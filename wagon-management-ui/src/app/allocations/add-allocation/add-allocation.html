@@ -1,0 +1,918 @@
+<div class="allocation-page">
+
+
+  <!-- ================================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ================================================= -->
+
+  <div class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Wagon Allocation
+      </h1>
+
+      <p>
+        Assign available wagons to an approved freight
+        consignment at its originating station.
+      </p>
+
+    </div>
+
+
+    <div class="header-status">
+
+      <span class="status-dot"></span>
+
+      Operations Control
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================================================= -->
+  <!-- KPI ROW -->
+  <!-- ================================================= -->
+
+  @if (!loading()) {
+
+    <div class="kpi-grid">
+
+
+      <!-- Available Wagons -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon wagon-icon">
+          <svg
+            lucideTrainFront
+            [attr.width]="22"
+            [attr.height]="22"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </div>
+
+        <div>
+
+          <div class="kpi-label">
+            AVAILABLE AT ORIGIN
+          </div>
+
+          <div class="kpi-value">
+            {{ wagons().length }}
+          </div>
+
+          <div class="kpi-description">
+            Suitable wagons
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Required -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon required-icon">
+          <svg
+            lucideClipboardList
+            [attr.width]="22"
+            [attr.height]="22"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </div>
+
+        <div>
+
+          <div class="kpi-label">
+            REQUIRED
+          </div>
+
+          <div class="kpi-value">
+            {{ getRequiredWagons() }}
+          </div>
+
+          <div class="kpi-description">
+            Wagons for demand
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Allocated -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon allocated-icon">
+          <svg
+            lucidePackageCheck
+            [attr.width]="22"
+            [attr.height]="22"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </div>
+
+        <div>
+
+          <div class="kpi-label">
+            ALLOCATED
+          </div>
+
+          <div class="kpi-value">
+            {{ getAllocatedCount() }}
+          </div>
+
+          <div class="kpi-description">
+            Wagons assigned
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Remaining -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon remaining-icon">
+          <svg
+            lucidePackageMinus
+            [attr.width]="22"
+            [attr.height]="22"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </div>
+
+        <div>
+
+          <div class="kpi-label">
+            REMAINING
+          </div>
+
+          <div class="kpi-value">
+            {{ getRemainingWagons() }}
+          </div>
+
+          <div class="kpi-description">
+            Still to allocate
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+
+  <!-- ================================================= -->
+  <!-- MAIN CONTENT -->
+  <!-- ================================================= -->
+
+  <div class="content-grid">
+
+
+    <!-- ================================================= -->
+    <!-- LEFT: ALLOCATION TRANSACTION -->
+    <!-- ================================================= -->
+
+    <section class="allocation-card">
+
+
+      <div class="card-header">
+
+        <div>
+
+          <div class="section-label">
+            ALLOCATION TRANSACTION
+          </div>
+
+          <h2>
+            Assign Wagon
+          </h2>
+
+          <p>
+            Select an approved consignment and assign a
+            suitable available wagon.
+          </p>
+
+        </div>
+
+
+        <div class="transaction-badge">
+          NEW ALLOCATION
+        </div>
+
+      </div>
+
+
+
+      @if (loading()) {
+
+        <div class="loading-state">
+
+          <div class="loading-spinner"></div>
+
+          Loading allocation data...
+
+        </div>
+
+      } @else {
+
+
+        <!-- ============================================= -->
+        <!-- CONTEXT -->
+        <!-- ============================================= -->
+
+        @if (getSelectedConsignment(); as consignment) {
+
+          <div class="consignment-context">
+
+
+            <div class="context-header">
+
+              <div>
+
+                <span class="context-label">
+                  SELECTED CONSIGNMENT
+                </span>
+
+                <strong>
+                  Consignment #{{ consignment.consignmentId }}
+                </strong>
+
+              </div>
+
+
+              <span class="approved-badge">
+                <svg
+                  lucideCheck
+                  [attr.width]="13"
+                  [attr.height]="13"
+                  [attr.stroke-width]="2.2">
+                </svg>
+                APPROVED
+              </span>
+
+            </div>
+
+
+            <div class="context-grid">
+
+              <div>
+
+                <span>
+                  Commodity
+                </span>
+
+                <strong>
+                  {{ consignment.commodity }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Quantity
+                </span>
+
+                <strong>
+                  {{ consignment.quantity }} tons
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Origin
+                </span>
+
+                <strong>
+                  {{ consignment.fromStation.stationCode }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Destination
+                </span>
+
+                <strong>
+                  {{ consignment.toStation.stationCode }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+
+
+        <!-- ============================================= -->
+        <!-- CONSIGNMENT SELECTION -->
+        <!-- ============================================= -->
+
+        <div class="form-section">
+
+          <div class="form-group">
+
+            <label for="consignment">
+
+              Consignment
+
+              <span class="required">
+                *
+              </span>
+
+            </label>
+
+
+            @if (consignments().length === 0) {
+
+              <div class="empty-selection">
+
+                No approved consignments are currently
+                available for wagon allocation.
+
+              </div>
+
+            } @else {
+
+              <select
+                id="consignment"
+                [ngModel]="selectedConsignmentId"
+                (ngModelChange)="
+                  selectedConsignmentId = $event ? +$event : null;
+                  onConsignmentChange()
+                "
+              >
+
+                <option [ngValue]="null">
+                  Select approved consignment
+                </option>
+
+
+                @for (
+                  consignment of consignments();
+                  track consignment.consignmentId
+                ) {
+
+                  <option
+                    [value]="consignment.consignmentId"
+                  >
+
+                    Consignment #{{ consignment.consignmentId }}
+
+                    —
+                    {{ consignment.commodity }}
+
+                    —
+                    {{ consignment.quantity }} tons
+
+                  </option>
+
+                }
+
+              </select>
+
+            }
+
+
+            <small>
+              Only consignments linked to APPROVED demands
+              are shown.
+            </small>
+
+          </div>
+
+
+
+          <!-- =========================================== -->
+          <!-- WAGON SELECTION -->
+          <!-- =========================================== -->
+
+          <div class="form-group">
+
+            <label for="wagon">
+
+              Wagon
+
+              <span class="required">
+                *
+              </span>
+
+            </label>
+
+
+            @if (
+              selectedConsignmentId === null
+            ) {
+
+              <div class="disabled-selection">
+
+                Select a consignment first.
+
+              </div>
+
+            } @else if (
+              wagons().length === 0
+            ) {
+
+              <div class="empty-selection warning">
+
+                No suitable AVAILABLE wagons are currently
+                present at
+                <strong>
+                  {{ getSelectedConsignment()?.fromStation?.stationCode }}
+                </strong>.
+
+              </div>
+
+            } @else {
+
+              <select
+                id="wagon"
+                [ngModel]="selectedWagonId"
+                (ngModelChange)="
+                  selectedWagonId = $event ? +$event : null
+                "
+              >
+
+                <option [ngValue]="null">
+                  Select available wagon
+                </option>
+
+
+                @for (
+                  wagon of wagons();
+                  track wagon.wagonId
+                ) {
+
+                  <option
+                    [value]="wagon.wagonId"
+                  >
+
+                    #{{ wagon.wagonId }}
+
+                    —
+                    {{ wagon.wagonNumber }}
+
+                    —
+                    {{ wagon.wagonType }}
+
+                    —
+                    {{ wagon.capacity }} tons
+
+                  </option>
+
+                }
+
+              </select>
+
+            }
+
+
+            <small>
+              Only AVAILABLE wagons at the consignment's
+              origin station are shown.
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ============================================= -->
+        <!-- ALLOCATION PROGRESS -->
+        <!-- ============================================= -->
+
+        @if (
+          selectedConsignmentId !== null
+        ) {
+
+          <div class="progress-panel">
+
+
+            <div class="progress-header">
+
+              <div>
+
+                <span class="progress-label">
+                  ALLOCATION PROGRESS
+                </span>
+
+                <strong>
+                  {{ getAllocatedCount() }}
+                  /
+                  {{ getRequiredWagons() }}
+                  wagons
+                </strong>
+
+              </div>
+
+
+              <span class="progress-percentage">
+                {{ getAllocationPercentage() }}%
+              </span>
+
+            </div>
+
+
+            <div class="progress-track">
+
+              <div
+                class="progress-fill"
+                [style.width.%]="getAllocationPercentage()"
+              ></div>
+
+            </div>
+
+
+            <div class="progress-footer">
+
+              @if (isAllocationComplete()) {
+
+                <span class="complete-text">
+                  <svg
+                    lucideCircleCheck
+                    [attr.width]="14"
+                    [attr.height]="14"
+                    [attr.stroke-width]="2">
+                  </svg>
+                  Allocation complete
+                </span>
+
+                <span>
+                  All required wagons assigned.
+                </span>
+
+              } @else {
+
+                <span>
+                  {{ getRemainingWagons() }}
+                  wagon(s) remaining
+                </span>
+
+                <span>
+                  {{ getAllocatedCount() }}
+                  allocated
+                </span>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+
+
+        <!-- ============================================= -->
+        <!-- VALIDATION -->
+        <!-- ============================================= -->
+
+        <div class="validation-box">
+
+          <div class="validation-icon">
+            <svg
+              lucideCircleCheck
+              [attr.width]="16"
+              [attr.height]="16"
+              [attr.stroke-width]="2">
+            </svg>
+          </div>
+
+          <div>
+
+            <strong>
+              Operational validation enabled
+            </strong>
+
+            <p>
+              The system validates demand status, wagon
+              availability, origin station and allocation
+              limits before recording the transaction.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ============================================= -->
+        <!-- MESSAGES -->
+        <!-- ============================================= -->
+
+        @if (message) {
+
+          <div class="success-message">
+
+            <span class="message-icon">
+              <svg
+                lucideCircleCheck
+                [attr.width]="14"
+                [attr.height]="14"
+                [attr.stroke-width]="2">
+              </svg>
+            </span>
+
+            <div>
+
+              <strong>
+                Allocation recorded
+              </strong>
+
+              <p>
+                {{ message }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <span class="message-icon">
+              <svg
+                lucideCircleAlert
+                [attr.width]="14"
+                [attr.height]="14"
+                [attr.stroke-width]="2">
+              </svg>
+            </span>
+
+            <div>
+
+              <strong>
+                Allocation could not be completed
+              </strong>
+
+              <p>
+                {{ errorMessage }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+
+        <!-- ============================================= -->
+        <!-- ACTION -->
+        <!-- ============================================= -->
+
+        <div class="action-row">
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="refresh()"
+          >
+            Refresh
+          </button>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            [disabled]="
+              submitting() ||
+              selectedWagonId === null ||
+              selectedConsignmentId === null ||
+              isAllocationComplete()
+            "
+            (click)="allocateWagon()"
+          >
+
+            @if (submitting()) {
+
+              Allocating...
+
+            } @else if (isAllocationComplete()) {
+
+              Allocation Complete
+
+            } @else {
+
+              Allocate Wagon
+              <svg
+                lucideArrowRight
+                [attr.width]="16"
+                [attr.height]="16"
+                [attr.stroke-width]="1.9">
+              </svg>
+
+            }
+
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- RIGHT: OPERATION FLOW -->
+    <!-- ================================================= -->
+
+    <aside class="flow-card">
+
+
+      <div class="flow-header">
+
+        <div class="section-label">
+          OPERATION FLOW
+        </div>
+
+        <h2>
+          Wagon Allocation
+        </h2>
+
+      </div>
+
+
+      <div class="flow-body">
+
+
+        <!-- Step 1 -->
+
+        <div class="flow-step completed">
+
+          <div class="step-number">
+            01
+          </div>
+
+          <div class="step-content">
+
+            <strong>
+              Demand Approved
+            </strong>
+
+            <p>
+              Commercial requirement has been validated
+              for operational processing.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Step 2 -->
+
+        <div class="flow-step completed">
+
+          <div class="step-number">
+            02
+          </div>
+
+          <div class="step-content">
+
+            <strong>
+              Consignment Created
+            </strong>
+
+            <p>
+              Approved demand has been converted into
+              an operational freight record.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Step 3 -->
+
+        <div class="flow-step active">
+
+          <div class="step-number">
+            03
+          </div>
+
+          <div class="step-content">
+
+            <strong>
+              Allocate Wagons
+            </strong>
+
+            <p>
+              Assign suitable available wagons at the
+              originating station.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Step 4 -->
+
+        <div class="flow-step">
+
+          <div class="step-number">
+            04
+          </div>
+
+          <div class="step-content">
+
+            <strong>
+              Load Freight
+            </strong>
+
+            <p>
+              Record cargo loading after wagon allocation
+              is complete.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Step 5 -->
+
+        <div class="flow-step">
+
+          <div class="step-number">
+            05
+          </div>
+
+          <div class="step-content">
+
+            <strong>
+              Form & Move Rake
+            </strong>
+
+            <p>
+              Form the rake, dispatch it and move the
+              freight toward destination.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="flow-footer">
+
+        <span class="status-dot"></span>
+
+        <div>
+
+          <strong>
+            Station validation active
+          </strong>
+
+          <p>
+            Wagons are filtered by origin station.
+          </p>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>

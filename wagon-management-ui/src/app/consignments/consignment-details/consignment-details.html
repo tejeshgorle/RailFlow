@@ -1,0 +1,761 @@
+<div class="details-page">
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div>
+        <strong>Loading consignment</strong>
+        <span>Retrieving freight details...</span>
+      </div>
+
+    </div>
+
+  }
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="error-page">
+
+      <div class="error-icon" aria-hidden="true">
+        <svg
+          lucideCircleAlert
+          [attr.width]="20"
+          [attr.height]="20"
+          [attr.stroke-width]="1.9">
+        </svg>
+      </div>
+
+      <h2>Unable to load consignment</h2>
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+      <a
+        routerLink="/consignments"
+        class="back-button"
+      >
+        <svg
+          lucideArrowLeft
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.9"
+          aria-hidden="true">
+        </svg>
+        <span>Back to Consignments</span>
+      </a>
+
+    </div>
+
+  }
+
+  <!-- =====================================================
+       DETAILS
+       ===================================================== -->
+
+  @else if (consignment()) {
+
+    <!-- ===================================================
+         PAGE HEADER
+         =================================================== -->
+
+    <section class="details-header">
+
+      <div class="header-left">
+
+        <div class="eyebrow">
+          FREIGHT OPERATIONS
+        </div>
+
+        <div class="title-row">
+
+          <h1>
+            Consignment #{{ consignment()!.consignmentId }}
+          </h1>
+
+          <span
+            class="status-badge"
+            [class]="getStatusClass()"
+          >
+            <span class="status-dot"></span>
+            {{ getStatusLabel() }}
+          </span>
+
+        </div>
+
+        <p>
+          Freight consignment and operational details.
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        @if (getDemandId()) {
+
+          <a
+            [routerLink]="[
+              '/demands',
+              getDemandId()
+            ]"
+            class="secondary-button"
+          >
+            <svg
+              lucideExternalLink
+              [attr.width]="15"
+              [attr.height]="15"
+              [attr.stroke-width]="1.8"
+              aria-hidden="true">
+            </svg>
+            <span>View Demand</span>
+          </a>
+
+        }
+
+        <a
+          routerLink="/consignments"
+          class="back-button"
+        >
+          <svg
+            lucideArrowLeft
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.9"
+            aria-hidden="true">
+          </svg>
+          <span>Consignments</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SUMMARY
+         =================================================== -->
+
+    <section class="summary-panel">
+
+      <div class="summary-item">
+
+        <span>
+          CONSIGNMENT
+        </span>
+
+        <strong>
+          #{{ consignment()!.consignmentId }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item">
+
+        <span>
+          DEMAND
+        </span>
+
+        <strong>
+          #{{ getDemandId() || '—' }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item">
+
+        <span>
+          FREIGHT
+        </span>
+
+        <strong>
+          {{ consignment()!.quantity | number:'1.0-2' }}
+          <small>t</small>
+        </strong>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item route-summary">
+
+        <span>
+          ROUTE
+        </span>
+
+        <strong>
+          {{ getRoute() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-status">
+
+        <span class="summary-status-label">
+          CURRENT STATUS
+        </span>
+
+        <span
+          class="status-badge small"
+          [class]="getStatusClass()"
+        >
+          <span class="status-dot"></span>
+          {{ getStatusLabel() }}
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MAIN INFORMATION
+         =================================================== -->
+
+    <section class="details-grid">
+
+      <!-- =================================================
+           COMMERCIAL PARTIES
+           ================================================= -->
+
+      <article class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              COMMERCIAL PARTIES
+            </div>
+
+            <h2>
+              Consignor & Consignee
+            </h2>
+
+          </div>
+
+          <span class="panel-tag">
+            <svg
+              lucideClipboardList
+              [attr.width]="14"
+              [attr.height]="14"
+              [attr.stroke-width]="1.8"
+              aria-hidden="true">
+            </svg>
+            <span>PARTIES</span>
+          </span>
+
+        </div>
+
+
+        <div class="party-grid">
+
+          <!-- CONSIGNOR -->
+
+          <div class="party-card">
+
+            <span class="field-label">
+              CONSIGNOR
+            </span>
+
+            <strong class="party-name">
+              {{
+                consignment()!.consignor?.customerName
+                || '—'
+              }}
+            </strong>
+
+            <span class="party-type">
+              {{
+                consignment()!.consignor?.customerType
+                || '—'
+              }}
+            </span>
+
+            <div class="party-divider"></div>
+
+            <span class="party-detail">
+              {{
+                consignment()!.consignor?.address
+                || 'Address not available'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- CONSIGNEE -->
+
+          <div class="party-card">
+
+            <span class="field-label">
+              CONSIGNEE
+            </span>
+
+            <strong class="party-name">
+              {{
+                consignment()!.consignee?.customerName
+                || '—'
+              }}
+            </strong>
+
+            <span class="party-type">
+              {{
+                consignment()!.consignee?.customerType
+                || '—'
+              }}
+            </span>
+
+            <div class="party-divider"></div>
+
+            <span class="party-detail">
+              {{
+                consignment()!.consignee?.address
+                || 'Address not available'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           FREIGHT DETAILS
+           ================================================= -->
+
+      <article class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              FREIGHT DETAILS
+            </div>
+
+            <h2>
+              Commodity & Quantity
+            </h2>
+
+          </div>
+
+          <span class="panel-tag">
+            <svg
+              lucidePackage
+              [attr.width]="14"
+              [attr.height]="14"
+              [attr.stroke-width]="1.8"
+              aria-hidden="true">
+            </svg>
+            <span>FREIGHT</span>
+          </span>
+
+        </div>
+
+
+        <div class="field-grid">
+
+          <div class="field">
+
+            <span class="field-label">
+              COMMODITY
+            </span>
+
+            <strong>
+              {{ consignment()!.commodity || '—' }}
+            </strong>
+
+          </div>
+
+
+          <div class="field">
+
+            <span class="field-label">
+              QUANTITY
+            </span>
+
+            <strong class="quantity-value">
+              {{ consignment()!.quantity | number:'1.0-2' }}
+              <small>t</small>
+            </strong>
+
+          </div>
+
+
+          <div class="field">
+
+            <span class="field-label">
+              DEMAND ID
+            </span>
+
+            @if (getDemandId()) {
+
+              <a
+                [routerLink]="[
+                  '/demands',
+                  getDemandId()
+                ]"
+                class="field-link"
+              >
+                #{{ getDemandId() }}
+              </a>
+
+            } @else {
+
+              <strong>—</strong>
+
+            }
+
+          </div>
+
+
+          <div class="field">
+
+            <span class="field-label">
+              STATUS
+            </span>
+
+            <span
+              class="status-badge small"
+              [class]="getStatusClass()"
+            >
+              <span class="status-dot"></span>
+              {{ getStatusLabel() }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           ROUTE
+           ================================================= -->
+
+      <article class="panel route-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              MOVEMENT ROUTE
+            </div>
+
+            <h2>
+              Freight Route
+            </h2>
+
+          </div>
+
+          <span class="panel-tag">
+            <svg
+              lucideRoute
+              [attr.width]="14"
+              [attr.height]="14"
+              [attr.stroke-width]="1.8"
+              aria-hidden="true">
+            </svg>
+            <span>ROUTE</span>
+          </span>
+
+        </div>
+
+
+        <div class="route-visual">
+
+          <!-- ORIGIN -->
+
+          <div class="station-block">
+
+            <span class="station-label">
+              ORIGIN
+            </span>
+
+            <strong class="station-code">
+              {{
+                consignment()!.fromStation?.stationCode
+                || '—'
+              }}
+            </strong>
+
+            <span class="station-name">
+              {{
+                consignment()!.fromStation?.stationName
+                || 'Station unavailable'
+              }}
+            </span>
+
+            <span class="station-meta">
+              {{
+                consignment()!.fromStation?.zone || '—'
+              }}
+              /
+              {{
+                consignment()!.fromStation?.division || '—'
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- TRACK -->
+
+          <div class="route-track">
+
+            <div class="track-start"></div>
+
+            <div class="track-line"></div>
+
+            <div class="track-arrow" aria-hidden="true">
+              <svg
+                lucideArrowRight
+                [attr.width]="16"
+                [attr.height]="16"
+                [attr.stroke-width]="1.9">
+              </svg>
+            </div>
+
+            <div class="track-end"></div>
+
+          </div>
+
+
+          <!-- DESTINATION -->
+
+          <div class="station-block destination">
+
+            <span class="station-label">
+              DESTINATION
+            </span>
+
+            <strong class="station-code">
+              {{
+                consignment()!.toStation?.stationCode
+                || '—'
+              }}
+            </strong>
+
+            <span class="station-name">
+              {{
+                consignment()!.toStation?.stationName
+                || 'Station unavailable'
+              }}
+            </span>
+
+            <span class="station-meta">
+              {{
+                consignment()!.toStation?.zone || '—'
+              }}
+              /
+              {{
+                consignment()!.toStation?.division || '—'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           WORKFLOW
+           ================================================= -->
+
+      <article class="panel workflow-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              OPERATIONAL CONTEXT
+            </div>
+
+            <h2>
+              Consignment Workflow
+            </h2>
+
+          </div>
+
+          <span class="panel-tag">
+            <svg
+              lucideTruck
+              [attr.width]="14"
+              [attr.height]="14"
+              [attr.stroke-width]="1.8"
+              aria-hidden="true">
+            </svg>
+            <span>PROCESS</span>
+          </span>
+
+        </div>
+
+
+        <div class="workflow">
+
+          <!-- STEP 1 -->
+
+          <div
+            class="workflow-step"
+            [class.active]="getStatus() === 'REGISTERED'"
+            [class.completed]="
+              getStatus() !== 'REGISTERED' &&
+              getStatus() !== 'UNKNOWN'
+            "
+          >
+
+            <div class="workflow-node">
+              01
+            </div>
+
+            <div class="workflow-text">
+              <strong>Demand</strong>
+              <span>Registered</span>
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- STEP 2 -->
+
+          <div
+            class="workflow-step"
+            [class.active]="getStatus() === 'APPROVED'"
+            [class.completed]="
+              getStatus() === 'WAGONS_ALLOCATED' ||
+              getStatus() === 'LOADED' ||
+              getStatus() === 'DELIVERED'
+            "
+          >
+
+            <div class="workflow-node">
+              02
+            </div>
+
+            <div class="workflow-text">
+              <strong>Approval</strong>
+              <span>Approved</span>
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- STEP 3 -->
+
+          <div
+            class="workflow-step"
+            [class.active]="
+              getStatus() === 'WAGONS_ALLOCATED'
+            "
+            [class.completed]="
+              getStatus() === 'LOADED' ||
+              getStatus() === 'DELIVERED'
+            "
+          >
+
+            <div class="workflow-node">
+              03
+            </div>
+
+            <div class="workflow-text">
+              <strong>Allocation</strong>
+              <span>Wagons assigned</span>
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- STEP 4 -->
+
+          <div
+            class="workflow-step"
+            [class.active]="getStatus() === 'LOADED'"
+            [class.completed]="
+              getStatus() === 'DELIVERED'
+            "
+          >
+
+            <div class="workflow-node">
+              04
+            </div>
+
+            <div class="workflow-text">
+              <strong>Loading</strong>
+              <span>Freight loaded</span>
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- STEP 5 -->
+
+          <div
+            class="workflow-step"
+            [class.active]="getStatus() === 'DELIVERED'"
+            [class.completed]="
+              getStatus() === 'DELIVERED'
+            "
+          >
+
+            <div class="workflow-node">
+              05
+            </div>
+
+            <div class="workflow-text">
+              <strong>Delivery</strong>
+              <span>Freight delivered</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  }
+
+</div>

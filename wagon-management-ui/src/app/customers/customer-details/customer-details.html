@@ -1,0 +1,471 @@
+<div class="details-page">
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div class="loading-content">
+
+        <strong>
+          Loading customer details
+        </strong>
+
+        <span>
+          Retrieving commercial master data...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else if (errorMessage()) {
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    <div class="error-page">
+
+      <div class="error-icon">
+
+        <svg
+          lucideCircleAlert
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+
+      </div>
+
+      <div class="eyebrow">
+        COMMERCIAL MASTER DATA
+      </div>
+
+      <h2>
+        Customer details unavailable
+      </h2>
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+      <a
+        class="back-button"
+        routerLink="/customers"
+      >
+        <svg
+          lucideArrowLeft
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+        Customers
+      </a>
+
+    </div>
+
+  } @else if (customer()) {
+
+    <!-- ===================================================
+         PAGE HEADER
+         =================================================== -->
+
+    <section class="page-header">
+
+      <div class="page-header-left">
+
+        <div class="eyebrow">
+          COMMERCIAL MASTER DATA
+        </div>
+
+        <div class="title-row">
+
+          <h1>
+            Customer #{{ customer()!.customerId }}
+          </h1>
+
+          <span class="customer-type-badge">
+            {{ customer()!.customerType }}
+          </span>
+
+        </div>
+
+        <p>
+          Detailed information about the registered freight customer.
+        </p>
+
+      </div>
+
+
+      <div class="page-header-actions">
+
+        <a
+          class="back-button"
+          routerLink="/customers"
+        >
+          <svg
+            lucideArrowLeft
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.8">
+          </svg>
+          Customers
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SUMMARY STRIP
+         =================================================== -->
+
+    <section class="summary-strip">
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          CUSTOMER
+        </span>
+
+        <strong class="summary-value">
+          #{{ customer()!.customerId }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          CUSTOMER TYPE
+        </span>
+
+        <strong class="summary-value blue">
+          {{ customer()!.customerType }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item customer-summary">
+
+        <span class="summary-label">
+          CUSTOMER NAME
+        </span>
+
+        <strong class="summary-value">
+          {{ customer()!.customerName }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-status">
+
+        <span class="summary-label">
+          MASTER STATUS
+        </span>
+
+        <span class="status-badge active">
+
+          <span class="status-dot"></span>
+
+          ACTIVE
+
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MAIN DETAILS GRID
+         =================================================== -->
+
+    <section class="details-grid">
+
+
+      <!-- =================================================
+           CUSTOMER INFORMATION
+           ================================================= -->
+
+      <article class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              CUSTOMER REGISTER
+            </div>
+
+            <h2>
+              Customer Information
+            </h2>
+
+            <p>
+              Core commercial customer master-data details.
+            </p>
+
+          </div>
+
+          <span class="panel-tag">
+            MASTER DATA
+          </span>
+
+        </div>
+
+
+        <div class="information-grid">
+
+
+          <!-- CUSTOMER ID -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              CUSTOMER ID
+            </span>
+
+            <span class="field-value">
+              #{{ customer()!.customerId }}
+            </span>
+
+          </div>
+
+
+          <!-- CUSTOMER TYPE -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              CUSTOMER TYPE
+            </span>
+
+            <span class="master-value">
+              {{ customer()!.customerType }}
+            </span>
+
+          </div>
+
+
+          <!-- CUSTOMER NAME -->
+
+          <div class="information-item wide">
+
+            <span class="field-label">
+              CUSTOMER NAME
+            </span>
+
+            <span class="field-value">
+              {{ customer()!.customerName }}
+            </span>
+
+            <span class="field-secondary">
+              Registered commercial customer
+            </span>
+
+          </div>
+
+
+          <!-- ADDRESS -->
+
+          <div class="information-item wide">
+
+            <span class="field-label">
+              REGISTERED ADDRESS
+            </span>
+
+            <span class="field-value">
+              {{ customer()!.address || '—' }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           COMMERCIAL CONTEXT
+           ================================================= -->
+
+      <article class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              COMMERCIAL CONTEXT
+            </div>
+
+            <h2>
+              Customer Profile
+            </h2>
+
+            <p>
+              Commercial classification and contact information.
+            </p>
+
+          </div>
+
+          <span class="panel-tag">
+            CUSTOMER
+          </span>
+
+        </div>
+
+
+        <div class="commercial-content">
+
+
+          <!-- CUSTOMER PROFILE -->
+
+          <div class="customer-profile">
+
+            <div class="profile-icon">
+
+              <svg
+                lucideUserRound
+                [attr.width]="18"
+                [attr.height]="18"
+                [attr.stroke-width]="1.8">
+              </svg>
+
+            </div>
+
+            <div>
+
+              <span class="profile-label">
+                CUSTOMER
+              </span>
+
+              <strong>
+                {{ customer()!.customerName }}
+              </strong>
+
+              <span class="profile-type">
+                {{ customer()!.customerType }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTACT -->
+
+          <div class="contact-block">
+
+            <span class="field-label">
+              CONTACT NUMBER
+            </span>
+
+            <strong class="contact-value">
+              {{ customer()!.contactNumber || 'Not available' }}
+            </strong>
+
+          </div>
+
+
+          <!-- ADDRESS -->
+
+          <div class="contact-block">
+
+            <span class="field-label">
+              OPERATING ADDRESS
+            </span>
+
+            <strong class="address-value">
+              {{ customer()!.address || 'Not available' }}
+            </strong>
+
+          </div>
+
+
+          <!-- MASTER STATUS -->
+
+          <div class="profile-status">
+
+            <div>
+
+              <span class="field-label">
+                MASTER RECORD
+              </span>
+
+              <strong>
+                Active
+              </strong>
+
+            </div>
+
+            <span class="status-badge active">
+
+              <span class="status-dot"></span>
+
+              ACTIVE
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         FOOTER
+         =================================================== -->
+
+    <footer class="details-footer">
+
+      <div>
+
+        <span class="footer-eyebrow">
+          CUSTOMER MASTER
+        </span>
+
+        <span class="footer-text">
+          Customer information is maintained as commercial master data.
+        </span>
+
+      </div>
+
+      <a
+        class="back-button"
+        routerLink="/customers"
+      >
+        <svg
+          lucideArrowLeft
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+        Back to Customer Register
+      </a>
+
+    </footer>
+
+  }
+
+</div>

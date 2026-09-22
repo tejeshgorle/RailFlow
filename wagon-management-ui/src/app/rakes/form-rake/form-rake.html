@@ -1,0 +1,668 @@
+<div class="rake-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-heading">
+
+    <div>
+      <div class="page-eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Rake Formation
+      </h1>
+
+      <p>
+        Form a rake from a fully loaded freight consignment.
+      </p>
+    </div>
+
+    <div class="heading-actions">
+
+      @if (demandId) {
+
+        <button
+          type="button"
+          class="back-demand-button"
+          (click)="backToDemand()">
+          <svg class="action-icon" lucideArrowLeft [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg> Back to Demand
+        </button>
+
+      }
+
+      <div class="operation-status">
+        <span class="status-dot"></span>
+        Formation Operation
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ACTIVE DEMAND
+  ====================================================== -->
+
+  @if (demandId) {
+
+    <div class="demand-context">
+
+      <div class="context-marker">
+        RAKE
+      </div>
+
+      <div class="context-main">
+
+        <span class="context-label">
+          ACTIVE DEMAND
+        </span>
+
+        <strong>
+          Demand #{{ demandId }}
+        </strong>
+
+        <span>
+          Rake formation initiated from the demand workflow.
+        </span>
+
+      </div>
+
+      <div class="context-arrow">
+        <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       MESSAGES
+  ====================================================== -->
+
+  @if (message) {
+
+    <div class="message success-message">
+
+      <span class="message-icon"><svg lucideCircleCheck [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg></span>
+
+      <div>
+        <strong>
+          Rake formation completed
+        </strong>
+
+        <span>
+          {{ message }}
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+
+  @if (errorMessage) {
+
+    <div class="message error-message">
+
+      <span class="message-icon"><svg lucideCircleAlert [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg></span>
+
+      <div>
+        <strong>
+          Rake formation could not be completed
+        </strong>
+
+        <span>
+          {{ errorMessage }}
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       FORMATION READINESS
+  ====================================================== -->
+
+  @if (getSelectedConsignment(); as consignment) {
+
+    <section class="readiness-card">
+
+      <div class="readiness-header">
+
+        <div>
+          <span class="panel-kicker">
+            FORMATION READINESS
+          </span>
+
+          <h2>
+            {{ consignment.commodity }}
+            · Consignment #{{ consignment.consignmentId }}
+          </h2>
+        </div>
+
+        <div
+          class="readiness-badge"
+          [class.ready]="isFormationReady()"
+          [class.waiting]="!isFormationReady()">
+
+          <span class="status-dot"></span>
+
+          {{ getReadinessLabel() }}
+
+        </div>
+
+      </div>
+
+
+      <div class="readiness-grid">
+
+        <div class="readiness-metric">
+
+          <span>
+            LOADED WAGONS
+          </span>
+
+          <strong>
+            {{ getLoadedWagonCount() }}
+            <small>/ {{ getRequiredWagons() }}</small>
+          </strong>
+
+          <div class="metric-track">
+            <div
+              class="metric-fill"
+              [class.complete]="getWagonReadinessPercentage() >= 100"
+              [style.width.%]="getWagonReadinessPercentage()">
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="readiness-metric">
+
+          <span>
+            LOADED QUANTITY
+          </span>
+
+          <strong>
+            {{ getLoadedQuantity() }}
+            <small>/ {{ getRequiredQuantity() }} TONS</small>
+          </strong>
+
+          <div class="metric-track">
+            <div
+              class="metric-fill"
+              [class.complete]="getQuantityPercentage() >= 100"
+              [style.width.%]="getQuantityPercentage()">
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="readiness-metric">
+
+          <span>
+            ROUTE
+          </span>
+
+          <strong>
+            {{ consignment.fromStation.stationCode }}
+            <svg class="route-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+            {{ consignment.toStation.stationCode }}
+          </strong>
+
+          <small class="route-name">
+            {{ consignment.fromStation.stationName }}
+            <svg class="route-inline-icon" lucideArrowRight [attr.width]="13" [attr.height]="13" [attr.stroke-width]="1.8"></svg>
+            {{ consignment.toStation.stationName }}
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- =====================================================
+       LOADING STATE
+  ====================================================== -->
+
+  @if (loading()) {
+
+    <div class="state-card">
+      Loading formation candidates...
+    </div>
+
+  } @else {
+
+
+    <!-- ===================================================
+         NO ELIGIBLE CONSIGNMENTS
+    ==================================================== -->
+
+    @if (consignments().length === 0) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon"><svg lucideClipboardList [attr.width]="24" [attr.height]="24" [attr.stroke-width]="1.7"></svg></div>
+
+        <div>
+          <span class="panel-kicker">
+            FORMATION QUEUE
+          </span>
+
+          <h2>
+            No loaded consignment available
+          </h2>
+
+          @if (demandId) {
+
+            <p>
+              Demand #{{ demandId }} does not currently have a
+              fully loaded consignment available for rake formation.
+            </p>
+
+          } @else {
+
+            <p>
+              A rake can only be formed after the associated demand
+              reaches LOADED status.
+            </p>
+
+          }
+
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="formation-layout">
+
+
+        <!-- ===============================================
+             FORMATION INSTRUCTION
+        ================================================ -->
+
+        <section class="formation-panel">
+
+          <div class="panel-header">
+
+            <div>
+              <span class="panel-kicker">
+                FORMATION INSTRUCTION
+              </span>
+
+              <h2>
+                Rake Details
+              </h2>
+            </div>
+          </div>
+
+
+          <!-- CONSIGNMENT -->
+
+          <div class="form-group">
+
+            <label for="consignment">
+              Loaded Consignment
+            </label>
+
+            <select
+              id="consignment"
+              name="consignmentId"
+              [ngModel]="selectedConsignmentId"
+              (ngModelChange)="selectedConsignmentId = $event ? +$event : null; onConsignmentChange()">
+
+              <option [ngValue]="null">
+                Select Consignment
+              </option>
+
+              @for (
+                consignment of consignments();
+                track consignment.consignmentId
+              ) {
+
+                <option
+                  [ngValue]="consignment.consignmentId">
+
+                  #{{ consignment.consignmentId }}
+                  · {{ consignment.commodity }}
+                  · {{ consignment.quantity }} tons
+                  · {{ consignment.fromStation.stationCode }}
+                  → {{ consignment.toStation.stationCode }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+
+          <!-- SELECTED CONSIGNMENT -->
+
+          @if (getSelectedConsignment(); as consignment) {
+
+            <div class="consignment-summary">
+
+              <div>
+                <span>CONSIGNOR</span>
+                <strong>
+                  {{ consignment.consignor.customerName }}
+                </strong>
+              </div>
+
+              <div>
+                <span>CONSIGNEE</span>
+                <strong>
+                  {{ consignment.consignee.customerName }}
+                </strong>
+              </div>
+
+              <div>
+                <span>COMMODITY</span>
+                <strong>
+                  {{ consignment.commodity }}
+                </strong>
+              </div>
+
+              <div>
+                <span>QUANTITY</span>
+                <strong>
+                  {{ consignment.quantity }}
+                  <small>TONS</small>
+                </strong>
+              </div>
+
+            </div>
+
+          }
+
+
+          <!-- RAKE NUMBER -->
+
+          <div class="form-group">
+
+            <label for="rakeNumber">
+              Rake Number
+            </label>
+
+            <input
+              id="rakeNumber"
+              name="rakeNumber"
+              type="text"
+              [(ngModel)]="rakeNumber"
+              placeholder="Example: Rake-008"
+              maxlength="30"
+              [disabled]="forming()">
+
+            <small class="field-hint">
+              Enter a unique operational rake number.
+            </small>
+
+          </div>
+
+
+          <!-- READINESS WARNING -->
+
+          @if (
+            getSelectedConsignment() &&
+            !isFormationReady()
+          ) {
+
+            <div class="readiness-warning">
+
+              <span class="warning-icon"><svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg></span>
+
+              <div>
+
+                <strong>
+                  Formation requirements not yet satisfied
+                </strong>
+
+                <span>
+                  {{ getRemainingWagons() }} wagon(s) and
+                  {{ getRemainingQuantity() }} tons remain before
+                  the rake can be formed.
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+
+          <!-- SUBMIT -->
+
+          <button
+            type="button"
+            class="formation-button"
+            (click)="formRake()"
+            [disabled]="
+              forming() ||
+              selectedConsignmentId === null ||
+              !isFormationReady() ||
+              !rakeNumber.trim()
+            ">
+
+            @if (forming()) {
+
+              <span class="button-loader"></span>
+              Forming Rake...
+
+            } @else if (isFormationReady()) {
+
+              <span>
+                Confirm Rake Formation
+              </span>
+
+              <span class="button-arrow"><svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg></span>
+
+            } @else {
+
+              <span>
+                Waiting for Loading Completion
+              </span>
+
+              <span class="waiting-icon"><svg lucideClock3 [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg></span>
+
+            }
+
+          </button>
+
+        </section>
+
+
+        <!-- ===============================================
+             FORMATION CHECK
+        ================================================ -->
+
+        <aside class="formation-check-panel">
+
+          <div class="panel-header compact">
+
+            <div>
+              <span class="panel-kicker">
+                FORMATION CHECK
+              </span>
+
+              <h2>
+                Before Formation
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div class="check-list">
+
+            <div class="check-item">
+              <span
+                class="check-marker"
+                [class.complete]="getSelectedConsignment() !== null">
+                @if (getSelectedConsignment()) {
+                  <svg class="check-status-icon" lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                } @else {
+                  01
+                }
+              </span>
+
+              <div>
+                <strong>
+                  Loaded Consignment
+                </strong>
+
+                <span>
+                  The associated demand must be in LOADED status.
+                </span>
+              </div>
+            </div>
+
+
+            <div class="check-item">
+              <span
+                class="check-marker"
+                [class.complete]="getLoadedWagonCount() >= getRequiredWagons() && getRequiredWagons() > 0">
+                @if (
+                  getLoadedWagonCount() >= getRequiredWagons() &&
+                  getRequiredWagons() > 0
+                ) {
+                  <svg class="check-status-icon" lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                } @else {
+                  02
+                }
+              </span>
+
+              <div>
+                <strong>
+                  Wagon Count
+                </strong>
+
+                <span>
+                  {{ getLoadedWagonCount() }} of
+                  {{ getRequiredWagons() }} required wagons loaded.
+                </span>
+              </div>
+            </div>
+
+
+            <div class="check-item">
+              <span
+                class="check-marker"
+                [class.complete]="getLoadedQuantity() >= getRequiredQuantity() && getRequiredQuantity() > 0">
+                @if (
+                  getLoadedQuantity() >= getRequiredQuantity() &&
+                  getRequiredQuantity() > 0
+                ) {
+                  <svg class="check-status-icon" lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                } @else {
+                  03
+                }
+              </span>
+
+              <div>
+                <strong>
+                  Loading Quantity
+                </strong>
+
+                <span>
+                  {{ getLoadedQuantity() }}
+                  / {{ getRequiredQuantity() }} tons loaded.
+                </span>
+              </div>
+            </div>
+
+
+            <div class="check-item">
+              <span
+                class="check-marker"
+                [class.complete]="getSelectedConsignment()?.fromStation?.stationId !== getSelectedConsignment()?.toStation?.stationId">
+                @if (
+                  getSelectedConsignment() &&
+                  getSelectedConsignment()!.fromStation.stationId !==
+                  getSelectedConsignment()!.toStation.stationId
+                ) {
+                  <svg class="check-status-icon" lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                } @else {
+                  04
+                }
+              </span>
+
+              <div>
+                <strong>
+                  Route
+                </strong>
+
+                <span>
+                  {{ getSelectedConsignment()?.fromStation?.stationCode || '—' }}
+                  <svg class="route-inline-icon" lucideArrowRight [attr.width]="13" [attr.height]="13" [attr.stroke-width]="1.8"></svg>
+                  {{ getSelectedConsignment()?.toStation?.stationCode || '—' }}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="workflow-note">
+
+            <span class="note-line"></span>
+
+            <div>
+
+              <span class="note-label">
+                WORKFLOW
+              </span>
+
+              <strong class="workflow-sequence">
+                Loading
+                <svg class="workflow-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                Rake Formation
+                <svg class="workflow-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                Dispatch
+              </strong>
+
+              <p>
+                Formation becomes available after all required
+                loading conditions are satisfied.
+              </p>
+
+              @if (demandId) {
+
+                <button
+                  type="button"
+                  class="panel-link"
+                  (click)="backToDemand()">
+                  View Demand #{{ demandId }}
+                  <svg class="workflow-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    }
+
+  }
+
+</div>

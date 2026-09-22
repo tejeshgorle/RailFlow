@@ -1,0 +1,673 @@
+<div class="login-page">
+
+  <div class="login-workspace">
+
+
+    <!-- =================================================
+         BRAND PANEL
+         ================================================= -->
+
+    <section class="brand-panel">
+
+      <div class="brand-panel-content">
+
+
+        <!-- BRAND -->
+
+        <div class="brand-identity">
+
+          <div class="brand-logo">
+
+            <img
+              src="/assets/logos/indian-railways.png"
+              alt="Indian Railways">
+
+          </div>
+
+          <div>
+
+            <div class="brand-name">
+              RailFlow
+            </div>
+
+            <div class="brand-subtitle">
+              Rail Freight Operations
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- INTRO -->
+
+        <div class="brand-intro">
+
+          <div class="brand-eyebrow">
+            RAIL FREIGHT OPERATIONS
+          </div>
+
+          <h1>
+            Management<br>
+            System
+          </h1>
+
+          <p>
+            Secure access to freight demand, wagons, rakes
+            and railway movement operations.
+          </p>
+
+        </div>
+
+
+        <!-- MODULES -->
+
+        <div class="module-summary">
+
+          <div class="module-summary-label">
+            OPERATIONS COVERAGE
+          </div>
+
+          <div class="module-list">
+
+            <span>Demand</span>
+            <span>Wagon</span>
+            <span>Rake</span>
+            <span>Movement</span>
+
+          </div>
+
+        </div>
+
+
+        <!-- NETWORK -->
+
+        <div class="network-indicator">
+
+          <span class="network-indicator-dot"></span>
+
+          <div>
+
+            <strong>
+              Operations Network
+            </strong>
+
+            <span>
+              System environment ready
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         LOGIN PANEL
+         ================================================= -->
+
+    <section class="login-panel">
+
+      <div class="login-card">
+
+
+        <!-- HEADER -->
+
+        <div class="login-header">
+<div class="login-eyebrow">
+            {{ otpMode ? 'IDENTITY VERIFICATION' : 'SECURE ACCESS' }}
+          </div>
+
+          <h2>
+            {{ otpMode ? 'Verify your RailFlow access' : 'Sign in to RailFlow' }}
+          </h2>
+
+          <p>
+            {{ otpMode
+              ? 'Complete the verification step to continue to rail freight operations.'
+              : 'Enter your credentials to access rail freight operations.' }}
+          </p>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+          class="login-form"
+          (ngSubmit)="otpMode ? verifyOtp() : signIn()"
+          novalidate>
+
+          <!-- =================================================
+               CREDENTIALS
+               ================================================= -->
+
+          <ng-container *ngIf="!otpMode">
+
+            <div
+              class="form-group"
+              [class.has-error]="usernameInvalid">
+
+              <div class="field-header">
+
+                <label for="username">
+                  Username / Email
+                </label>
+
+                <span
+                  *ngIf="usernameInvalid"
+                  class="field-required">
+                  Required
+                </span>
+
+              </div>
+
+              <div class="input-wrapper">
+
+                <input
+                  id="username"
+                  type="text"
+                  name="username"
+                  [(ngModel)]="username"
+                  (blur)="onUsernameBlur()"
+                  [class.input-error]="usernameInvalid"
+                  placeholder="Enter your username or email"
+                  autocomplete="username">
+
+              </div>
+
+              <div
+                *ngIf="usernameInvalid"
+                class="field-error">
+
+                <svg
+                  lucideCircleAlert
+                  [attr.width]="13"
+                  [attr.height]="13"
+                  [attr.stroke-width]="2">
+                </svg>
+
+                <span>
+                  Username or email is required.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="form-group"
+              [class.has-error]="passwordInvalid">
+
+              <div class="field-header">
+
+                <label for="password">
+                  Password
+                </label>
+
+                <span
+                  *ngIf="passwordInvalid"
+                  class="field-required">
+                  Required
+                </span>
+
+              </div>
+
+              <div class="input-wrapper password-wrapper">
+
+                <input
+                  id="password"
+                  [type]="showPassword ? 'text' : 'password'"
+                  name="password"
+                  [(ngModel)]="password"
+                  (blur)="onPasswordBlur()"
+                  [class.input-error]="passwordInvalid"
+                  placeholder="Enter your password"
+                  autocomplete="current-password">
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="togglePassword()"
+                  [attr.aria-label]="
+                    showPassword ? 'Hide password' : 'Show password'
+                  "
+                  [attr.title]="
+                    showPassword ? 'Hide password' : 'Show password'
+                  ">
+
+                  <svg
+                    *ngIf="!showPassword"
+                    lucideEye
+                    [attr.width]="17"
+                    [attr.height]="17"
+                    [attr.stroke-width]="1.8">
+                  </svg>
+
+                  <svg
+                    *ngIf="showPassword"
+                    lucideEyeOff
+                    [attr.width]="17"
+                    [attr.height]="17"
+                    [attr.stroke-width]="1.8">
+                  </svg>
+
+                </button>
+
+              </div>
+
+              <div
+                *ngIf="passwordInvalid"
+                class="field-error">
+
+                <svg
+                  lucideCircleAlert
+                  [attr.width]="13"
+                  [attr.height]="13"
+                  [attr.stroke-width]="2">
+                </svg>
+
+                <span>
+                  Password is required.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="form-group"
+              [class.has-error]="captchaInvalid">
+
+              <div class="field-header">
+
+                <label for="captchaInput">
+                  Verification
+                </label>
+
+              </div>
+
+              <div class="captcha-row">
+
+                <div
+                  class="captcha-visual"
+                  aria-label="Verification code">
+
+                  <span class="captcha-line line-one"></span>
+                  <span class="captcha-line line-two"></span>
+                  <span class="captcha-line line-three"></span>
+
+                  <span class="captcha-character c1">
+                    {{ captcha[0] }}
+                  </span>
+
+                  <span class="captcha-character c2">
+                    {{ captcha[1] }}
+                  </span>
+
+                  <span class="captcha-character c3">
+                    {{ captcha[2] }}
+                  </span>
+
+                  <span class="captcha-character c4">
+                    {{ captcha[3] }}
+                  </span>
+
+                  <span class="captcha-character c5">
+                    {{ captcha[4] }}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="captcha-refresh"
+                  (click)="refreshCaptcha()"
+                  title="Refresh verification code"
+                  aria-label="Refresh verification code">
+
+                  <svg
+                    lucideRefreshCw
+                    [attr.width]="17"
+                    [attr.height]="17"
+                    [attr.stroke-width]="1.8">
+                  </svg>
+
+                </button>
+
+                <input
+                  id="captchaInput"
+                  type="text"
+                  name="captchaInput"
+                  [(ngModel)]="captchaInput"
+                  (blur)="onCaptchaBlur()"
+                  (input)="onCaptchaInput()"
+                  [class.input-error]="captchaInvalid"
+                  maxlength="5"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  placeholder="Enter code">
+
+              </div>
+
+              <div
+                *ngIf="captchaInvalid"
+                class="field-error">
+
+                <svg
+                  lucideCircleAlert
+                  [attr.width]="13"
+                  [attr.height]="13"
+                  [attr.stroke-width]="2">
+                </svg>
+
+                <span>
+                  {{
+                    captchaError
+                      ? 'Verification code does not match.'
+                      : 'Verification code is required.'
+                  }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="security-note">
+
+              <div class="security-icon">
+
+                <svg
+                  lucideShieldCheck
+                  [attr.width]="16"
+                  [attr.height]="16"
+                  [attr.stroke-width]="1.8">
+                </svg>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Secure access
+                </strong>
+
+                <span>
+                  Protected railway operations environment
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              *ngIf="loginError"
+              class="login-error">
+
+              <svg
+                lucideCircleAlert
+                [attr.width]="15"
+                [attr.height]="15"
+                [attr.stroke-width]="2">
+              </svg>
+
+              <span>
+                {{ loginError }}
+              </span>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="sign-in-button"
+              [disabled]="isLoading || !formValid">
+
+              <span *ngIf="!isLoading">
+                SIGN IN
+              </span>
+
+              <span
+                *ngIf="isLoading"
+                class="button-loading">
+
+                <span class="loading-spinner"></span>
+                Signing in...
+
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="forgot-password">
+
+              Forgot password?
+
+            </button>
+
+          </ng-container>
+
+
+          <!-- =================================================
+               OTP
+               ================================================= -->
+
+          <ng-container *ngIf="otpMode">
+
+            <div class="otp-header">
+
+              <button
+                type="button"
+                class="back-button"
+                (click)="backToCredentials()">
+
+                <svg
+                  lucideArrowLeft
+                  [attr.width]="16"
+                  [attr.height]="16"
+                  [attr.stroke-width]="1.9">
+                </svg>
+
+                <span>
+                  Back to credentials
+                </span>
+
+              </button>
+
+              <div class="otp-eyebrow">
+                TWO-STEP VERIFICATION
+              </div>
+
+              <h3>
+                Verify your identity
+              </h3>
+
+              <p>
+                Enter the 6-digit verification code sent to
+                your registered contact.
+              </p>
+
+            </div>
+
+
+            <div class="otp-destination">
+
+              <div class="otp-destination-icon">
+
+                <svg
+                  lucideShieldCheck
+                  [attr.width]="18"
+                  [attr.height]="18"
+                  [attr.stroke-width]="1.8">
+                </svg>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Verification required
+                </strong>
+
+                <span>
+                  Your credentials were accepted. Complete
+                  verification to continue.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="form-group otp-group"
+              [class.has-error]="otpInvalid">
+
+              <div class="field-header">
+
+                <label for="otpInput">
+                  One-Time Password
+                </label>
+
+              </div>
+
+              <input
+                #otpField
+                id="otpInput"
+                class="otp-input"
+                type="text"
+                name="otpInput"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                [(ngModel)]="otpInput"
+                (input)="onOtpInput($event)"
+                (blur)="onOtpBlur()"
+                [class.input-error]="otpInvalid"
+                placeholder="Enter 6-digit code"
+                aria-label="Enter 6-digit verification code">
+
+              <div class="otp-helper">
+
+                <span *ngIf="!otpInvalid">
+                  Code expires in
+                  <strong>
+                    00:{{
+                      otpSecondsRemaining < 10
+                        ? '0' + otpSecondsRemaining
+                        : otpSecondsRemaining
+                    }}
+                  </strong>
+                </span>
+
+                <span
+                  *ngIf="otpInvalid"
+                  class="field-error">
+
+                  <svg
+                    lucideCircleAlert
+                    [attr.width]="13"
+                    [attr.height]="13"
+                    [attr.stroke-width]="2">
+                  </svg>
+
+                  {{
+                    otpError || 'Enter the 6-digit verification code.'
+                  }}
+
+                </span>
+
+                <button
+                  type="button"
+                  class="resend-button"
+                  [disabled]="!otpResendAvailable"
+                  (click)="resendOtp()">
+
+                  {{
+                    otpResendAvailable
+                      ? 'Resend code'
+                      : 'Resend'
+                  }}
+
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="sign-in-button"
+              [disabled]="isLoading || !otpValid">
+
+              <span *ngIf="!isLoading">
+                VERIFY & CONTINUE
+              </span>
+
+              <span
+                *ngIf="isLoading"
+                class="button-loading">
+
+                <span class="loading-spinner"></span>
+                Verifying...
+
+              </span>
+
+            </button>
+
+
+            <div class="otp-security-note">
+
+              <svg
+                lucideShieldCheck
+                [attr.width]="15"
+                [attr.height]="15"
+                [attr.stroke-width]="1.8">
+              </svg>
+
+              <span>
+                Never share your verification code with anyone.
+              </span>
+
+            </div>
+
+          </ng-container>
+
+        </form>
+
+
+        <!-- FOOTER -->
+
+        <div class="login-footer">
+
+          <span>
+            RailFlow Ops v1.0
+          </span>
+
+          <span class="footer-separator">
+            •
+          </span>
+
+          <span>
+            Rail Freight Operations
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

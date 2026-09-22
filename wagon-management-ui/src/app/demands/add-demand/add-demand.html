@@ -1,0 +1,665 @@
+<div class="demand-page">
+
+  <!-- ================================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ================================================= -->
+
+  <div class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Register Demand
+      </h1>
+
+      <p>
+        Create a new freight demand for wagon allocation and
+        subsequent movement operations.
+      </p>
+
+    </div>
+
+    <div class="operation-indicator">
+
+      <span class="indicator-dot"></span>
+
+      <span>
+        Operations Control
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- LOADING -->
+  <!-- ================================================= -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+        <strong>Loading operational data</strong>
+
+        <span>
+          Retrieving customers and station information...
+        </span>
+      </div>
+
+    </div>
+
+  } @else {
+
+
+    <!-- =============================================== -->
+    <!-- MAIN GRID -->
+    <!-- =============================================== -->
+
+    <div class="content-grid">
+
+
+      <!-- ============================================= -->
+      <!-- DEMAND FORM -->
+      <!-- ============================================= -->
+
+      <section class="form-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              DEMAND REGISTRATION
+            </div>
+
+            <h2>
+              Create Freight Demand
+            </h2>
+
+            <p>
+              Enter the commercial and movement requirements
+              for the requested freight.
+            </p>
+
+          </div>
+
+          <div class="new-badge">
+            NEW DEMAND
+          </div>
+
+        </div>
+
+
+        <div class="form-body">
+
+
+          <!-- ========================================= -->
+          <!-- CUSTOMER -->
+          <!-- ========================================= -->
+
+          <div class="form-section">
+
+            <div class="section-title">
+              Commercial Details
+            </div>
+
+            <div class="form-group">
+
+              <label for="customerId">
+                Customer
+                <span>*</span>
+              </label>
+
+              <select
+                id="customerId"
+                name="customerId"
+                [(ngModel)]="customerId"
+              >
+
+                <option [ngValue]="null">
+                  Select customer
+                </option>
+
+                @for (
+                  customer of customers();
+                  track customer.customerId
+                ) {
+
+                  <option
+                    [ngValue]="customer.customerId"
+                  >
+                    {{ customer.customerName }}
+                  </option>
+
+                }
+
+              </select>
+
+              <small>
+                Select the customer placing the freight demand.
+              </small>
+
+            </div>
+
+
+            <!-- COMMODITY -->
+
+            <div class="form-group">
+
+              <label for="commodity">
+                Commodity
+                <span>*</span>
+              </label>
+
+              <input
+                type="text"
+                id="commodity"
+                name="commodity"
+                [(ngModel)]="commodity"
+                placeholder="e.g. COAL"
+              >
+
+              <small>
+                Specify the commodity to be transported.
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- FREIGHT REQUIREMENT -->
+          <!-- ========================================= -->
+
+          <div class="form-section">
+
+            <div class="section-title">
+              Freight Requirement
+            </div>
+
+            <div class="two-column">
+
+
+              <!-- QUANTITY -->
+
+              <div class="form-group">
+
+                <label for="quantity">
+                  Required Quantity
+                  <span>*</span>
+                </label>
+
+                <div class="input-with-unit">
+
+                  <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    [(ngModel)]="quantity"
+                    min="1"
+                    placeholder="Enter quantity"
+                  >
+
+                  <span>
+                    tons
+                  </span>
+
+                </div>
+
+                <small>
+                  Total freight quantity requested.
+                </small>
+
+              </div>
+
+
+              <!-- WAGONS -->
+
+              <div class="form-group">
+
+                <label for="requiredWagons">
+                  Required Wagons
+                  <span>*</span>
+                </label>
+
+                <div class="input-with-unit">
+
+                  <input
+                    type="number"
+                    id="requiredWagons"
+                    name="requiredWagons"
+                    [(ngModel)]="requiredWagons"
+                    min="1"
+                    placeholder="Wagon count"
+                  >
+
+                  <span>
+                    wagons
+                  </span>
+
+                </div>
+
+                <small>
+                  Number of wagons required for this demand.
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- MOVEMENT ROUTE -->
+          <!-- ========================================= -->
+
+          <div class="form-section">
+
+            <div class="section-title">
+              Movement Route
+            </div>
+
+            <div class="route-fields">
+
+
+              <!-- FROM -->
+
+              <div class="form-group">
+
+                <label for="fromStationId">
+                  Origin Station
+                  <span>*</span>
+                </label>
+
+                <select
+                  id="fromStationId"
+                  name="fromStationId"
+                  [(ngModel)]="fromStationId"
+                >
+
+                  <option [ngValue]="null">
+                    Select origin station
+                  </option>
+
+                  @for (
+                    station of stations();
+                    track station.stationId
+                  ) {
+
+                    <option
+                      [ngValue]="station.stationId"
+                    >
+                      {{ station.stationCode }}
+                      —
+                      {{ station.stationName }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </div>
+
+
+              <div class="route-arrow" aria-hidden="true">
+                <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.9"></svg>
+              </div>
+
+
+              <!-- TO -->
+
+              <div class="form-group">
+
+                <label for="toStationId">
+                  Destination Station
+                  <span>*</span>
+                </label>
+
+                <select
+                  id="toStationId"
+                  name="toStationId"
+                  [(ngModel)]="toStationId"
+                >
+
+                  <option [ngValue]="null">
+                    Select destination station
+                  </option>
+
+                  @for (
+                    station of stations();
+                    track station.stationId
+                  ) {
+
+                    <option
+                      [ngValue]="station.stationId"
+                    >
+                      {{ station.stationCode }}
+                      —
+                      {{ station.stationName }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </div>
+
+            </div>
+
+            <div class="route-note">
+
+              <span class="note-icon" aria-hidden="true">
+                <svg lucideArrowLeftRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+              </span>
+
+              <span>
+                Origin and destination must be different stations.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- VALIDATION NOTICE -->
+          <!-- ========================================= -->
+
+          <div class="validation-box">
+
+            <div class="validation-icon" aria-hidden="true">
+              <svg lucideCircleCheck [attr.width]="17" [attr.height]="17" [attr.stroke-width]="2"></svg>
+            </div>
+
+            <div>
+
+              <strong>
+                Operational validation enabled
+              </strong>
+
+              <span>
+                The system will validate the customer, stations,
+                quantity and wagon requirement before registration.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- ACTION -->
+          <!-- ========================================= -->
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="primary-button"
+              (click)="addDemand()"
+              [disabled]="submitting()"
+            >
+
+              @if (submitting()) {
+
+                <span class="button-spinner"></span>
+
+                Registering...
+
+              } @else {
+
+                Register Demand
+
+                <span class="button-arrow" aria-hidden="true">
+                  <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="2"></svg>
+                </span>
+
+              }
+
+            </button>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- SUCCESS -->
+          <!-- ========================================= -->
+
+          @if (message) {
+
+            <div class="success-message">
+
+              <div class="message-icon" aria-hidden="true">
+                <svg lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="2"></svg>
+              </div>
+
+              <div>
+
+                <strong>
+                  Demand registered
+                </strong>
+
+                <span>
+                  {{ message }}
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+
+          <!-- ========================================= -->
+          <!-- ERROR -->
+          <!-- ========================================= -->
+
+          @if (errorMessage) {
+
+            <div class="error-message">
+
+              <div class="message-icon" aria-hidden="true">
+                <svg lucideTriangleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg>
+              </div>
+
+              <div>
+
+                <strong>
+                  Registration failed
+                </strong>
+
+                <span>
+                  {{ errorMessage }}
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+
+      <!-- ============================================= -->
+      <!-- OPERATION FLOW -->
+      <!-- ============================================= -->
+
+      <aside class="workflow-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              OPERATION FLOW
+            </div>
+
+            <h2>
+              Demand Lifecycle
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="workflow-body">
+
+
+          <div class="workflow-step active">
+
+            <div class="step-number">
+              01
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Register Demand
+              </strong>
+
+              <span>
+                Create the customer's freight requirement.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <div class="workflow-step">
+
+            <div class="step-number">
+              02
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Approve Demand
+              </strong>
+
+              <span>
+                Validate and approve the registered demand.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <div class="workflow-step">
+
+            <div class="step-number">
+              03
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Allocate Wagons
+              </strong>
+
+              <span>
+                Assign available wagons to the requirement.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <div class="workflow-step">
+
+            <div class="step-number">
+              04
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Load & Form Rake
+              </strong>
+
+              <span>
+                Load freight and prepare the operational rake.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <div class="workflow-step">
+
+            <div class="step-number">
+              05
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Move & Deliver
+              </strong>
+
+              <span>
+                Dispatch, arrive, unload and complete delivery.
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="workflow-footer">
+
+          <span class="status-dot"></span>
+
+          <div>
+
+            <strong>
+              Workflow validation active
+            </strong>
+
+            <span>
+              Demand starts in REGISTERED status.
+            </span>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,686 @@
+<div class="rake-details-page">
+
+  <!-- ========================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ========================================= -->
+
+  <div class="page-header">
+
+    <div class="header-left">
+
+      <a
+        routerLink="/rakes"
+        class="back-link">
+        <svg class="action-icon" lucideArrowLeft [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        Rake Movement
+      </a>
+
+      <div class="title-row">
+
+        <div class="title-icon">
+          <svg lucideTrainFront [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+          <h1>Rake Details</h1>
+
+          @if (rake()) {
+            <p>
+              Composition and operational information
+              for {{ rake()?.rakeNumber }}
+            </p>
+          } @else {
+            <p>
+              Loading rake information...
+            </p>
+          }
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- LOADING -->
+  <!-- ========================================= -->
+
+  @if (loading()) {
+
+    <div class="loading-state">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+        <strong>Loading rake details</strong>
+        <span>
+          Retrieving rake composition and movement information...
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- ========================================= -->
+  <!-- ERROR -->
+  <!-- ========================================= -->
+
+  @if (!loading() && errorMessage()) {
+
+    <div class="error-panel">
+
+      <div class="error-icon">
+        <svg lucideCircleAlert [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+      </div>
+
+      <div>
+        <strong>Unable to load rake</strong>
+        <p>{{ errorMessage() }}</p>
+      </div>
+
+    </div>
+
+  }
+
+
+  @if (!loading() && rake()) {
+
+    <!-- ======================================= -->
+    <!-- RAIL SUMMARY -->
+    <!-- ======================================= -->
+
+    <section class="hero-panel">
+
+      <div class="hero-main">
+
+        <div class="rake-identity">
+
+          <span class="eyebrow">
+            RAKE IDENTIFICATION
+          </span>
+
+          <h2>
+            {{ rake()?.rakeNumber }}
+          </h2>
+
+          <span class="rake-id">
+            Rake ID #{{ rake()?.rakeId }}
+          </span>
+
+        </div>
+
+        <div
+          class="status-badge"
+          [class]="getStatusClass(rake()!.status)">
+
+          <span class="status-dot"></span>
+
+          {{ rake()?.status }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ROUTE -->
+
+      <div class="route-panel">
+
+        <div class="route-station">
+
+          <span class="station-code">
+            {{ rake()?.fromStation?.stationCode }}
+          </span>
+
+          <span class="station-name">
+            {{ rake()?.fromStation?.stationName }}
+          </span>
+
+        </div>
+
+
+        <div class="route-line">
+
+          <span class="route-start"></span>
+
+          <div class="route-track">
+
+            <span
+              class="train-marker"
+              [class.formed]="rake()?.status === 'FORMED'"
+              [class.dispatched]="rake()?.status === 'DISPATCHED'"
+              [class.arrived]="rake()?.status === 'ARRIVED'">
+
+              <svg
+                lucideTrainFront
+                [attr.width]="16"
+                [attr.height]="16"
+                [attr.stroke-width]="1.8">
+              </svg>
+
+            </span>
+
+          </div>
+
+          <span class="route-end"></span>
+
+        </div>
+
+
+        <div class="route-station destination">
+
+          <span class="station-code">
+            {{ rake()?.toStation?.stationCode }}
+          </span>
+
+          <span class="station-name">
+            {{ rake()?.toStation?.stationName }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================= -->
+    <!-- KPI ROW -->
+    <!-- ======================================= -->
+
+    <section class="kpi-grid">
+
+      <div class="kpi-card">
+
+        <div class="kpi-label">
+          WAGONS
+        </div>
+
+        <div class="kpi-value">
+          {{ rake()?.wagonCount }}
+        </div>
+
+        <div class="kpi-description">
+          Rake composition
+        </div>
+
+      </div>
+
+
+      <div class="kpi-card">
+
+        <div class="kpi-label">
+          TOTAL CAPACITY
+        </div>
+
+        <div class="kpi-value">
+          {{ getTotalCapacity() }}
+          <span>t</span>
+        </div>
+
+        <div class="kpi-description">
+          Combined wagon capacity
+        </div>
+
+      </div>
+
+
+      <div class="kpi-card">
+
+        <div class="kpi-label">
+          CONSIGNMENT
+        </div>
+
+        <div class="kpi-value small">
+          #{{ rake()?.consignment?.consignmentId }}
+        </div>
+
+        <div class="kpi-description">
+          {{ rake()?.consignment?.commodity }}
+        </div>
+
+      </div>
+
+
+      <div class="kpi-card">
+
+        <div class="kpi-label">
+          DEMAND
+        </div>
+
+        <div class="kpi-value small">
+          #{{ rake()?.consignment?.demandId }}
+        </div>
+
+        <div class="kpi-description">
+          Associated demand
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ======================================= -->
+
+    <div class="content-grid">
+
+
+      <!-- ===================================== -->
+      <!-- WAGON COMPOSITION -->
+      <!-- ===================================== -->
+
+      <section class="section-panel wagon-section">
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="section-eyebrow">
+              RAKE COMPOSITION
+            </span>
+
+            <h3>
+              Wagons in this Rake
+            </h3>
+
+          </div>
+
+          <div class="wagon-count">
+            {{ rake()?.wagons?.length }} Wagons
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>SEQ</th>
+                <th>WAGON</th>
+                <th>TYPE</th>
+                <th>CAPACITY</th>
+                <th>STATUS</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              @for (
+                wagon of rake()?.wagons;
+                track wagon.wagonId
+              ) {
+
+                <tr>
+
+                  <td>
+
+                    <span class="sequence">
+                      {{ wagon.sequenceNumber }}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <div class="wagon-identity">
+
+                      <strong>
+                        {{ wagon.wagonNumber }}
+                      </strong>
+
+                      <span>
+                        Wagon #{{ wagon.wagonId }}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+                  <td>
+
+                    <span class="wagon-type">
+                      {{ wagon.wagonType }}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <strong>
+                      {{ wagon.capacity }}
+                    </strong>
+
+                    <span class="unit">
+                      t
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <span class="wagon-status">
+                      <span class="status-dot"></span>
+                      {{ wagon.status }}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================== -->
+      <!-- OPERATION TIMELINE -->
+      <!-- ===================================== -->
+
+      <section class="section-panel timeline-section">
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="section-eyebrow">
+              MOVEMENT HISTORY
+            </span>
+
+            <h3>
+              Operational Timeline
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline">
+
+
+          <!-- FORMATION -->
+
+          <div class="timeline-item completed">
+
+            <div class="timeline-marker">
+              <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+            </div>
+
+            <div class="timeline-content">
+
+              <strong>
+                Rake Formed
+              </strong>
+
+              <span>
+                {{ rake()?.formationTime
+                  | date:'dd MMM yyyy, HH:mm' }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- DISPATCH -->
+
+          <div
+            class="timeline-item"
+            [class.completed]="isDispatched()">
+
+            <div class="timeline-marker">
+
+              @if (isDispatched()) {
+                <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+              } @else {
+                2
+              }
+
+            </div>
+
+            <div class="timeline-content">
+
+              <strong>
+                Dispatched
+              </strong>
+
+              @if (rake()?.dispatchTime) {
+
+                <span>
+                  {{ rake()?.dispatchTime
+                    | date:'dd MMM yyyy, HH:mm' }}
+                </span>
+
+              } @else {
+
+                <span>
+                  Awaiting dispatch
+                </span>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- ARRIVAL -->
+
+          <div
+            class="timeline-item"
+            [class.completed]="rake()?.status === 'ARRIVED'">
+
+            <div class="timeline-marker">
+
+              @if (rake()?.status === 'ARRIVED') {
+                <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+              } @else {
+                3
+              }
+
+            </div>
+
+            <div class="timeline-content">
+
+              <strong>
+                Arrival
+              </strong>
+
+              @if (rake()?.status === 'ARRIVED') {
+
+                <span>
+                  Arrived at
+                  {{ rake()?.toStation?.stationCode }}
+                </span>
+
+              } @else {
+
+                <span>
+                  Pending arrival
+                </span>
+
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================== -->
+      <!-- CONSIGNMENT -->
+      <!-- ===================================== -->
+
+      <section class="section-panel">
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="section-eyebrow">
+              FREIGHT INFORMATION
+            </span>
+
+            <h3>
+              Consignment
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <span>Consignment ID</span>
+            <strong>
+              #{{ rake()?.consignment?.consignmentId }}
+            </strong>
+          </div>
+
+          <div class="info-item">
+            <span>Demand ID</span>
+            <strong>
+              #{{ rake()?.consignment?.demandId }}
+            </strong>
+          </div>
+
+          <div class="info-item">
+            <span>Commodity</span>
+            <strong>
+              {{ rake()?.consignment?.commodity }}
+            </strong>
+          </div>
+
+          <div class="info-item">
+            <span>Quantity</span>
+            <strong>
+              {{ rake()?.consignment?.quantity }} t
+            </strong>
+          </div>
+
+          <div class="info-item">
+            <span>Consignor</span>
+            <strong>
+              {{ rake()?.consignment?.consignorName }}
+            </strong>
+          </div>
+
+          <div class="info-item">
+            <span>Consignee</span>
+            <strong>
+              {{ rake()?.consignment?.consigneeName }}
+            </strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================== -->
+      <!-- ROUTE DETAILS -->
+      <!-- ===================================== -->
+
+      <section class="section-panel">
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="section-eyebrow">
+              ROUTE
+            </span>
+
+            <h3>
+              Movement Route
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="route-details">
+
+          <div class="route-detail-station">
+
+            <span class="route-code">
+              {{ rake()?.fromStation?.stationCode }}
+            </span>
+
+            <div>
+
+              <strong>
+                {{ rake()?.fromStation?.stationName }}
+              </strong>
+
+              <span>
+                {{ rake()?.fromStation?.zone }}
+                ·
+                {{ rake()?.fromStation?.division }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="route-arrow">
+            <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+          </div>
+
+
+          <div class="route-detail-station">
+
+            <span class="route-code">
+              {{ rake()?.toStation?.stationCode }}
+            </span>
+
+            <div>
+
+              <strong>
+                {{ rake()?.toStation?.stationName }}
+              </strong>
+
+              <span>
+                {{ rake()?.toStation?.zone }}
+                ·
+                {{ rake()?.toStation?.division }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+</div>

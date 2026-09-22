@@ -1,0 +1,389 @@
+<div class="movement-page">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+
+    <div class="page-header-left">
+      <div class="eyebrow">FREIGHT OPERATIONS</div>
+
+      <h1>Movement History</h1>
+
+      <p>
+        Complete movement record of wagons across stations.
+      </p>
+    </div>
+
+    <div class="page-header-actions">
+
+      @if (lastRefreshTime()) {
+        <span class="last-refresh">
+          Updated {{ lastRefreshTime() | date:'HH:mm:ss' }}
+        </span>
+      }
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshMovements()"
+      >
+        <span class="refresh-icon">
+          <svg lucideRefreshCw [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        </span>
+        Refresh
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- KPI CARDS -->
+  <section class="kpi-grid">
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+        <span class="kpi-label">TOTAL MOVEMENTS</span>
+
+        <span class="kpi-icon blue">
+          <svg lucideArrowLeftRight [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+      </div>
+
+      <strong class="kpi-value">
+        {{ movements().length }}
+      </strong>
+
+      <span class="kpi-description">
+        All recorded movements
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+        <span class="kpi-label">TODAY</span>
+
+        <span class="kpi-icon green">
+          <svg lucideCircleCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+      </div>
+
+      <strong class="kpi-value">
+        {{ getTodayMovementCount() }}
+      </strong>
+
+      <span class="kpi-description">
+        Movements recorded today
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+        <span class="kpi-label">ORIGIN STATIONS</span>
+
+        <span class="kpi-icon gray">
+          <svg lucideMapPin [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+      </div>
+
+      <strong class="kpi-value">
+        {{ getOriginStationCount() }}
+      </strong>
+
+      <span class="kpi-description">
+        Stations generating movements
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+        <span class="kpi-label">DESTINATION STATIONS</span>
+
+        <span class="kpi-icon amber">
+          <svg lucideMapPinCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+      </div>
+
+      <strong class="kpi-value">
+        {{ getDestinationStationCount() }}
+      </strong>
+
+      <span class="kpi-description">
+        Stations receiving wagons
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+        <span class="kpi-label">LATEST ACTIVITY</span>
+
+        <span class="kpi-icon green">
+          <svg lucideClock3 [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+      </div>
+
+      <strong class="kpi-value latest-value">
+
+        @if (movements().length > 0) {
+          {{ movements()[0].movementTime | date:'HH:mm' }}
+        } @else {
+          —
+        }
+
+      </strong>
+
+      <span class="kpi-description">
+
+        @if (movements().length > 0) {
+          {{ movements()[0].movementTime | date:'dd MMM yyyy' }}
+        } @else {
+          No activity recorded
+        }
+
+      </span>
+
+    </article>
+
+  </section>
+
+
+  <!-- LOADING -->
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div class="loading-content">
+
+        <strong>
+          Loading movement history
+        </strong>
+
+        <span>
+          Retrieving wagon movement records...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+
+    <!-- ERROR -->
+    @if (errorMessage()) {
+
+      <div class="error-banner">
+
+        <div class="error-icon">
+          <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="error-content">
+
+          <strong>
+            Movement history unavailable
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- REGISTER -->
+    <section class="movement-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <div class="panel-eyebrow">
+            MOVEMENT REGISTER
+          </div>
+
+          <h2>
+            Wagon Movement Records
+          </h2>
+
+        </div>
+
+        <span class="record-count">
+          {{ movements().length }}
+          {{ movements().length === 1 ? 'record' : 'records' }}
+        </span>
+
+      </div>
+
+
+      <!-- EMPTY -->
+      @if (movements().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg lucideArrowLeftRight [attr.width]="24" [attr.height]="24" [attr.stroke-width]="1.7"></svg>
+          </div>
+
+          <strong>
+            No movement records found
+          </strong>
+
+          <span>
+            Wagon movement history will appear here when
+            operational movements are recorded.
+          </span>
+
+        </div>
+
+      } @else {
+
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>MOVEMENT</th>
+                <th>WAGON</th>
+                <th>WAGON TYPE</th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>MOVEMENT TIME</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              @for (
+                movement of movements();
+                track movement.movementId
+              ) {
+
+                <tr>
+
+                  <td>
+
+                    <a
+                      [routerLink]="['/movement-history']"
+                      class="movement-id"
+                    >
+                      #{{ movement.movementId }}
+                    </a>
+
+                  </td>
+
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/wagons',
+                        movement.wagon.wagonId
+                      ]"
+                      class="wagon-link"
+                    >
+                      {{ movement.wagon.wagonNumber }}
+                    </a>
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="wagon-type">
+                      {{ movement.wagon.wagonType }}
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    <div class="station-cell">
+
+                      <strong class="station-code">
+                        {{ movement.fromStation.stationCode }}
+                      </strong>
+
+                      <span class="station-name">
+                        {{ movement.fromStation.stationName }}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    <div class="station-cell">
+
+                      <strong class="station-code">
+                        {{ movement.toStation.stationCode }}
+                      </strong>
+
+                      <span class="station-name">
+                        {{ movement.toStation.stationName }}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    <div class="movement-time">
+
+                      <strong>
+                        {{ movement.movementTime | date:'dd MMM yyyy' }}
+                      </strong>
+
+                      <span>
+                        {{ movement.movementTime | date:'HH:mm:ss' }}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

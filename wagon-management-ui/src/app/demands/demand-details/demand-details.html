@@ -1,0 +1,763 @@
+<div class="demand-details-page">
+
+  <!-- =====================================================
+       BACK NAVIGATION
+  ====================================================== -->
+
+  <a
+    routerLink="/demands"
+    class="back-link"
+  >
+    <svg lucideArrowLeft class="ui-icon ui-icon-back" aria-hidden="true"></svg>
+    Demand Management
+  </a>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  @if (loading()) {
+
+    <div class="details-state">
+
+      <div class="loading-indicator"></div>
+
+      <p>
+        Loading demand details...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="details-state error-state">
+
+      <div class="state-icon">
+        <svg lucideCircleAlert class="ui-icon ui-icon-state" aria-hidden="true"></svg>
+      </div>
+
+      <h3>
+        Unable to load demand
+      </h3>
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+      <a
+        routerLink="/demands"
+        class="secondary-button"
+      >
+        Back to Demands
+      </a>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       DEMAND DETAILS
+  ====================================================== -->
+
+  @else if (demand()) {
+
+    <div class="demand-content">
+
+      <!-- =================================================
+           PAGE HEADER
+      ================================================== -->
+
+      <div class="details-header">
+
+        <div>
+
+          <div class="page-eyebrow">
+            FREIGHT DEMAND
+          </div>
+
+          <div class="title-row">
+
+            <h1>
+              Demand #{{ demand()!.demandId }}
+            </h1>
+
+            <span
+              class="status-badge"
+              [class]="
+                getStatusClass(
+                  demand()!.status
+                )
+              "
+            >
+
+              <span class="status-dot"></span>
+
+              {{ getStatusLabel(demand()!.status) }}
+
+            </span>
+
+          </div>
+
+          <p>
+            {{ demand()!.customer.customerName }}
+          </p>
+
+        </div>
+
+
+        @if (demand()!.status === 'REGISTERED') {
+
+          <button
+            type="button"
+            class="approve-button"
+            (click)="approveDemand()"
+          >
+            <svg lucideCheck class="ui-icon ui-icon-button" aria-hidden="true"></svg>
+            Approve Demand
+          </button>
+
+        }
+
+      </div>
+
+
+      <!-- =================================================
+           MESSAGES
+      ================================================== -->
+
+      @if (successMessage()) {
+
+        <div class="message success-message">
+
+          <span class="message-icon">
+            <svg lucideCircleCheck class="ui-icon ui-icon-message" aria-hidden="true"></svg>
+          </span>
+
+          {{ successMessage() }}
+
+        </div>
+
+      }
+
+
+      @if (errorMessage()) {
+
+        <div class="message error-message">
+
+          <span class="message-icon">
+            <svg lucideCircleAlert class="ui-icon ui-icon-message" aria-hidden="true"></svg>
+          </span>
+
+          {{ errorMessage() }}
+
+        </div>
+
+      }
+
+
+      <!-- =================================================
+           SUMMARY
+      ================================================== -->
+
+      <div class="summary-grid">
+
+
+        <!-- CUSTOMER -->
+
+        <div class="summary-card">
+
+          <div class="summary-label">
+            CUSTOMER
+          </div>
+
+          <div class="summary-value">
+            {{ demand()!.customer.customerName }}
+          </div>
+
+          <div class="summary-secondary">
+            {{ demand()!.customer.customerType }}
+          </div>
+
+        </div>
+
+
+        <!-- COMMODITY -->
+
+        <div class="summary-card">
+
+          <div class="summary-label">
+            COMMODITY
+          </div>
+
+          <div class="summary-value">
+            {{ demand()!.commodity }}
+          </div>
+
+          <div class="summary-secondary">
+            Freight commodity
+          </div>
+
+        </div>
+
+
+        <!-- QUANTITY -->
+
+        <div class="summary-card">
+
+          <div class="summary-label">
+            QUANTITY
+          </div>
+
+          <div class="summary-value large-number">
+            {{ demand()!.quantity }}
+            <span>TONNES</span>
+          </div>
+
+          <div class="summary-secondary">
+            Total demanded quantity
+          </div>
+
+        </div>
+
+
+        <!-- WAGONS -->
+
+        <div class="summary-card">
+
+          <div class="summary-label">
+            REQUIRED WAGONS
+          </div>
+
+          <div class="summary-value large-number">
+            {{ demand()!.requiredWagons }}
+          </div>
+
+          <div class="summary-secondary">
+            Wagons required
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ROUTE
+      ================================================== -->
+
+      <div class="route-card">
+
+        <div class="route-header">
+
+          <div>
+
+            <div class="section-label">
+              FREIGHT ROUTE
+            </div>
+
+            <div class="section-description">
+              Origin and destination
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="route-display">
+
+          <!-- ORIGIN -->
+
+          <div class="station">
+
+            <div class="station-code">
+              {{ demand()!.fromStation.stationCode }}
+            </div>
+
+            <div class="station-name">
+              {{ demand()!.fromStation.stationName }}
+            </div>
+
+            <div class="station-meta">
+              {{ demand()!.fromStation.zone }}
+              ·
+              {{ demand()!.fromStation.division }}
+            </div>
+
+          </div>
+
+
+          <!-- TRACK -->
+
+          <div class="route-track">
+
+            <div class="track-line"></div>
+
+            <div class="track-dot origin-dot"></div>
+
+            <div class="track-arrow">
+              <svg lucideArrowRight class="ui-icon ui-icon-route" aria-hidden="true"></svg>
+            </div>
+
+            <div class="track-dot destination-dot"></div>
+
+          </div>
+
+
+          <!-- DESTINATION -->
+
+          <div class="station destination">
+
+            <div class="station-code">
+              {{ demand()!.toStation.stationCode }}
+            </div>
+
+            <div class="station-name">
+              {{ demand()!.toStation.stationName }}
+            </div>
+
+            <div class="station-meta">
+              {{ demand()!.toStation.zone }}
+              ·
+              {{ demand()!.toStation.division }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           WORKFLOW
+      ================================================== -->
+
+      <div class="workflow-card">
+
+        <div class="workflow-header">
+
+          <div>
+
+            <div class="section-label">
+              OPERATIONS WORKFLOW
+            </div>
+
+            <div class="section-description">
+              Current progress of this freight demand
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="workflow">
+
+
+          <!-- 1 REGISTERED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(1)"
+            [class.current]="isCurrentStep(1)"
+            [class.pending]="isStepPending(1)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(1)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                1
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Demand Registered
+              </div>
+
+              <div class="step-description">
+                Freight demand entered into the system
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 2 APPROVED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(2)"
+            [class.current]="isCurrentStep(2)"
+            [class.pending]="isStepPending(2)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(2)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                2
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Demand Approved
+              </div>
+
+              <div class="step-description">
+                Demand approved for wagon allocation
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 3 ALLOCATED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(3)"
+            [class.current]="isCurrentStep(3)"
+            [class.pending]="isStepPending(3)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(3)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                3
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Wagons Allocated
+              </div>
+
+              <div class="step-description">
+                Required wagons assigned to the consignment
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 4 LOADED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(4)"
+            [class.current]="isCurrentStep(4)"
+            [class.pending]="isStepPending(4)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(4)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                4
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Wagon Loading
+              </div>
+
+              <div class="step-description">
+                Required freight quantity loaded into wagons
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 5 RAKE -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(5)"
+            [class.current]="isCurrentStep(5)"
+            [class.pending]="isStepPending(5)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(5)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                5
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Rake Formation
+              </div>
+
+              <div class="step-description">
+                Wagons grouped into a rake for movement
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 6 DISPATCH -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(6)"
+            [class.current]="isCurrentStep(6)"
+            [class.pending]="isStepPending(6)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(6)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                6
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Dispatch
+              </div>
+
+              <div class="step-description">
+                Rake dispatched from origin station
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 7 ARRIVAL -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(7)"
+            [class.current]="isCurrentStep(7)"
+            [class.pending]="isStepPending(7)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(7)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                7
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Arrival & Unloading
+              </div>
+
+              <div class="step-description">
+                Freight received and unloaded at destination
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- 8 DELIVERED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isStepCompleted(8)"
+            [class.current]="isCurrentStep(8)"
+            [class.pending]="isStepPending(8)"
+          >
+
+            <div class="step-indicator">
+
+              @if (isStepCompleted(8)) {
+                <svg lucideCheck class="ui-icon ui-icon-step" aria-hidden="true"></svg>
+              } @else {
+                8
+              }
+
+            </div>
+
+            <div class="step-content">
+
+              <div class="step-title">
+                Demand Completed
+              </div>
+
+              <div class="step-description">
+                Freight delivered and operational cycle completed
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           NEXT ACTION
+      ================================================== -->
+
+      @if (hasNextAction()) {
+
+        <div class="next-action-card">
+
+          <div class="next-action-info">
+
+            <div class="next-action-label">
+              NEXT OPERATION
+            </div>
+
+            <div class="next-action-title">
+              {{ getNextActionLabel() }}
+            </div>
+
+            <div class="next-action-description">
+
+              @if (demand()!.status === 'APPROVED') {
+                Allocate the required wagons to this demand.
+              }
+
+              @else if (demand()!.status === 'WAGONS_ALLOCATED') {
+                Load the allocated wagons with the required freight.
+              }
+
+              @else if (demand()!.status === 'LOADED') {
+                Form a rake using the loaded wagons.
+              }
+
+              @else {
+                Complete the next operational step for this demand.
+              }
+
+            </div>
+
+          </div>
+
+
+          @if (demand()!.status === 'REGISTERED') {
+
+            <button
+              type="button"
+              class="next-action-button"
+              (click)="approveDemand()"
+            >
+              Approve Demand
+              <svg lucideArrowRight class="ui-icon ui-icon-button-arrow" aria-hidden="true"></svg>
+            </button>
+
+          }
+
+          @else {
+
+            <button
+              type="button"
+              class="next-action-button"
+              (click)="goToNextAction()"
+            >
+              {{ getNextActionLabel() }}
+              <svg lucideArrowRight class="ui-icon ui-icon-button-arrow" aria-hidden="true"></svg>
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- =================================================
+           DEMAND INFORMATION
+      ================================================== -->
+
+      <div class="information-card">
+
+        <div class="section-label">
+          DEMAND INFORMATION
+        </div>
+
+        <div class="information-grid">
+
+          <div>
+            <span>Demand ID</span>
+            <strong>
+              #{{ demand()!.demandId }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Demand Date</span>
+            <strong>
+              {{ demand()!.demandDate | date:'dd MMM yyyy' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Customer</span>
+            <strong>
+              {{ demand()!.customer.customerName }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Commodity</span>
+            <strong>
+              {{ demand()!.commodity }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

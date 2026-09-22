@@ -1,0 +1,601 @@
+<div class="wagon-details-page">
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <section class="state-panel">
+
+      <div class="spinner"></div>
+
+      <div>
+        <strong>Loading wagon details</strong>
+
+        <span>
+          Retrieving wagon information from the operations system...
+        </span>
+      </div>
+
+    </section>
+
+  } @else {
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    @if (errorMessage()) {
+
+      <section class="error-banner">
+
+        <div class="message-icon">
+          <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="message-content">
+
+          <strong>
+            Unable to load wagon
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+        <a
+          routerLink="/wagons"
+          class="secondary-button"
+        >
+          <svg lucideArrowLeft [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+          Wagons
+        </a>
+
+      </section>
+
+    }
+
+
+    @if (wagon()) {
+
+      <!-- =================================================
+           PAGE HEADER
+           ================================================= -->
+
+      <section class="page-header">
+
+        <div class="page-header-content">
+
+          <div class="eyebrow">
+            FLEET OPERATIONS
+          </div>
+
+          <div class="title-row">
+
+            <h1>
+              Wagon {{ wagon()?.wagonNumber }}
+            </h1>
+
+            <span
+              class="status-badge"
+              [class]="getStatusClass(wagon()?.status)"
+            >
+
+              <span class="status-dot"></span>
+
+              {{ wagon()?.status }}
+
+            </span>
+
+          </div>
+
+          <p>
+            Wagon profile and current operational details.
+          </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+          <a
+            routerLink="/wagons"
+            class="secondary-button"
+          >
+            <svg lucideArrowLeft [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+          Wagons
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           SUMMARY
+           ================================================= -->
+
+      <section class="summary-card">
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            WAGON ID
+          </span>
+
+          <strong class="summary-value">
+            #{{ wagon()?.wagonId }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-divider"></div>
+
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            WAGON TYPE
+          </span>
+
+          <strong class="summary-value">
+            {{ wagon()?.wagonType }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-divider"></div>
+
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            CAPACITY
+          </span>
+
+          <strong class="summary-value">
+
+            {{ wagon()?.capacity }}
+
+            <small>
+              t
+            </small>
+
+          </strong>
+
+        </div>
+
+
+        <div class="summary-divider"></div>
+
+
+        <div class="summary-item">
+
+          <span class="summary-label">
+            CURRENT STATION
+          </span>
+
+          <strong class="summary-value">
+
+            {{ wagon()?.station?.stationCode || '—' }}
+
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           WAGON PROFILE + STATION
+           ================================================= -->
+
+      <section class="details-grid">
+
+
+        <!-- WAGON INFORMATION -->
+
+        <article class="content-card">
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="panel-eyebrow">
+                WAGON PROFILE
+              </div>
+
+              <h2>
+                Wagon Information
+              </h2>
+
+              <p>
+                Registered identification and equipment details.
+              </p>
+
+            </div>
+
+            <span class="card-tag">
+              MASTER DATA
+            </span>
+
+          </div>
+
+
+          <div class="info-grid">
+
+            <div class="info-item">
+
+              <span class="info-label">
+                WAGON NUMBER
+              </span>
+
+              <strong>
+                {{ wagon()?.wagonNumber }}
+              </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+              <span class="info-label">
+                WAGON TYPE
+              </span>
+
+              <strong>
+                {{ wagon()?.wagonType }}
+              </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+              <span class="info-label">
+                CAPACITY
+              </span>
+
+              <strong>
+                {{ wagon()?.capacity }} t
+              </strong>
+
+            </div>
+
+
+            <div class="info-item">
+
+              <span class="info-label">
+                WAGON ID
+              </span>
+
+              <strong>
+                #{{ wagon()?.wagonId }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- CURRENT LOCATION -->
+
+        <article class="content-card">
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="panel-eyebrow">
+                CURRENT LOCATION
+              </div>
+
+              <h2>
+                Station Assignment
+              </h2>
+
+              <p>
+                Current operating location of the wagon.
+              </p>
+
+            </div>
+
+            <span class="card-tag">
+              LOCATION
+            </span>
+
+          </div>
+
+
+          @if (wagon()?.station) {
+
+            <div class="station-card">
+
+              <div class="station-code">
+                {{ wagon()?.station?.stationCode }}
+              </div>
+
+              <div class="station-name">
+                {{ wagon()?.station?.stationName }}
+              </div>
+
+              <div class="station-meta">
+
+                <span>
+                  {{ wagon()?.station?.zone }}
+                </span>
+
+                <span class="meta-separator">
+                  /
+                </span>
+
+                <span>
+                  {{ wagon()?.station?.division }}
+                </span>
+
+              </div>
+
+            </div>
+
+          } @else {
+
+            <div class="no-location">
+
+              <div class="no-location-icon">
+                <svg lucideMapPinOff [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+              </div>
+
+              <div>
+
+                <strong>
+                  Station unavailable
+                </strong>
+
+                <span>
+                  No current station is assigned to this wagon.
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+        </article>
+
+      </section>
+
+
+      <!-- =================================================
+           OPERATIONAL STATUS
+           ================================================= -->
+
+      <article class="content-card status-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              OPERATIONAL STATUS
+            </div>
+
+            <h2>
+              Current State
+            </h2>
+
+            <p>
+              {{ getStatusDescription(wagon()?.status) }}
+            </p>
+
+          </div>
+
+
+          <span
+            class="large-status-badge"
+            [class]="getStatusClass(wagon()?.status)"
+          >
+
+            <span class="status-dot"></span>
+
+            {{ wagon()?.status }}
+
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           WAGON LIFECYCLE
+           ================================================= -->
+
+      <article class="content-card workflow-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              OPERATIONAL FLOW
+            </div>
+
+            <h2>
+              Wagon Lifecycle
+            </h2>
+
+            <p>
+              Current position of the wagon in its operational lifecycle.
+            </p>
+
+          </div>
+
+          <span class="card-tag">
+            WAGON FLOW
+          </span>
+
+        </div>
+
+
+        <div class="workflow">
+
+
+          <!-- AVAILABLE -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isLifecycleCompleted(1)"
+            [class.current]="isLifecycleCurrent(1)"
+          >
+
+            <div class="step-marker">
+              01
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Available
+              </strong>
+
+              <span>
+                Ready for allocation
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- ALLOCATED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isLifecycleCompleted(2)"
+            [class.current]="isLifecycleCurrent(2)"
+          >
+
+            <div class="step-marker">
+              02
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Allocated
+              </strong>
+
+              <span>
+                Assigned to freight
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- LOADED -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isLifecycleCompleted(3)"
+            [class.current]="isLifecycleCurrent(3)"
+          >
+
+            <div class="step-marker">
+              03
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Loaded
+              </strong>
+
+              <span>
+                Carrying freight
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line"></div>
+
+
+          <!-- EMPTY -->
+
+          <div
+            class="workflow-step"
+            [class.completed]="isLifecycleCompleted(4)"
+            [class.current]="isLifecycleCurrent(4)"
+          >
+
+            <div class="step-marker">
+              04
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Empty
+              </strong>
+
+              <span>
+                Ready for release
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           INFORMATION NOTE
+           ================================================= -->
+
+      <section class="information-panel">
+
+        <div class="information-icon">
+          <svg lucideInfo [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <strong>
+            Operational Information
+          </strong>
+
+          <p>
+            Wagon status and station assignment are updated
+            automatically as operational activities are completed.
+          </p>
+
+        </div>
+
+      </section>
+
+    }
+
+  }
+
+</div>

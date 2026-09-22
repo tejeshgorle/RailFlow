@@ -1,0 +1,790 @@
+<div class="rake-movement-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <div class="page-eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Rake Movement
+      </h1>
+
+      <p>
+        Monitor formation, dispatch and arrival of operational rakes.
+      </p>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <div class="operation-status">
+
+        <span class="status-dot"></span>
+
+        Operations Control
+
+      </div>
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshRakes()"
+        [disabled]="loading()"
+      >
+
+        <span class="refresh-icon">
+          <svg lucideRefreshCw [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+        Refresh
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       KPI SUMMARY
+  ====================================================== -->
+
+  @if (!loading()) {
+
+    <div class="summary-grid">
+
+      <!-- TOTAL -->
+
+      <div class="summary-card">
+
+        <div class="summary-icon total-icon">
+          <svg lucideTrainFront [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="summary-content">
+
+          <span class="summary-label">
+            TOTAL RAKES
+          </span>
+
+          <strong>
+            {{ getTotalRakes() }}
+          </strong>
+
+          <span class="summary-description">
+            Operational records
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORMED -->
+
+      <div class="summary-card formed-card">
+
+        <div class="summary-icon formed-icon">
+          <svg lucideClipboardCheck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="summary-content">
+
+          <span class="summary-label">
+            FORMED
+          </span>
+
+          <strong>
+            {{ getFormedCount() }}
+          </strong>
+
+          <span class="summary-description">
+            Awaiting dispatch
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- DISPATCHED -->
+
+      <div class="summary-card dispatched-card">
+
+        <div class="summary-icon dispatched-icon">
+          <svg lucideTruck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="summary-content">
+
+          <span class="summary-label">
+            IN TRANSIT
+          </span>
+
+          <strong>
+            {{ getDispatchedCount() }}
+          </strong>
+
+          <span class="summary-description">
+            Dispatched rakes
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ARRIVED -->
+
+      <div class="summary-card arrived-card">
+
+        <div class="summary-icon arrived-icon">
+          <svg lucideCircleCheck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="summary-content">
+
+          <span class="summary-label">
+            ARRIVED
+          </span>
+
+          <strong>
+            {{ getArrivedCount() }}
+          </strong>
+
+          <span class="summary-description">
+            Destination reached
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       MESSAGES
+  ====================================================== -->
+
+  @if (successMessage()) {
+
+    <div class="success-message">
+
+      <span class="message-symbol">
+        <svg lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+      </span>
+
+      <span>
+        {{ successMessage() }}
+      </span>
+
+    </div>
+
+  }
+
+
+  @if (errorMessage()) {
+
+    <div class="error-message">
+
+      <span class="message-symbol">
+        <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+      </span>
+
+      <span>
+        {{ errorMessage() }}
+      </span>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+
+        <strong>
+          Loading rake operations
+        </strong>
+
+        <span>
+          Retrieving current movement information...
+        </span>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       EMPTY STATE
+  ====================================================== -->
+
+  @if (!loading() && rakes().length === 0) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+        <svg lucideTrainFront [attr.width]="24" [attr.height]="24" [attr.stroke-width]="1.7"></svg>
+      </div>
+
+      <h2>
+        No rake movements found
+      </h2>
+
+      <p>
+        No operational rakes are currently available.
+        Form a rake to begin the movement workflow.
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       RAKE OPERATIONS
+  ====================================================== -->
+
+  @if (!loading() && rakes().length > 0) {
+
+    <div class="section-header">
+
+      <div>
+
+        <span class="section-eyebrow">
+          OPERATIONAL MOVEMENTS
+        </span>
+
+        <h2>
+          Rake Movement Register
+        </h2>
+
+      </div>
+
+      <span class="record-count">
+        {{ rakes().length }} records
+      </span>
+
+    </div>
+
+
+    <div class="rake-list">
+
+      @for (
+        rake of rakes();
+        track rake.rakeId
+      ) {
+
+        <article class="rake-card">
+
+
+          <!-- =================================================
+               RAKE HEADER
+          ================================================== -->
+
+          <div class="rake-card-header">
+
+            <div class="rake-identity">
+
+              <div class="rake-mark">
+                R
+              </div>
+
+              <div>
+
+                <span class="rake-label">
+                  RAKE
+                </span>
+
+                <h3>
+                  {{ rake.rakeNumber }}
+                </h3>
+
+                <span class="rake-id">
+                  Operational ID #{{ rake.rakeId }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <span
+              class="status-badge"
+              [class.formed]="rake.status === 'FORMED'"
+              [class.dispatched]="rake.status === 'DISPATCHED'"
+              [class.arrived]="rake.status === 'ARRIVED'"
+            >
+
+              <span class="status-dot"></span>
+
+              {{ getStatusLabel(rake.status) }}
+
+            </span>
+
+          </div>
+
+
+          <!-- =================================================
+               ROUTE
+          ================================================== -->
+
+          <div class="route-section">
+
+            <div class="station">
+
+              <span class="station-code">
+                {{ rake.fromStation.stationCode }}
+              </span>
+
+              <span class="station-name">
+                {{ rake.fromStation.stationName }}
+              </span>
+
+            </div>
+
+
+            <div class="route-line">
+
+              <div class="route-track">
+
+                <span
+                  class="route-progress"
+                  [class.formed-progress]="rake.status === 'FORMED'"
+                  [class.dispatched-progress]="rake.status === 'DISPATCHED'"
+                  [class.arrived-progress]="rake.status === 'ARRIVED'"
+                ></span>
+
+                <span
+                  class="train-symbol"
+                  [class.formed]="rake.status === 'FORMED'"
+                  [class.dispatched]="rake.status === 'DISPATCHED'"
+                  [class.arrived]="rake.status === 'ARRIVED'"
+                >
+                  <svg lucideTrainFront [attr.width]="13" [attr.height]="13" [attr.stroke-width]="1.8"></svg>
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="station destination">
+
+              <span class="station-code">
+                {{ rake.toStation.stationCode }}
+              </span>
+
+              <span class="station-name">
+                {{ rake.toStation.stationName }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               MOVEMENT TIMELINE
+          ================================================== -->
+
+          <div class="movement-timeline">
+
+            <!-- FORMATION -->
+
+            <div
+              class="timeline-step"
+              [class.completed]="true"
+            >
+
+              <div class="timeline-marker">
+                <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+              </div>
+
+              <div class="timeline-content">
+
+                <span class="timeline-title">
+                  Formation
+                </span>
+
+                <span class="timeline-time">
+                  {{ rake.formationTime | date:'medium' }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="timeline-connector"
+              [class.active]="
+                rake.status === 'DISPATCHED' ||
+                rake.status === 'ARRIVED'
+              "
+            >
+            </div>
+
+
+            <!-- DISPATCH -->
+
+            <div
+              class="timeline-step"
+              [class.completed]="
+                rake.status === 'DISPATCHED' ||
+                rake.status === 'ARRIVED'
+              "
+            >
+
+              <div class="timeline-marker">
+
+                @if (
+                  rake.status === 'DISPATCHED' ||
+                  rake.status === 'ARRIVED'
+                ) {
+
+                  <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+
+                } @else {
+
+                  02
+
+                }
+
+              </div>
+
+              <div class="timeline-content">
+
+                <span class="timeline-title">
+                  Dispatch
+                </span>
+
+                @if (rake.dispatchTime) {
+
+                  <span class="timeline-time">
+                    {{ rake.dispatchTime | date:'medium' }}
+                  </span>
+
+                } @else {
+
+                  <span class="timeline-pending">
+                    Pending
+                  </span>
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="timeline-connector"
+              [class.active]="
+                rake.status === 'ARRIVED'
+              "
+            >
+            </div>
+
+
+            <!-- ARRIVAL -->
+
+            <div
+              class="timeline-step"
+              [class.completed]="
+                rake.status === 'ARRIVED'
+              "
+            >
+
+              <div class="timeline-marker">
+
+                @if (rake.status === 'ARRIVED') {
+
+                  <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+
+                } @else {
+
+                  03
+
+                }
+
+              </div>
+
+              <div class="timeline-content">
+
+                <span class="timeline-title">
+                  Arrival
+                </span>
+
+                @if (rake.status === 'ARRIVED') {
+
+                  <span class="timeline-time">
+                    Destination reached
+                  </span>
+
+                } @else {
+
+                  <span class="timeline-pending">
+                    Pending
+                  </span>
+
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               OPERATION DETAILS
+          ================================================== -->
+
+          <div class="operation-details">
+
+            <div class="detail-item">
+
+              <span class="detail-label">
+                CONSIGNMENT
+              </span>
+
+              <strong>
+                #{{ rake.consignment.consignmentId }}
+              </strong>
+
+              <span>
+                {{ rake.consignment.commodity }}
+              </span>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span class="detail-label">
+                WAGONS
+              </span>
+
+              <strong>
+                {{ rake.wagonCount }}
+              </strong>
+
+              <span>
+                Attached wagons
+              </span>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span class="detail-label">
+                ORIGIN
+              </span>
+
+              <strong>
+                {{ rake.fromStation.stationCode }}
+              </strong>
+
+              <span>
+                {{ rake.fromStation.stationName }}
+              </span>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span class="detail-label">
+                DESTINATION
+              </span>
+
+              <strong>
+                {{ rake.toStation.stationCode }}
+              </strong>
+
+              <span>
+                {{ rake.toStation.stationName }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               ACTION AREA
+          ================================================== -->
+
+          <div class="rake-card-footer">
+
+            <!-- VIEW DETAILS -->
+            <a
+              class="secondary-action view-action"
+              [routerLink]="['/rakes', rake.rakeId]"
+            >
+              <span class="view-icon">
+                <svg lucideEye [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+              </span>
+
+              View Details
+            </a>
+
+
+            <!-- FORMED -->
+            @if (rake.status === 'FORMED') {
+
+              <div class="action-context">
+
+                <span class="action-indicator formed-indicator"></span>
+
+                <div>
+
+                  <strong>
+                    Ready for dispatch
+                  </strong>
+
+                  <span>
+                    Rake formation is complete.
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="primary-action dispatch-action"
+                [disabled]="actionLoading() === rake.rakeId"
+                (click)="dispatchRake(rake)"
+              >
+
+                @if (actionLoading() === rake.rakeId) {
+
+                  Processing...
+
+                } @else {
+
+                  Dispatch Rake
+                  <span class="action-arrow"><svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg></span>
+
+                }
+
+              </button>
+
+            }
+
+
+            <!-- DISPATCHED -->
+            @else if (rake.status === 'DISPATCHED') {
+
+              <div class="action-context">
+
+                <span class="action-indicator dispatched-indicator"></span>
+
+                <div>
+
+                  <strong>
+                    Rake in transit
+                  </strong>
+
+                  <span>
+                    Movement is active toward
+                    {{ rake.toStation.stationCode }}.
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="primary-action arrive-action"
+                [disabled]="actionLoading() === rake.rakeId"
+                (click)="arriveRake(rake)"
+              >
+
+                @if (actionLoading() === rake.rakeId) {
+
+                  Processing...
+
+                } @else {
+
+                  Mark Arrival
+                  <span class="action-arrow"><svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg></span>
+
+                }
+
+              </button>
+
+            }
+
+
+            <!-- ARRIVED -->
+            @else {
+
+              <div class="action-context completed-context">
+
+                <span class="action-indicator arrived-indicator">
+                  <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                </span>
+
+                <div>
+
+                  <strong>
+                    Movement completed
+                  </strong>
+
+                  <span>
+                    Rake has reached
+                    {{ rake.toStation.stationCode }}.
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <span class="completed-label">
+                Completed
+              </span>
+
+            }
+
+          </div>
+
+        </article>
+
+      }
+
+    </div>
+
+  }
+
+</div>

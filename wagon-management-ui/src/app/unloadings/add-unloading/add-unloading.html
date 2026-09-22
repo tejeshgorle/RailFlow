@@ -1,0 +1,762 @@
+<div class="page-container">
+
+  <!-- =================================================
+       PAGE HEADER
+       ================================================= -->
+
+  <div class="page-header">
+
+    <div class="header-copy">
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Unloading Operations
+      </h1>
+
+      <p>
+        Record cargo unloading from arrived wagons at
+        their destination station.
+      </p>
+
+    </div>
+
+    <div class="header-indicator">
+
+      <span class="status-dot"></span>
+
+      Operations Control
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       OPERATION SUMMARY
+       ================================================= -->
+
+  @if (!loading()) {
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <div class="summary-icon wagon-icon">
+          <svg lucideTrainFront [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <span class="summary-label">
+            LOADED WAGONS
+          </span>
+
+          <strong>
+            {{ wagons().length }}
+          </strong>
+
+          <small>
+            Available for unloading
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="summary-icon freight-icon">
+          <svg lucidePackage [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <span class="summary-label">
+            CONSIGNMENTS
+          </span>
+
+          <strong>
+            {{ consignments().length }}
+          </strong>
+
+          <small>
+            Freight records
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary-card destination-card">
+
+        <div class="summary-icon destination-icon">
+          <svg lucideArrowRight [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <span class="summary-label">
+            OPERATION
+          </span>
+
+          <strong>
+            UNLOAD
+          </strong>
+
+          <small>
+            Destination activity
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =================================================
+       LOADING STATE
+       ================================================= -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+
+        <strong>
+          Loading operational data
+        </strong>
+
+        <p>
+          Retrieving loaded wagons and consignments...
+        </p>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =================================================
+       MAIN CONTENT
+       ================================================= -->
+
+  @if (!loading()) {
+
+    @if (wagons().length === 0) {
+
+      <!-- -----------------------------------------------
+           NO WAGONS
+           ----------------------------------------------- -->
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          <svg lucideTrainFront [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <div class="section-label">
+            UNLOADING QUEUE
+          </div>
+
+          <h2>
+            No loaded wagons available
+          </h2>
+
+          <p>
+            There are currently no wagons in
+            <strong>LOADED</strong> status available
+            for unloading.
+          </p>
+
+          <span class="empty-note">
+            A wagon must complete loading and arrive
+            at the destination before unloading can
+            be recorded.
+          </span>
+
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="operation-layout">
+
+        <!-- =============================================
+             UNLOADING FORM
+             ============================================= -->
+
+        <section class="form-card">
+
+          <div class="card-header">
+
+            <div>
+
+              <div class="section-label">
+                UNLOADING TRANSACTION
+              </div>
+
+              <h2>
+                Record Wagon Unloading
+              </h2>
+
+              <p>
+                Select the operational wagon and
+                corresponding consignment.
+              </p>
+
+            </div>
+
+            <div class="transaction-badge">
+              NEW TRANSACTION
+            </div>
+
+          </div>
+
+
+          <div class="form-body">
+
+            <!-- -----------------------------------------
+                 WAGON
+                 ----------------------------------------- -->
+
+            <div class="form-group">
+
+              <label for="wagon">
+                Wagon
+                <span>*</span>
+              </label>
+
+              <select
+                id="wagon"
+                [ngModel]="selectedWagonId"
+                (ngModelChange)="selectedWagonId = $event ? +$event : null; onWagonChange()"
+              >
+
+                <option [ngValue]="null">
+                  Select loaded wagon
+                </option>
+
+                @for (
+                  wagon of wagons();
+                  track wagon.wagonId
+                ) {
+
+                  <option
+                    [value]="wagon.wagonId"
+                  >
+
+                    #{{ wagon.wagonId }}
+                    ·
+                    {{ wagon.wagonNumber }}
+                    ·
+                    {{ wagon.wagonType }}
+                    ·
+                    {{ wagon.capacity }} t
+
+                  </option>
+
+                }
+
+              </select>
+
+              <small class="field-help">
+                Only wagons currently in LOADED status
+                are shown.
+              </small>
+
+            </div>
+
+
+            <!-- -----------------------------------------
+                 CONSIGNMENT
+                 ----------------------------------------- -->
+
+            <div class="form-group">
+
+              <label for="consignment">
+                Consignment
+                <span>*</span>
+              </label>
+
+              <select
+                id="consignment"
+                [ngModel]="selectedConsignmentId"
+                (ngModelChange)="selectedConsignmentId = $event ? +$event : null; onConsignmentChange()"
+              >
+
+                <option [ngValue]="null">
+                  Select consignment
+                </option>
+
+                @for (
+                  consignment of consignments();
+                  track consignment.consignmentId
+                ) {
+
+                  <option
+                    [value]="consignment.consignmentId"
+                  >
+
+                    #{{ consignment.consignmentId }}
+                    ·
+                    {{ consignment.commodity }}
+                    ·
+                    {{ consignment.quantity }} t
+                    ·
+                    {{ consignment.fromStation.stationCode }}
+                    →
+                    {{ consignment.toStation.stationCode }}
+
+                  </option>
+
+                }
+
+              </select>
+
+              <small class="field-help">
+                Select the consignment associated with
+                the wagon movement.
+              </small>
+
+            </div>
+
+
+            <!-- -----------------------------------------
+                 OPERATIONAL CONTEXT
+                 ----------------------------------------- -->
+
+            @if (
+              getSelectedWagon() ||
+              getSelectedConsignment()
+            ) {
+
+              <div class="context-panel">
+
+                <div class="context-header">
+
+                  <span class="context-title">
+                    OPERATIONAL CONTEXT
+                  </span>
+
+                  <span class="context-status">
+                    READY
+                  </span>
+
+                </div>
+
+
+                <div class="context-grid">
+
+                  @if (getSelectedWagon()) {
+
+                    <div class="context-item">
+
+                      <span>
+                        WAGON
+                      </span>
+
+                      <strong>
+                        {{ getSelectedWagon()?.wagonNumber }}
+                      </strong>
+
+                      <small>
+                        {{ getSelectedWagon()?.wagonType }}
+                        ·
+                        {{ getSelectedWagon()?.capacity }} t
+                      </small>
+
+                    </div>
+
+                  }
+
+
+                  @if (getSelectedConsignment()) {
+
+                    <div class="context-item">
+
+                      <span>
+                        CONSIGNMENT
+                      </span>
+
+                      <strong>
+                        #{{ getSelectedConsignment()?.consignmentId }}
+                      </strong>
+
+                      <small>
+                        {{ getSelectedConsignment()?.commodity }}
+                        ·
+                        {{ getSelectedConsignment()?.quantity }} t
+                      </small>
+
+                    </div>
+
+                  }
+
+                </div>
+
+
+                @if (getSelectedConsignment()) {
+
+                  <div class="route-context">
+
+                    <div>
+
+                      <span>
+                        ORIGIN
+                      </span>
+
+                      <strong>
+                        {{ getSelectedConsignment()?.fromStation?.stationCode }}
+                      </strong>
+
+                    </div>
+
+                    <div class="route-arrow">
+                      <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+                    </div>
+
+                    <div class="destination">
+
+                      <span>
+                        DESTINATION
+                      </span>
+
+                      <strong>
+                        {{ getSelectedConsignment()?.toStation?.stationCode }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+
+            <!-- -----------------------------------------
+                 QUANTITY
+                 ----------------------------------------- -->
+
+            <div class="form-group quantity-group">
+
+              <label for="quantity">
+                Unloaded Quantity
+                <span>*</span>
+              </label>
+
+              <div class="quantity-input">
+
+                <input
+                  id="quantity"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  [(ngModel)]="unloadedQuantity"
+                  placeholder="Enter quantity"
+                />
+
+                <span>
+                  tons
+                </span>
+
+              </div>
+
+              <small class="field-help">
+                Enter the quantity actually unloaded from
+                the selected wagon.
+              </small>
+
+            </div>
+
+
+            <!-- -----------------------------------------
+                 INFO
+                 ----------------------------------------- -->
+
+            <div class="operation-note">
+
+              <div class="note-icon">
+                <svg lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+              </div>
+
+              <div>
+
+                <strong>
+                  Unloading validation
+                </strong>
+
+                <p>
+                  The backend will verify the wagon,
+                  consignment, unloading quantity and
+                  operational state before recording
+                  the transaction.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <!-- -----------------------------------------
+                 MESSAGES
+                 ----------------------------------------- -->
+
+            @if (message) {
+
+              <div class="message success-message">
+
+                <div class="message-icon">
+                  <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                </div>
+
+                <div>
+
+                  <strong>
+                    Unloading recorded
+                  </strong>
+
+                  <span>
+                    {{ message }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            }
+
+
+            @if (errorMessage) {
+
+              <div class="message error-message">
+
+                <div class="message-icon">
+                  <svg lucideCircleAlert [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                </div>
+
+                <div>
+
+                  <strong>
+                    Unable to record unloading
+                  </strong>
+
+                  <span>
+                    {{ errorMessage }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            }
+
+
+            <!-- -----------------------------------------
+                 SUBMIT
+                 ----------------------------------------- -->
+
+            <div class="form-actions">
+
+              <button
+                type="button"
+                class="submit-button"
+                [disabled]="submitting()"
+                (click)="unloadWagon()"
+              >
+
+                @if (submitting()) {
+
+                  <span class="button-spinner"></span>
+
+                  Recording...
+
+                } @else {
+
+                  Record Unloading
+                  <span class="button-arrow">→</span>
+
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =============================================
+             OPERATION GUIDE
+             ============================================= -->
+
+        <aside class="guide-card">
+
+          <div class="card-header guide-header">
+
+            <div class="section-label">
+              OPERATION FLOW
+            </div>
+
+            <h2>
+              Unloading Process
+            </h2>
+
+          </div>
+
+
+          <div class="process-list">
+
+            <div class="process-step">
+
+              <div class="step-number">
+                01
+              </div>
+
+              <div>
+
+                <strong>
+                  Select Wagon
+                </strong>
+
+                <p>
+                  Choose a wagon currently carrying
+                  loaded freight.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-line"></div>
+
+
+            <div class="process-step">
+
+              <div class="step-number">
+                02
+              </div>
+
+              <div>
+
+                <strong>
+                  Select Consignment
+                </strong>
+
+                <p>
+                  Identify the freight consignment
+                  being unloaded.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-line"></div>
+
+
+            <div class="process-step">
+
+              <div class="step-number">
+                03
+              </div>
+
+              <div>
+
+                <strong>
+                  Enter Quantity
+                </strong>
+
+                <p>
+                  Record the quantity unloaded from
+                  the wagon.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-line"></div>
+
+
+            <div class="process-step">
+
+              <div class="step-number">
+                04
+              </div>
+
+              <div>
+
+                <strong>
+                  Record Transaction
+                </strong>
+
+                <p>
+                  The system validates and records
+                  the unloading operation.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="guide-footer">
+
+            <span class="status-dot"></span>
+
+            Operational validation enabled
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    }
+
+  }
+
+
+  <!-- =================================================
+       GENERAL ERROR
+       ================================================= -->
+
+  @if (
+    !loading() &&
+    errorMessage &&
+    wagons().length === 0
+  ) {
+
+    <div class="global-error">
+
+      {{ errorMessage }}
+
+    </div>
+
+  }
+
+</div>

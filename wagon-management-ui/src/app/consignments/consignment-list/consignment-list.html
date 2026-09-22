@@ -1,0 +1,460 @@
+<div class="consignment-page">
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <section class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Consignments
+      </h1>
+
+      <p>
+        View and track freight consignments registered in the
+        operations system.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      @if (lastRefreshTime()) {
+
+        <span class="last-refresh">
+          Updated
+          {{ lastRefreshTime() | date:'HH:mm:ss' }}
+        </span>
+
+      }
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshConsignments()"
+      >
+        <span class="refresh-icon" aria-hidden="true">
+          <svg
+            lucideRefreshCw
+            [attr.width]="17"
+            [attr.height]="17"
+            [attr.stroke-width]="1.9">
+          </svg>
+        </span>
+
+        Refresh
+      </button>
+
+      <a
+        routerLink="/consignments/add"
+        class="primary-button"
+      >
+        <svg
+          lucidePackagePlus
+          [attr.width]="17"
+          [attr.height]="17"
+          [attr.stroke-width]="1.9"
+          aria-hidden="true">
+        </svg>
+        <span>Create Consignment</span>
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div>
+
+        <strong>
+          Loading consignments
+        </strong>
+
+        <span>
+          Retrieving freight records...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-banner">
+
+        <div class="error-icon" aria-hidden="true">
+          <svg
+            lucideCircleAlert
+            [attr.width]="16"
+            [attr.height]="16"
+            [attr.stroke-width]="1.9">
+          </svg>
+        </div>
+
+        <div>
+
+          <strong>
+            Unable to load consignments
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- ===================================================
+         SUMMARY
+         =================================================== -->
+
+    <section class="summary-panel">
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          TOTAL CONSIGNMENTS
+        </span>
+
+        <strong class="summary-value">
+          {{ totalConsignments() }}
+        </strong>
+
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          TOTAL FREIGHT
+        </span>
+
+        <strong class="summary-value">
+          {{ totalQuantity() | number:'1.0-2' }}
+          <small>t</small>
+        </strong>
+
+      </div>
+
+      <div class="summary-info">
+
+        <span class="info-icon" aria-hidden="true">
+          <svg
+            lucideInfo
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.9">
+          </svg>
+        </span>
+
+        <span>
+          Consignment status follows the associated demand
+          workflow.
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         CONSIGNMENT REGISTER
+         =================================================== -->
+
+    <article class="register-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <div class="panel-eyebrow">
+            FREIGHT REGISTER
+          </div>
+
+          <h2>
+            Consignment Records
+          </h2>
+
+        </div>
+
+        <span class="record-count">
+          {{ totalConsignments() }} records
+        </span>
+
+      </div>
+
+
+      @if (consignments().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon" aria-hidden="true">
+            <svg
+              lucideClipboardList
+              [attr.width]="28"
+              [attr.height]="28"
+              [attr.stroke-width]="1.7">
+            </svg>
+          </div>
+
+          <strong>
+            No consignments recorded
+          </strong>
+
+          <span>
+            Create a consignment from an approved demand
+            to begin freight processing.
+          </span>
+
+          <a
+            routerLink="/consignments/add"
+            class="secondary-button"
+          >
+            Create Consignment
+          </a>
+
+        </div>
+
+      } @else {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>CONSIGNMENT</th>
+                <th>DEMAND</th>
+                <th>CONSIGNOR</th>
+                <th>CONSIGNEE</th>
+                <th>COMMODITY</th>
+                <th>QUANTITY</th>
+                <th>ROUTE</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                consignment of consignments();
+                track consignment.consignmentId
+              ) {
+
+                <tr>
+
+                  <!-- CONSIGNMENT -->
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/consignments',
+                        consignment.consignmentId
+                      ]"
+                      class="consignment-id"
+                    >
+                      #{{ consignment.consignmentId }}
+                    </a>
+
+                  </td>
+
+
+                  <!-- DEMAND -->
+
+                  <td>
+
+                    @if (consignment.demand?.demandId) {
+
+                      <a
+                        [routerLink]="[
+                          '/demands',
+                          consignment.demand!.demandId
+                        ]"
+                        class="demand-id"
+                      >
+                        #{{ consignment.demand!.demandId }}
+                      </a>
+
+                    } @else {
+
+                      <span class="muted">
+                        —
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- CONSIGNOR -->
+
+                  <td>
+
+                    <strong class="customer-name">
+                      {{ consignment.consignor.customerName || '—' }}
+                    </strong>
+
+                  </td>
+
+
+                  <!-- CONSIGNEE -->
+
+                  <td>
+
+                    <span class="customer-name">
+                      {{ consignment.consignee.customerName || '—' }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- COMMODITY -->
+
+                  <td>
+
+                    <span class="commodity">
+                      {{ consignment.commodity }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- QUANTITY -->
+
+                  <td>
+
+                    <strong class="quantity">
+                      {{ consignment.quantity | number:'1.0-2' }}
+                      t
+                    </strong>
+
+                  </td>
+
+
+                  <!-- ROUTE -->
+
+                  <td>
+
+                    <div class="route-cell">
+
+                      <strong>
+                        {{ consignment.fromStation.stationCode }}
+                      </strong>
+
+                      <span class="route-arrow" aria-hidden="true">
+                        <svg
+                          lucideArrowRight
+                          [attr.width]="15"
+                          [attr.height]="15"
+                          [attr.stroke-width]="1.8">
+                        </svg>
+                      </span>
+
+                      <strong>
+                        {{ consignment.toStation.stationCode }}
+                      </strong>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- STATUS -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [class]="
+                        getStatusClass(
+                          getConsignmentStatus(consignment)
+                        )
+                      "
+                    >
+
+                      <span class="status-dot"></span>
+
+                      {{
+                        getStatusLabel(
+                          getConsignmentStatus(consignment)
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- ACTION -->
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/consignments',
+                        consignment.consignmentId
+                      ]"
+                      class="view-link"
+                    >
+                      <span>View</span>
+                      <svg
+                        lucideEye
+                        [attr.width]="15"
+                        [attr.height]="15"
+                        [attr.stroke-width]="1.8"
+                        aria-hidden="true">
+                      </svg>
+                    </a>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </article>
+
+  }
+
+</div>

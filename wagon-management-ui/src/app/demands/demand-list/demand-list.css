@@ -1,0 +1,1597 @@
+/* =========================================================
+   DEMAND MANAGEMENT
+========================================================= */
+
+.demand-page {
+
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto;
+
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 24px;
+
+}
+
+
+.page-eyebrow {
+
+  margin-bottom: 6px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.1px;
+
+  color: var(--rf-blue);
+
+}
+
+
+.page-header h1 {
+
+  margin: 0;
+
+  font-size: 32px;
+
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  letter-spacing: -0.6px;
+
+  color: var(--rf-navy);
+
+}
+
+
+.page-header p {
+
+  margin: 7px 0 0;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  color: var(--rf-text-secondary);
+
+}
+
+
+/* =========================================================
+   PRIMARY ACTION
+========================================================= */
+
+.primary-action {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 40px;
+
+  padding: 0 16px;
+
+  border-radius: 8px;
+
+  background: var(--rf-navy);
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  box-shadow: var(--rf-shadow);
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+
+}
+
+
+.primary-action:hover {
+
+  background: var(--rf-navy-light);
+
+  transform: translateY(-1px);
+
+  box-shadow: var(--rf-shadow-hover);
+
+}
+
+
+.action-icon {
+
+  font-size: 18px;
+
+  line-height: 1;
+
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.message {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 11px 14px;
+
+  margin-bottom: 18px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+}
+
+
+.success-message {
+
+  background: var(--rf-green-soft);
+
+  color: var(--rf-green);
+
+  border: 1px solid #c9eadb;
+
+}
+
+
+.error-message {
+
+  background: var(--rf-red-soft);
+
+  color: var(--rf-red);
+
+  border: 1px solid #f3cccc;
+
+}
+
+
+.message-icon {
+
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   KPI GRID
+========================================================= */
+
+.kpi-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 22px;
+
+}
+
+
+.kpi-card {
+
+  position: relative;
+
+  min-height: 126px;
+
+  padding: 17px 18px;
+
+  background: var(--rf-surface);
+
+  border:
+    1px solid var(--rf-border);
+
+  border-radius: 11px;
+
+  box-shadow: var(--rf-shadow);
+
+  overflow: hidden;
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+
+}
+
+
+.kpi-card:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: var(--rf-shadow-hover);
+
+}
+
+
+.kpi-top {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+}
+
+
+.kpi-label {
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.75px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+.kpi-icon {
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: var(--rf-blue-soft);
+
+  color: var(--rf-blue);
+
+  font-size: 13px;
+
+}
+
+
+.registered-icon {
+
+  background: #f0f2f5;
+
+  color: var(--rf-text-secondary);
+
+}
+
+
+.approved-icon,
+.delivered-icon {
+
+  background: var(--rf-green-soft);
+
+  color: var(--rf-green);
+
+}
+
+
+.loaded-icon {
+
+  background: var(--rf-amber-soft);
+
+  color: var(--rf-orange);
+
+}
+
+
+.kpi-value {
+
+  margin-top: 12px;
+
+  font-size: 32px;
+
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: -0.7px;
+
+  color: var(--rf-navy);
+
+}
+
+
+.kpi-description {
+
+  margin-top: 8px;
+
+  font-size: 12px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   DATA PANEL
+========================================================= */
+
+.demand-panel {
+
+  background: var(--rf-surface);
+
+  border:
+    1px solid var(--rf-border);
+
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow);
+
+  overflow: hidden;
+
+}
+
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.panel-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 18px;
+
+  padding: 18px 20px;
+
+  border-bottom:
+    1px solid var(--rf-border);
+
+}
+
+
+.panel-header h2 {
+
+  margin: 0;
+
+  font-size: 18px;
+
+  font-weight: 650;
+
+  color: var(--rf-navy);
+
+}
+
+
+.record-count {
+
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+}
+
+
+.search-box {
+
+  position: relative;
+
+  width: 270px;
+
+}
+
+
+.search-box input {
+
+  width: 100%;
+
+  height: 36px;
+
+  padding:
+    0 12px 0 34px;
+
+  border:
+    1px solid var(--rf-border);
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: var(--rf-text);
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+
+}
+
+
+.search-box input::placeholder {
+
+  color: #9ba3ad;
+
+}
+
+
+.search-box input:focus {
+
+  border-color: var(--rf-blue);
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.09);
+
+}
+
+
+.search-icon {
+
+  position: absolute;
+
+  left: 11px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: var(--rf-text-muted);
+
+  font-size: 17px;
+
+  pointer-events: none;
+
+}
+
+
+.status-filter {
+
+  height: 36px;
+
+  min-width: 145px;
+
+  padding: 0 10px;
+
+  border:
+    1px solid var(--rf-border);
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: var(--rf-text-secondary);
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  outline: none;
+
+  cursor: pointer;
+
+}
+
+
+.status-filter:focus {
+
+  border-color: var(--rf-blue);
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+
+  width: 100%;
+
+  overflow-x: auto;
+
+}
+
+
+table {
+
+  width: 100%;
+
+  min-width: 1080px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+}
+
+/* Deliberate column proportions for operational scanning */
+thead th:nth-child(1),
+tbody td:nth-child(1) {
+  width: 10%;
+}
+
+thead th:nth-child(2),
+tbody td:nth-child(2) {
+  width: 18%;
+}
+
+thead th:nth-child(3),
+tbody td:nth-child(3) {
+  width: 11%;
+}
+
+thead th:nth-child(4),
+tbody td:nth-child(4) {
+  width: 10%;
+}
+
+thead th:nth-child(5),
+tbody td:nth-child(5) {
+  width: 9%;
+}
+
+thead th:nth-child(6),
+tbody td:nth-child(6) {
+  width: 12%;
+}
+
+thead th:nth-child(7),
+tbody td:nth-child(7) {
+  width: 17%;
+}
+
+thead th:nth-child(8),
+tbody td:nth-child(8) {
+  width: 13%;
+}
+
+
+thead th {
+
+  height: 44px;
+
+  padding:
+    0 14px;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  background: #f8fafc;
+
+  border-bottom:
+    1px solid var(--rf-border);
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.65px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+tbody td {
+
+  padding:
+    14px 14px;
+
+  vertical-align: middle;
+
+  line-height: 1.35;
+
+  border-bottom:
+    1px solid #edf0f3;
+
+  font-size: 14px;
+
+  color: var(--rf-text);
+
+}
+
+
+tbody tr:last-child td {
+
+  border-bottom: none;
+
+}
+
+
+tbody tr {
+
+  transition:
+    background 130ms ease;
+
+}
+
+
+tbody tr:hover {
+
+  background: #fafbfd;
+
+}
+
+
+/* =========================================================
+   DEMAND
+========================================================= */
+
+.demand-id {
+
+  color: var(--rf-blue);
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+}
+
+
+.demand-id:hover {
+
+  text-decoration: underline;
+
+}
+
+
+.demand-date {
+
+  margin-top: 4px;
+
+  font-size: 11px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+.customer-name {
+
+  font-weight: 600;
+
+  color: var(--rf-text);
+
+}
+
+
+.customer-type {
+
+  margin-top: 3px;
+
+  font-size: 11px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   COMMODITY
+========================================================= */
+
+.commodity {
+
+  display: inline-flex;
+
+  padding:
+    4px 8px;
+
+  border-radius: 5px;
+
+  background: #f1f4f7;
+
+  color: var(--rf-navy);
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+}
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quantity {
+
+  font-weight: 650;
+
+}
+
+
+.unit {
+
+  margin-left: 3px;
+
+  font-size: 11px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   ROUTE
+========================================================= */
+
+.route {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+}
+
+
+.route-arrow {
+
+  color: var(--rf-text-muted);
+
+  font-size: 15px;
+
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding:
+    6px 9px;
+
+  border-radius: 5px;
+
+  white-space: nowrap;
+
+  font-size: 10.5px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+
+}
+
+
+.status-dot-small {
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+}
+
+
+.status-registered {
+
+  background: #f1f3f5;
+
+  color: #69727e;
+
+}
+
+
+.status-approved {
+
+  background: var(--rf-green-soft);
+
+  color: var(--rf-green);
+
+}
+
+
+.status-allocated {
+
+  background: var(--rf-blue-soft);
+
+  color: var(--rf-blue);
+
+}
+
+
+.status-loaded {
+
+  background: var(--rf-amber-soft);
+
+  color: var(--rf-orange);
+
+}
+
+
+.status-delivered {
+
+  background: #e9f5ef;
+
+  color: #14704e;
+
+}
+
+
+.status-default {
+
+  background: #f1f3f5;
+
+  color: var(--rf-text-secondary);
+
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+}
+
+
+.approve-button,
+.view-button {
+
+  height: 32px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 0 10px;
+
+  border-radius: 6px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  text-decoration: none;
+
+}
+
+
+.approve-button {
+
+  border: 1px solid #bfe3d2;
+
+  background: var(--rf-green-soft);
+
+  color: var(--rf-green);
+
+}
+
+
+.approve-button:hover {
+
+  background: #d9f1e6;
+
+}
+
+
+.view-button {
+
+  border:
+    1px solid var(--rf-border);
+
+  background: #ffffff;
+
+  color: var(--rf-navy);
+
+}
+
+
+.view-button:hover {
+
+  border-color: #bdc7d3;
+
+  background: #f7f9fb;
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY & INTERACTION POLISH
+========================================================= */
+
+.search-box input:hover,
+.status-filter:hover {
+
+  border-color: #c6ced8;
+
+}
+
+
+.primary-action:focus-visible,
+.approve-button:focus-visible,
+.view-button:focus-visible,
+.status-filter:focus-visible,
+.search-box input:focus-visible {
+
+  outline: 2px solid rgba(37, 99, 235, 0.35);
+
+  outline-offset: 2px;
+
+}
+
+
+.approve-button,
+.view-button {
+
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+
+}
+
+
+.approve-button:hover,
+.view-button:hover {
+
+  transform: translateY(-1px);
+
+}
+
+
+.kpi-card::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 2px;
+
+  background: transparent;
+
+  transition: background 160ms ease;
+
+}
+
+
+.kpi-card:hover::after {
+
+  background: var(--rf-blue);
+
+}
+
+
+/* =========================================================
+   TABLE STATES
+========================================================= */
+
+.table-state {
+
+  min-height: 280px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: var(--rf-text-secondary);
+
+}
+
+
+.table-state p {
+
+  margin: 12px 0 0;
+
+  font-size: 13px;
+
+}
+
+
+.loading-indicator {
+
+  width: 28px;
+  height: 28px;
+
+  border:
+    3px solid #e4e8ed;
+
+  border-top-color: var(--rf-blue);
+
+  border-radius: 50%;
+
+  animation:
+    demandSpin 750ms linear infinite;
+
+}
+
+
+@keyframes demandSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+.empty-icon {
+
+  font-size: 30px;
+
+  color: #aeb6c0;
+
+}
+
+
+.empty-state h3 {
+
+  margin: 12px 0 0;
+
+  font-size: 15px;
+
+  color: var(--rf-text);
+
+}
+
+
+.empty-state p {
+
+  margin-top: 6px;
+
+  color: var(--rf-text-muted);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .kpi-grid {
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+  }
+
+
+  .panel-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+  }
+
+
+  .filters {
+
+    width: 100%;
+
+  }
+
+
+  .search-box {
+
+    flex: 1;
+
+    width: auto;
+
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .page-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+  }
+
+
+  .page-header h1 {
+
+    font-size: 25px;
+
+  }
+
+
+  .primary-action {
+
+    width: 100%;
+
+    justify-content: center;
+
+  }
+
+
+  .kpi-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+  }
+
+
+  .filters {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+  }
+
+
+  .search-box,
+  .status-filter {
+
+    width: 100%;
+
+  }
+
+}
+
+
+/* =========================================================
+   RAILFLOW DEMAND MANAGEMENT — FINAL POLISH
+   ========================================================= */
+
+/* Lucide consistency */
+.demand-page svg {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.action-icon,
+.message-icon,
+.kpi-icon,
+.search-icon,
+.empty-icon,
+.route-arrow,
+.th-label,
+.approve-button,
+.view-button {
+  line-height: 1;
+}
+
+/* Header action */
+.primary-action {
+  gap: 9px;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Messages */
+.message-icon {
+  flex: 0 0 20px;
+}
+
+/* KPI cards — slightly stronger operational hierarchy */
+.kpi-card {
+  border-top: 2px solid transparent;
+}
+
+.kpi-card:nth-child(1) {
+  border-top-color: #cbd5e1;
+}
+
+.kpi-card:nth-child(2) {
+  border-top-color: #94a3b8;
+}
+
+.kpi-card:nth-child(3) {
+  border-top-color: #2f73d9;
+}
+
+.kpi-card:nth-child(4) {
+  border-top-color: #d88900;
+}
+
+.kpi-card:nth-child(5) {
+  border-top-color: #16865b;
+}
+
+.kpi-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Main panel title */
+.panel-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title-row h2 {
+  margin: 0;
+}
+
+.panel-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16865b;
+  box-shadow: 0 0 0 3px rgba(22, 134, 91, 0.10);
+}
+
+.panel-live-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.85px;
+  color: #16865b;
+}
+
+/* Search */
+.search-icon {
+  width: 17px;
+  height: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Filter summary */
+.filter-summary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 0 20px 12px;
+  font-size: 11px;
+  color: var(--rf-text-muted);
+}
+
+.filter-summary strong {
+  color: var(--rf-text-secondary);
+  font-weight: 700;
+}
+
+.summary-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rf-blue);
+}
+
+/* Table header */
+.th-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+thead th svg {
+  color: #8a98a8;
+}
+
+tbody td {
+  height: 58px;
+}
+
+tbody tr {
+  position: relative;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Demand ID gets a subtle operational affordance */
+.demand-id {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 6px;
+  margin-left: -6px;
+  border-radius: 5px;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.demand-id:hover {
+  background: var(--rf-blue-soft);
+  text-decoration: none;
+}
+
+/* Route */
+.route-arrow {
+  width: 18px;
+  height: 18px;
+  color: #8b99a8;
+}
+
+/* Actions */
+.actions {
+  gap: 8px;
+}
+
+.approve-button,
+.view-button {
+  gap: 6px;
+}
+
+.approve-button svg,
+.view-button svg {
+  transition: transform 140ms ease;
+}
+
+.approve-button:hover svg {
+  transform: scale(1.05);
+}
+
+.view-button:hover svg {
+  transform: translateX(1px);
+}
+
+/* Empty state */
+.empty-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f3f6fa;
+  color: #8c99a8;
+}
+
+/* Better responsive filter summary */
+@media (max-width: 700px) {
+  .filter-summary {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .panel-live-label {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .kpi-card,
+  .primary-action,
+  .approve-button,
+  .view-button,
+  .demand-id {
+    transition: none;
+  }
+
+  .loading-indicator {
+    animation-duration: 1.5s;
+  }
+}
+
+@media (max-width: 900px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi-card {
+    min-height: 116px;
+  }
+}
+
+
+/* =========================================================
+   COMPACT ICON SCALE
+   Keep icons visually secondary to text and KPI values.
+   ========================================================= */
+
+.demand-page .action-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.demand-page .action-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.demand-page .message-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.demand-page .message-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.demand-page .kpi-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+.demand-page .kpi-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.demand-page .search-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.demand-page .search-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.demand-page .empty-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+}
+
+.demand-page .empty-icon svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.demand-page .route-arrow {
+  width: 16px;
+  height: 16px;
+}
+
+.demand-page .route-arrow svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.demand-page thead th svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.demand-page .th-label {
+  gap: 5px;
+}
+
+.demand-page .approve-button svg,
+.demand-page .view-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.demand-page .approve-button,
+.demand-page .view-button {
+  gap: 5px;
+}
+
+/* Slightly reduce visual weight of table-header icons */
+.demand-page thead th {
+  font-size: 10.5px;
+}
+
+@media (max-width: 700px) {
+  .demand-page .kpi-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .demand-page .kpi-icon svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+}

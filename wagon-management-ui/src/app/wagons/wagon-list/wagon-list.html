@@ -1,0 +1,744 @@
+<div class="wagon-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <section class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FLEET OPERATIONS
+      </div>
+
+      <h1>
+        Wagons
+      </h1>
+
+      <p>
+        Monitor and manage the registered wagon fleet
+        across the operations network.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      @if (lastRefreshTime()) {
+
+        <span class="last-refresh">
+          Updated
+          {{ lastRefreshTime() | date:'HH:mm:ss' }}
+        </span>
+
+      }
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshWagons()"
+      >
+
+        <span class="refresh-icon">
+          <svg lucideRefreshCw [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+        Refresh
+
+      </button>
+
+      <a
+        routerLink="/wagons/add"
+        class="add-wagon-button"
+      >
+
+        <span class="button-icon">
+          <svg lucidePlus [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+        Add Wagon
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div>
+
+        <strong>
+          Loading wagon fleet
+        </strong>
+
+        <span>
+          Retrieving current wagon records...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-banner">
+
+        <div class="error-icon">
+          <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <strong>
+            Unable to load wagon fleet
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- ===================================================
+         FLEET SUMMARY
+         =================================================== -->
+
+    <section class="fleet-summary">
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          TOTAL WAGONS
+        </span>
+
+        <strong class="summary-value">
+          {{ getTotalWagons() }}
+        </strong>
+
+        <span class="summary-description">
+          Registered fleet
+        </span>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item available">
+
+        <span class="summary-label">
+          AVAILABLE
+        </span>
+
+        <strong class="summary-value">
+          {{ getAvailableWagons() }}
+        </strong>
+
+        <span class="summary-description">
+          Ready for allocation
+        </span>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item allocated">
+
+        <span class="summary-label">
+          ALLOCATED
+        </span>
+
+        <strong class="summary-value">
+          {{ getAllocatedWagons() }}
+        </strong>
+
+        <span class="summary-description">
+          Assigned to freight
+        </span>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item loaded">
+
+        <span class="summary-label">
+          LOADED
+        </span>
+
+        <strong class="summary-value">
+          {{ getLoadedWagons() }}
+        </strong>
+
+        <span class="summary-description">
+          Carrying freight
+        </span>
+
+      </div>
+
+
+      <div class="summary-divider"></div>
+
+
+      <div class="summary-item empty">
+
+        <span class="summary-label">
+          EMPTY
+        </span>
+
+        <strong class="summary-value">
+          {{ getEmptyWagons() }}
+        </strong>
+
+        <span class="summary-description">
+          Awaiting assignment
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         EDIT WAGON
+         =================================================== -->
+
+    @if (editingWagonId !== null) {
+
+      <section class="edit-panel">
+
+        <div class="edit-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              FLEET MASTER DATA
+            </div>
+
+            <h2>
+              Edit Wagon
+            </h2>
+
+            <p>
+              Update the wagon's editable master information.
+            </p>
+
+          </div>
+
+          <span class="edit-id">
+            Wagon #{{ editingWagonId }}
+          </span>
+
+        </div>
+
+
+        <div class="edit-grid">
+
+          <!-- WAGON NUMBER -->
+
+          <div class="form-field">
+
+            <label for="editWagonNumber">
+              Wagon Number
+            </label>
+
+            <input
+              id="editWagonNumber"
+              type="text"
+              name="editWagonNumber"
+              [(ngModel)]="editWagonNumber"
+              autocomplete="off"
+            />
+
+            <small>
+              Unique wagon identification number.
+            </small>
+
+          </div>
+
+
+          <!-- WAGON TYPE -->
+
+          <div class="form-field">
+
+            <label for="editWagonType">
+              Wagon Type
+            </label>
+
+            <input
+              id="editWagonType"
+              type="text"
+              name="editWagonType"
+              [(ngModel)]="editWagonType"
+              autocomplete="off"
+            />
+
+            <small>
+              Equipment or stock type.
+            </small>
+
+          </div>
+
+
+          <!-- CAPACITY -->
+
+          <div class="form-field">
+
+            <label for="editCapacity">
+              Capacity
+            </label>
+
+            <div class="input-with-unit">
+
+              <input
+                id="editCapacity"
+                type="number"
+                name="editCapacity"
+                min="1"
+                [(ngModel)]="editCapacity"
+              />
+
+              <span>
+                t
+              </span>
+
+            </div>
+
+            <small>
+              Maximum freight carrying capacity.
+            </small>
+
+          </div>
+
+
+          @if (getEditingWagon(); as wagon) {
+
+            <!-- STATUS -->
+
+            <div class="form-field">
+
+              <label>
+                Current Status
+              </label>
+
+              <div class="readonly-value">
+
+                <span
+                  class="status-badge"
+                  [class]="getStatusClass(wagon.status)"
+                >
+
+                  <span class="status-dot"></span>
+
+                  {{ wagon.status }}
+
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- STATION -->
+
+            <div class="form-field">
+
+              <label>
+                Current Station
+              </label>
+
+              <div class="readonly-value station-value">
+
+                <strong>
+                  {{ wagon.station?.stationCode || '—' }}
+                </strong>
+
+                <span>
+                  {{ wagon.station?.stationName || 'Station unavailable' }}
+                </span>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- EDIT SUCCESS -->
+
+        @if (editMessage) {
+
+          <div class="success-message">
+
+            <span class="message-icon">
+              <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+            </span>
+
+            {{ editMessage }}
+
+          </div>
+
+        }
+
+
+        <!-- EDIT ERROR -->
+
+        @if (editErrorMessage) {
+
+          <div class="edit-error-message">
+
+            <span class="message-icon">
+              <svg lucideCircleAlert [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+            </span>
+
+            {{ editErrorMessage }}
+
+          </div>
+
+        }
+
+
+        <!-- EDIT ACTIONS -->
+
+        <div class="edit-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="cancelEdit()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="updateWagon()"
+          >
+            Save Changes
+            <span>
+              →
+            </span>
+          </button>
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         WAGON REGISTER
+         =================================================== -->
+
+    <section class="register-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <div class="panel-eyebrow">
+            FLEET REGISTER
+          </div>
+
+          <h2>
+            Wagon Fleet
+          </h2>
+
+          <p>
+            Registered wagons currently available in the
+            operations network.
+          </p>
+
+        </div>
+
+        <span class="record-count">
+          {{ getTotalWagons() }}
+          records
+        </span>
+
+      </div>
+
+
+      <!-- =================================================
+           EMPTY STATE
+           ================================================= -->
+
+      @if (wagons().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg lucideTrainFront [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+          </div>
+
+          <strong>
+            No wagons registered
+          </strong>
+
+          <span>
+            Add a wagon to begin building the operational fleet.
+          </span>
+
+          <a
+            routerLink="/wagons/add"
+            class="secondary-button"
+          >
+            Add Wagon
+          </a>
+
+        </div>
+
+      } @else {
+
+
+        <!-- =================================================
+             TABLE
+             ================================================= -->
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  WAGON
+                </th>
+
+                <th>
+                  TYPE
+                </th>
+
+                <th>
+                  CAPACITY
+                </th>
+
+                <th>
+                  CURRENT STATION
+                </th>
+
+                <th>
+                  STATUS
+                </th>
+
+                <th class="action-column">
+                  ACTIONS
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                wagon of wagons();
+                track wagon.wagonId
+              ) {
+
+                <tr>
+
+
+                  <!-- WAGON -->
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/wagons',
+                        wagon.wagonId
+                      ]"
+                      class="wagon-number"
+                    >
+
+                      {{ wagon.wagonNumber }}
+
+                    </a>
+
+                    <span class="wagon-id">
+                      Wagon #{{ wagon.wagonId }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- TYPE -->
+
+                  <td>
+
+                    <span class="wagon-type">
+                      {{ wagon.wagonType }}
+                    </span>
+
+                  </td>
+
+
+                  <!-- CAPACITY -->
+
+                  <td>
+
+                    <strong class="capacity">
+
+                      {{ wagon.capacity | number:'1.0-2' }}
+
+                      <span>
+                        t
+                      </span>
+
+                    </strong>
+
+                  </td>
+
+
+                  <!-- STATION -->
+
+                  <td>
+
+                    @if (wagon.station) {
+
+                      <div class="station-cell">
+
+                        <strong>
+                          {{ wagon.station.stationCode }}
+                        </strong>
+
+                        <span>
+                          {{ wagon.station.stationName }}
+                        </span>
+
+                      </div>
+
+                    } @else {
+
+                      <span class="muted">
+                        Station unavailable
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- STATUS -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [class]="getStatusClass(wagon.status)"
+                    >
+
+                      <span class="status-dot"></span>
+
+                      {{ wagon.status }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- ACTIONS -->
+
+                  <td>
+
+                    <div class="action-group">
+
+                      <a
+                        [routerLink]="[
+                          '/wagons',
+                          wagon.wagonId
+                        ]"
+                        class="action-button view-button"
+                      >
+
+                        <span>
+                          View
+                        </span>
+
+                        <span class="action-arrow">
+                          <svg lucideEye [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+                        </span>
+
+                      </a>
+
+
+                      <button
+                        type="button"
+                        class="action-button edit-button"
+                        (click)="editWagon(wagon)"
+                      >
+
+                        <span>
+                          Edit
+                        </span>
+
+                      </button>
+
+
+                      <button
+                        type="button"
+                        class="action-button delete-button"
+                        (click)="deleteWagon(wagon)"
+                      >
+
+                        <span>
+                          Delete
+                        </span>
+
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

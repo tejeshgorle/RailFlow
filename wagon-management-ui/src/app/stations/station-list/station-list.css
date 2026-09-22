@@ -1,0 +1,693 @@
+/* ============================================================
+   RAILFLOW OPS
+   STATION MASTER
+   Consistent with Demand Management / Movement History UI
+   ============================================================ */
+
+.station-page {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 24px;
+}
+
+.page-header-left {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin-bottom: 7px;
+  color: var(--rf-blue);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: var(--rf-text-950);
+  font-size: 32px;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.7px;
+}
+
+.page-header p {
+  margin: 7px 0 0;
+  color: var(--rf-text-600);
+  font-size: 14px;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.last-refresh {
+  color: var(--rf-text-500);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.refresh-button {
+  height: 38px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+  background: var(--rf-white);
+  color: var(--rf-text-800);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--rf-shadow-sm);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.refresh-button:hover {
+  border-color: var(--rf-blue);
+  box-shadow: var(--rf-shadow-md);
+  transform: translateY(-1px);
+}
+
+.refresh-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+/* ============================================================
+   KPI GRID
+   ============================================================ */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 17px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  min-height: 154px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid var(--rf-border);
+  border-radius: 10px;
+  box-shadow: var(--rf-shadow-sm);
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--rf-shadow-md);
+  transform: translateY(-1px);
+}
+
+.kpi-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-label {
+  color: var(--rf-text-500);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.kpi-icon {
+  width: 39px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.kpi-icon.blue {
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+}
+
+.kpi-icon.green {
+  background: var(--rf-green-soft);
+  color: var(--rf-green);
+}
+
+.kpi-icon.gray {
+  background: #f0f2f4;
+  color: var(--rf-text-500);
+}
+
+.kpi-icon.amber {
+  background: var(--rf-amber-soft);
+  color: var(--rf-amber-dark);
+}
+
+.kpi-value {
+  display: block;
+  margin-top: 17px;
+  color: var(--rf-text-950);
+  font-size: 31px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -0.7px;
+}
+
+.latest-value {
+  font-size: 25px;
+}
+
+.kpi-description {
+  display: block;
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--rf-text-500);
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading-panel {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  background: #ffffff;
+  border: 1px solid var(--rf-border);
+  border-radius: 10px;
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loading-content strong {
+  color: var(--rf-text-800);
+  font-size: 14px;
+}
+
+.loading-content span {
+  color: var(--rf-text-500);
+  font-size: 12px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--rf-border);
+  border-top-color: var(--rf-blue);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error-banner {
+  min-height: 64px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--rf-red-soft);
+  border: 1px solid rgba(190, 65, 65, 0.18);
+  border-radius: 9px;
+}
+
+.error-icon {
+  width: 29px;
+  height: 29px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(190, 65, 65, 0.12);
+  color: var(--rf-red);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.error-content strong {
+  color: var(--rf-red);
+  font-size: 13px;
+}
+
+.error-content span {
+  color: var(--rf-text-600);
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   STATION REGISTER
+   ============================================================ */
+
+.station-panel {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--rf-border);
+  border-radius: 10px;
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.panel-header {
+  min-height: 101px;
+  padding: 19px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--rf-border);
+}
+
+.panel-eyebrow {
+  margin-bottom: 5px;
+  color: var(--rf-text-500);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  color: var(--rf-text-900);
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.panel-description {
+  display: block;
+  margin-top: 5px;
+  color: var(--rf-text-500);
+  font-size: 12px;
+}
+
+.record-count {
+  padding: 9px 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+  background: var(--rf-white);
+  color: var(--rf-text-600);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f7f9fb;
+}
+
+th {
+  height: 52px;
+  padding: 0 20px;
+  text-align: left;
+  color: var(--rf-text-500);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  border-bottom: 1px solid var(--rf-border);
+  white-space: nowrap;
+}
+
+td {
+  height: 76px;
+  padding: 12px 20px;
+  color: var(--rf-text-700);
+  font-size: 13px;
+  border-bottom: 1px solid var(--rf-border-light);
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition: background 120ms ease;
+}
+
+tbody tr:hover {
+  background: #fafcff;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ============================================================
+   STATION ID
+   ============================================================ */
+
+.station-id {
+  color: var(--rf-blue);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+
+/* ============================================================
+   STATION CODE
+   ============================================================ */
+
+.station-code-link {
+  color: var(--rf-blue);
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.station-code-link:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   STATION NAME
+   ============================================================ */
+
+.station-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.station-name-cell strong {
+  color: var(--rf-text-800);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.station-name-cell span {
+  color: var(--rf-text-400);
+  font-size: 10px;
+}
+
+
+/* ============================================================
+   ZONE
+   ============================================================ */
+
+.zone-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 9px;
+  border-radius: 5px;
+  background: #f1f4f7;
+  color: var(--rf-text-700);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+
+/* ============================================================
+   DIVISION
+   ============================================================ */
+
+.division-text {
+  color: var(--rf-text-700);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+
+/* ============================================================
+   VIEW BUTTON
+   ============================================================ */
+
+.view-button {
+  height: 34px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rf-border);
+  border-radius: 6px;
+  background: var(--rf-white);
+  color: var(--rf-text-700);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.view-button:hover {
+  border-color: var(--rf-blue);
+  color: var(--rf-blue);
+  box-shadow: var(--rf-shadow-sm);
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.empty-state {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.empty-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+  font-size: 14px;
+}
+
+.empty-state strong {
+  color: var(--rf-text-800);
+  font-size: 14px;
+}
+
+.empty-state span {
+  max-width: 430px;
+  margin-top: 6px;
+  color: var(--rf-text-500);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+  .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 850px) {
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .last-refresh {
+    display: none;
+  }
+
+  .refresh-button {
+    width: 100%;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* ============================================================
+   SURFACE COLOR ALIGNMENT
+   Match the Demand Management reference exactly:
+   page = light gray, content surfaces = clean white.
+   ============================================================ */
+
+.kpi-card,
+.station-panel,
+.loading-panel {
+  background: #ffffff;
+}
+
+.station-panel .panel-header {
+  background: #ffffff;
+}
+
+.station-panel tbody {
+  background: #ffffff;
+}
+
+.station-panel tbody tr {
+  background: #ffffff;
+}
+
+.station-panel tbody tr:hover {
+  background: #fafcff;
+}
+
+/* Keep the table header slightly tinted, like the reference UI. */
+.station-panel thead {
+  background: #f7f9fb;
+}
+
+
+/* ============================================================
+   LUCIDE ICONS
+   Compact RailFlow utility sizing
+   ============================================================ */
+
+.refresh-button,
+.kpi-icon,
+.error-icon,
+.empty-icon,
+.view-button {
+  line-height: 0;
+}
+
+.refresh-button svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+}
+
+.kpi-icon svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+}
+
+.error-icon svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.empty-icon svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+.view-button svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  margin-left: 5px;
+}
+
+/* Prevent the old text-symbol font sizing from affecting SVG icons. */
+.refresh-icon,
+.kpi-icon,
+.error-icon,
+.empty-icon {
+  font-size: 0;
+}

@@ -1,0 +1,917 @@
+/* ============================================================
+   RAILFLOW OPS
+   STATION DETAILS
+   Visual reference: Wagon Details / Demand Management
+   ============================================================ */
+
+.details-page {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading-panel {
+  min-height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  background: #ffffff;
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.loading-content strong {
+  color: var(--rf-text-900);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.loading-content span {
+  color: var(--rf-text-500);
+  font-size: 12px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid #e5ebf2;
+  border-top-color: var(--rf-blue);
+
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error-page {
+  min-height: 300px;
+  padding: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  text-align: center;
+
+  background: #ffffff;
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.error-icon {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--rf-red-soft);
+  color: var(--rf-red);
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.error-page .eyebrow {
+  margin-bottom: 6px;
+}
+
+.error-page h2 {
+  margin: 0;
+
+  color: var(--rf-text-950);
+
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.error-page p {
+  max-width: 500px;
+  margin: 8px 0 18px;
+
+  color: var(--rf-text-500);
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+.page-header {
+  min-height: 88px;
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.page-header-left {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin-bottom: 7px;
+
+  color: var(--rf-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.7px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: var(--rf-text-950);
+
+  font-size: 32px;
+  font-weight: 750;
+  line-height: 1.15;
+
+  letter-spacing: -0.7px;
+}
+
+.page-header p {
+  margin: 7px 0 0;
+
+  color: var(--rf-text-500);
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.station-code-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border: 1px solid #d7e5fb;
+  border-radius: 6px;
+
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+  padding-bottom: 2px;
+}
+
+.last-refresh {
+  color: var(--rf-text-500);
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.back-button {
+  height: 40px;
+
+  padding: 0 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: var(--rf-text-800);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  box-shadow: var(--rf-shadow-sm);
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.back-button:hover {
+  border-color: #c8d7e8;
+  background: #ffffff;
+
+  box-shadow: var(--rf-shadow-md);
+
+  transform: translateY(-1px);
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
+
+/* ============================================================
+   SUMMARY STRIP
+   ============================================================ */
+
+.summary-strip {
+  min-height: 82px;
+
+  margin-bottom: 20px;
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+
+  background: #ffffff;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.summary-item {
+  display: flex;
+  align-items: baseline;
+
+  gap: 10px;
+
+  white-space: nowrap;
+}
+
+.summary-label {
+  color: var(--rf-text-500);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.summary-value {
+  color: var(--rf-text-900);
+
+  font-size: 20px;
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+.summary-value.blue {
+  color: var(--rf-blue);
+}
+
+.station-summary {
+  min-width: 160px;
+}
+
+.summary-divider {
+  width: 1px;
+  height: 32px;
+
+  margin: 0 25px;
+
+  background: var(--rf-border);
+}
+
+.summary-status {
+  margin-left: auto;
+  padding-left: 25px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  border-left: 1px solid var(--rf-border);
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+}
+
+.status-badge.active {
+  background: var(--rf-green-soft);
+  color: var(--rf-green);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--rf-green);
+}
+
+
+/* ============================================================
+   MAIN GRID
+   ============================================================ */
+
+.details-grid {
+  display: grid;
+
+  grid-template-columns: 1.1fr 0.9fr;
+
+  gap: 20px;
+}
+
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+
+.panel {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.panel-header {
+  min-height: 82px;
+
+  padding: 17px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  border-bottom: 1px solid var(--rf-border);
+
+  background: #ffffff;
+}
+
+.panel-eyebrow {
+  margin-bottom: 5px;
+
+  color: #71869f;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.3px;
+}
+
+.panel h2 {
+  margin: 0;
+
+  color: var(--rf-text-900);
+
+  font-size: 24px;
+  font-weight: 750;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.35px;
+}
+
+.panel-header p {
+  margin: 5px 0 0;
+
+  color: var(--rf-text-500);
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.panel-tag {
+  flex-shrink: 0;
+
+  padding: 8px 10px;
+
+  border: 1px solid #d7e2ee;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #607d9a;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+}
+
+
+/* ============================================================
+   INFORMATION GRID
+   ============================================================ */
+
+.information-grid {
+  padding: 20px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 0;
+
+  background: #ffffff;
+}
+
+.information-item {
+  min-height: 82px;
+
+  padding: 15px 16px;
+
+  border-bottom: 1px solid var(--rf-border-light);
+}
+
+.information-item:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.information-item.wide {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #71869f;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.field-value {
+  display: block;
+
+  color: var(--rf-text-900);
+
+  font-size: 16px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.code-value {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+
+  font-size: 15px;
+  font-weight: 750;
+
+  letter-spacing: 0.4px;
+}
+
+.field-secondary {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--rf-text-400);
+
+  font-size: 12px;
+}
+
+.master-value {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #f1f4f7;
+  color: var(--rf-text-700);
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+
+/* ============================================================
+   NETWORK CONTEXT
+   ============================================================ */
+
+.network-content {
+  padding: 20px;
+}
+
+.network-location {
+  padding: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  border: 1px solid var(--rf-border-light);
+  border-radius: 8px;
+
+  background: #fafbfd;
+}
+
+.location-icon {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+
+  font-size: 12px;
+}
+
+.network-location strong {
+  display: block;
+
+  color: var(--rf-text-900);
+
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.network-location > div:last-child > span:last-child {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--rf-blue);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   NETWORK ROUTE
+   ============================================================ */
+
+.network-route {
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.network-line {
+  flex: 1;
+
+  height: 1px;
+
+  background: #d9e3ed;
+}
+
+.network-node {
+  min-width: 50px;
+  height: 32px;
+
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d5e3f2;
+  border-radius: 6px;
+
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.network-node.division {
+  background: #f1f4f7;
+
+  border-color: #e0e6ec;
+
+  color: var(--rf-text-700);
+}
+
+
+/* ============================================================
+   CLASSIFICATION
+   ============================================================ */
+
+.classification-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+.classification-item {
+  min-height: 88px;
+
+  padding: 15px;
+
+  border: 1px solid var(--rf-border-light);
+  border-radius: 8px;
+
+  background: #ffffff;
+}
+
+.classification-item strong {
+  display: block;
+
+  color: var(--rf-text-900);
+
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.classification-item > span:last-child {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--rf-text-400);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.details-footer {
+  min-height: 64px;
+
+  margin-top: 18px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  border-top: 1px solid var(--rf-border);
+}
+
+.footer-eyebrow {
+  margin-right: 10px;
+
+  color: var(--rf-text-400);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.footer-text {
+  color: var(--rf-text-500);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1050px) {
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header-actions {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+
+  .summary-strip {
+    overflow-x: auto;
+  }
+}
+
+
+@media (max-width: 720px) {
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .panel h2 {
+    font-size: 21px;
+  }
+
+  .panel-header p {
+    font-size: 13px;
+  }
+
+  .page-header-actions {
+    justify-content: flex-start;
+  }
+
+  .summary-strip {
+    padding: 15px;
+
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .summary-divider {
+    display: none;
+  }
+
+  .summary-status {
+    margin-left: 0;
+    padding-left: 0;
+
+    border-left: 0;
+  }
+
+  .information-grid {
+    grid-template-columns: 1fr;
+
+    padding: 14px 16px;
+  }
+
+  .information-item {
+    min-height: auto;
+
+    padding: 14px 10px;
+  }
+
+  .information-item.wide {
+    grid-column: auto;
+  }
+
+  .information-item:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--rf-border-light);
+  }
+
+  .information-item:last-child {
+    border-bottom: 0;
+  }
+
+  .network-content {
+    padding: 15px 16px;
+  }
+
+  .classification-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-footer {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 16px 0;
+  }
+}
+
+/* ============================================================
+   LUCIDE ICONS
+   Compact RailFlow detail-page sizing
+   ============================================================ */
+
+.error-icon,
+.back-button,
+.location-icon {
+  line-height: 0;
+}
+
+.error-icon svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.back-button {
+  gap: 6px;
+}
+
+.back-button svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.location-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+/* Prevent old text-symbol sizing from affecting SVG icons. */
+.error-icon {
+  font-size: 0;
+}

@@ -1,0 +1,598 @@
+<div
+  class="app-shell"
+  [class.sidebar-collapsed]="sidebarCollapsed()"
+>
+
+  <!-- =====================================================
+       SIDEBAR
+       ====================================================== -->
+
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+
+    <div class="sidebar-brand">
+
+      <div class="brand-mark">
+
+        <img
+          src="/assets/logos/indian-railways.png"
+          alt="Indian Railways"
+          class="railways-logo">
+
+      </div>
+
+      <div class="brand-text">
+
+        <div class="brand-name">
+          RailFlow
+        </div>
+
+        <div class="brand-subtitle">
+          Rail Freight Operations
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         NAVIGATION
+         ================================================== -->
+
+    <nav class="sidebar-nav">
+
+
+      <!-- ================= CONTROL ================= -->
+
+      <div class="nav-section">
+
+        <div class="nav-section-title">
+          CONTROL
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          title="Dashboard"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideLayoutDashboard
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Dashboard
+          </span>
+
+        </a>
+
+      </div>
+
+
+      <!-- ================= OPERATIONS ================= -->
+
+      <div class="nav-section">
+
+        <div class="nav-section-title">
+          OPERATIONS
+        </div>
+
+
+        <!-- DEMANDS -->
+
+        <a
+          routerLink="/demands"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Demand Management"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideClipboardList
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Demand Management
+          </span>
+
+        </a>
+
+
+        <!-- CONSIGNMENT -->
+
+        <a
+          routerLink="/consignments"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Consignment"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideFileText
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Consignment
+          </span>
+
+        </a>
+
+
+        <!-- ALLOCATION -->
+
+        <a
+          routerLink="/allocations/add"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Wagon Allocation"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucidePackageCheck
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Wagon Allocation
+          </span>
+
+        </a>
+
+
+        <!-- LOADING -->
+
+        <a
+          routerLink="/loadings/add"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Wagon Loading"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucidePackagePlus
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Wagon Loading
+          </span>
+
+        </a>
+
+
+        <!-- RAKE FORMATION -->
+
+        <a
+          routerLink="/rakes/form"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Rake Formation"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideTrainFront
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Rake Formation
+          </span>
+
+        </a>
+
+
+        <!-- RAKE MOVEMENT -->
+
+        <a
+          routerLink="/rakes"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          title="Rake Movement"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideRoute
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Rake Movement
+          </span>
+
+        </a>
+
+
+        <!-- MOVEMENT HISTORY -->
+
+        <a
+          routerLink="/movements"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Movement History"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideHistory
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Movement History
+          </span>
+
+        </a>
+
+
+        <!-- UNLOADING -->
+
+        <a
+          routerLink="/unloadings/add"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Unloading"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucidePackageMinus
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Unloading
+          </span>
+
+        </a>
+
+
+        <!-- RELEASE -->
+
+        <a
+          routerLink="/unloadings/release"
+          routerLinkActive="active"
+          class="nav-item"
+          title="Wagon Release"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucidePackageCheck
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Wagon Release
+          </span>
+
+        </a>
+
+      </div>
+
+
+      <!-- =================================================
+           MASTER DATA
+           ================================================== -->
+
+      <div class="nav-section">
+
+        <div class="nav-section-title">
+          MASTER DATA
+        </div>
+
+
+        <!-- WAGONS -->
+
+        <a
+          routerLink="/wagons"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          title="Wagons"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideTrainFront
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Wagons
+          </span>
+
+        </a>
+
+
+        <!-- STATIONS -->
+
+        <a
+          routerLink="/stations"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          title="Stations"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideMapPin
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Stations
+          </span>
+
+        </a>
+
+
+        <!-- CUSTOMERS -->
+
+        <a
+          routerLink="/customers"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+          title="Customers"
+        >
+
+          <span class="nav-icon">
+
+            <svg
+              lucideUsers
+              [attr.width]="19"
+              [attr.height]="19"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+          <span class="nav-label">
+            Customers
+          </span>
+
+        </a>
+
+      </div>
+
+    </nav>
+
+
+    <!-- =================================================
+         SIDEBAR FOOTER
+         ================================================== -->
+
+    <div class="sidebar-footer">
+
+      <div class="system-status">
+
+        <span class="status-dot"></span>
+
+        <span class="nav-label">
+          System Online
+        </span>
+
+      </div>
+
+
+      <div class="environment">
+
+        <span class="nav-label">
+          Environment: Local
+        </span>
+
+      </div>
+
+
+      <div class="version">
+
+        <span class="nav-label">
+          RailFlow Ops v1.0
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         SIDEBAR TOGGLE
+         ================================================== -->
+
+    <button
+      class="sidebar-toggle"
+      type="button"
+      (click)="toggleSidebar()"
+      [attr.aria-label]="
+        sidebarCollapsed()
+          ? 'Expand sidebar'
+          : 'Collapse sidebar'
+      "
+      [attr.title]="
+        sidebarCollapsed()
+          ? 'Expand sidebar'
+          : 'Collapse sidebar'
+      "
+    >
+
+      <span>
+        {{ sidebarCollapsed() ? '›' : '‹' }}
+      </span>
+
+    </button>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN AREA
+       ====================================================== -->
+
+  <main class="main-area">
+
+
+    <!-- ================= TOP BAR ================= -->
+
+    <header class="topbar">
+
+      <div class="breadcrumb">
+
+        <span class="breadcrumb-muted">
+          RailFlow
+        </span>
+
+        <span class="breadcrumb-separator">
+          /
+        </span>
+
+        <span class="breadcrumb-muted">
+          {{ currentSection() }}
+        </span>
+
+        <span class="breadcrumb-separator">
+          /
+        </span>
+
+        <span class="breadcrumb-current">
+          {{ currentPage() }}
+        </span>
+
+      </div>
+
+
+      <div class="topbar-right">
+
+
+        <!-- NETWORK STATUS -->
+
+        <div class="network-status">
+
+          <span class="network-dot"></span>
+
+          <span>
+            Operations Network
+          </span>
+
+        </div>
+
+
+        <div class="topbar-divider"></div>
+
+
+        <!-- USER -->
+
+        <div class="user-profile">
+
+          <div class="user-avatar">
+            OP
+          </div>
+
+          <div class="user-info">
+
+            <strong>
+              Operator
+            </strong>
+
+            <span>
+              Operations
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================= PAGE CONTENT ================= -->
+
+    <section class="page-content">
+
+      <router-outlet></router-outlet>
+
+    </section>
+
+  </main>
+
+</div>

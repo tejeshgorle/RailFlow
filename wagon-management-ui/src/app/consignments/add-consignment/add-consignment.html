@@ -1,0 +1,708 @@
+<div class="page-container">
+
+  <!-- =================================================
+       PAGE HEADER
+       ================================================= -->
+
+  <div class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Create Consignment
+      </h1>
+
+      <p>
+        Convert an approved freight demand into an operational consignment.
+      </p>
+
+    </div>
+
+    <div class="header-status">
+
+      <span class="status-dot"></span>
+
+      Operations Control
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       MAIN GRID
+       ================================================= -->
+
+  <div class="content-grid">
+
+
+    <!-- =================================================
+         MAIN FORM
+         ================================================= -->
+
+    <section class="form-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <div class="section-label">
+            CONSIGNMENT REGISTRATION
+          </div>
+
+          <h2>
+            Create from Approved Demand
+          </h2>
+
+          <p>
+            Select an approved demand and identify the receiving customer.
+          </p>
+
+        </div>
+
+        <span class="header-tag">
+          NEW CONSIGNMENT
+        </span>
+
+      </div>
+
+
+      <div class="form-body">
+
+
+        <!-- =============================================
+             DEMAND
+             ============================================= -->
+
+        <div class="form-section">
+
+          <div class="section-title">
+            Demand Selection
+          </div>
+
+          <div class="form-group">
+
+            <label for="demandId">
+              Approved Demand
+              <span>*</span>
+            </label>
+
+            @if (loading) {
+
+              <div class="loading-select">
+                Loading approved demands...
+              </div>
+
+            } @else {
+
+              <select
+                id="demandId"
+                name="demandId"
+                [(ngModel)]="demandId"
+                (ngModelChange)="onDemandChange()"
+              >
+
+                <option [ngValue]="null">
+                  Select approved demand
+                </option>
+
+                @for (
+                  demand of approvedDemands;
+                  track demand.demandId
+                ) {
+
+                  <option
+                    [ngValue]="demand.demandId"
+                  >
+
+                    Demand #{{ demand.demandId }}
+                    ·
+                    {{ demand.commodity }}
+                    ·
+                    {{ demand.quantity }} tons
+                    ·
+                    {{ demand.fromStation.stationCode }}
+                    →
+                    {{ demand.toStation.stationCode }}
+
+                  </option>
+
+                }
+
+              </select>
+
+            }
+
+            <small>
+              Only demands in APPROVED status are available for consignment creation.
+            </small>
+
+          </div>
+
+
+          <!-- ===========================================
+               SELECTED DEMAND SUMMARY
+               =========================================== -->
+
+          @if (getSelectedDemand(); as demand) {
+
+            <div class="demand-summary">
+
+              <div class="summary-header">
+
+                <div>
+
+                  <span class="summary-label">
+                    SELECTED DEMAND
+                  </span>
+
+                  <strong>
+                    Demand #{{ demand.demandId }}
+                  </strong>
+
+                </div>
+
+                <span class="approved-badge">
+                  <span class="approved-dot"></span>
+                  <svg
+                    lucideCheck
+                    [attr.width]="13"
+                    [attr.height]="13"
+                    [attr.stroke-width]="2">
+                  </svg>
+                  APPROVED
+                </span>
+
+              </div>
+
+
+              <div class="summary-grid">
+
+                <div class="summary-item">
+
+                  <span>
+                    Customer
+                  </span>
+
+                  <strong>
+                    {{ demand.customer.customerName }}
+                  </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                  <span>
+                    Commodity
+                  </span>
+
+                  <strong>
+                    {{ demand.commodity }}
+                  </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                  <span>
+                    Quantity
+                  </span>
+
+                  <strong>
+                    {{ demand.quantity }}
+                    <small>tons</small>
+                  </strong>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                  <span>
+                    Required Wagons
+                  </span>
+
+                  <strong>
+                    {{ demand.requiredWagons }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div class="route-preview">
+
+                <div class="route-station">
+
+                  <strong>
+                    {{ demand.fromStation.stationCode }}
+                  </strong>
+
+                  <span>
+                    {{ demand.fromStation.stationName }}
+                  </span>
+
+                  <small>
+                    {{ demand.fromStation.zone }}
+                    ·
+                    {{ demand.fromStation.division }}
+                  </small>
+
+                </div>
+
+
+                <div class="route-line">
+
+                  <span class="route-dot"></span>
+
+                  <div></div>
+
+                  <span class="route-arrow" aria-hidden="true">
+                    <svg
+                      lucideArrowRight
+                      [attr.width]="17"
+                      [attr.height]="17"
+                      [attr.stroke-width]="1.9">
+                    </svg>
+                  </span>
+
+                </div>
+
+
+                <div class="route-station destination">
+
+                  <strong>
+                    {{ demand.toStation.stationCode }}
+                  </strong>
+
+                  <span>
+                    {{ demand.toStation.stationName }}
+                  </span>
+
+                  <small>
+                    {{ demand.toStation.zone }}
+                    ·
+                    {{ demand.toStation.division }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =============================================
+             CONSIGNEE
+             ============================================= -->
+
+        <div class="form-section">
+
+          <div class="section-title">
+            Receiving Party
+          </div>
+
+          <div class="form-group">
+
+            <label for="consigneeId">
+              Consignee
+              <span>*</span>
+            </label>
+
+            <select
+              id="consigneeId"
+              name="consigneeId"
+              [(ngModel)]="consigneeId"
+            >
+
+              <option [ngValue]="null">
+                Select consignee
+              </option>
+
+              @for (
+                customer of customers;
+                track customer.customerId
+              ) {
+
+                <option
+                  [ngValue]="customer.customerId"
+                >
+
+                  {{ customer.customerName }}
+
+                </option>
+
+              }
+
+            </select>
+
+            <small>
+              Select the customer receiving the freight at destination.
+            </small>
+
+          </div>
+
+
+          <!-- Selected consignee -->
+
+          @if (getSelectedConsignee(); as consignee) {
+
+            <div class="consignee-preview">
+
+              <div class="consignee-icon" aria-hidden="true">
+                <svg
+                  lucideUserRound
+                  [attr.width]="18"
+                  [attr.height]="18"
+                  [attr.stroke-width]="1.8">
+                </svg>
+              </div>
+
+              <div>
+
+                <span>
+                  RECEIVING CUSTOMER
+                </span>
+
+                <strong>
+                  {{ consignee.customerName }}
+                </strong>
+
+                <small>
+                  {{ consignee.customerType }}
+                  @if (consignee.contactNumber) {
+                    · {{ consignee.contactNumber }}
+                  }
+                </small>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =============================================
+             VALIDATION
+             ============================================= -->
+
+        <div class="validation-panel">
+
+          <div class="validation-icon" aria-hidden="true">
+            <svg
+              lucideCircleCheck
+              [attr.width]="16"
+              [attr.height]="16"
+              [attr.stroke-width]="1.9">
+            </svg>
+          </div>
+
+          <div>
+
+            <strong>
+              Operational validation enabled
+            </strong>
+
+            <p>
+              The system will validate the selected demand,
+              consignee and demand lifecycle before creating
+              the consignment.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- =============================================
+             MESSAGES
+             ============================================= -->
+
+        @if (message) {
+
+          <div class="success-message">
+
+            <div class="message-icon" aria-hidden="true">
+              <svg
+                lucideCircleCheck
+                [attr.width]="16"
+                [attr.height]="16"
+                [attr.stroke-width]="1.9">
+              </svg>
+            </div>
+
+            <div>
+
+              <strong>
+                Consignment Created
+              </strong>
+
+              <p>
+                {{ message }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <div class="message-icon" aria-hidden="true">
+              <svg
+                lucideCircleAlert
+                [attr.width]="16"
+                [attr.height]="16"
+                [attr.stroke-width]="1.9">
+              </svg>
+            </div>
+
+            <div>
+
+              <strong>
+                Unable to Create Consignment
+              </strong>
+
+              <p>
+                {{ errorMessage }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- =============================================
+             ACTION
+             ============================================= -->
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="createConsignment()"
+            [disabled]="submitting || loading"
+          >
+
+            @if (submitting) {
+
+              Creating Consignment...
+
+            } @else {
+
+              Create Consignment
+
+              <span class="action-arrow" aria-hidden="true">
+                <svg
+                  lucideArrowRight
+                  [attr.width]="16"
+                  [attr.height]="16"
+                  [attr.stroke-width]="1.9">
+                </svg>
+              </span>
+
+            }
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         WORKFLOW PANEL
+         ================================================= -->
+
+    <aside class="workflow-card">
+
+      <div class="workflow-header">
+
+        <div class="section-label">
+          OPERATION FLOW
+        </div>
+
+        <h2>
+          Consignment Lifecycle
+        </h2>
+
+      </div>
+
+
+      <div class="workflow-body">
+
+
+        <!-- Step 01 -->
+
+        <div class="workflow-step active">
+
+          <div class="step-number">
+            01
+          </div>
+
+          <div>
+
+            <strong>
+              Demand Approved
+            </strong>
+
+            <p>
+              Commercial requirement has been validated.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step-line"></div>
+
+
+        <!-- Step 02 -->
+
+        <div class="workflow-step current">
+
+          <div class="step-number">
+            02
+          </div>
+
+          <div>
+
+            <strong>
+              Create Consignment
+            </strong>
+
+            <p>
+              Convert the approved demand into a freight record.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step-line"></div>
+
+
+        <!-- Step 03 -->
+
+        <div class="workflow-step">
+
+          <div class="step-number">
+            03
+          </div>
+
+          <div>
+
+            <strong>
+              Allocate Wagons
+            </strong>
+
+            <p>
+              Assign suitable wagons to the consignment.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step-line"></div>
+
+
+        <!-- Step 04 -->
+
+        <div class="workflow-step">
+
+          <div class="step-number">
+            04
+          </div>
+
+          <div>
+
+            <strong>
+              Load Freight
+            </strong>
+
+            <p>
+              Record cargo loading into allocated wagons.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step-line"></div>
+
+
+        <!-- Step 05 -->
+
+        <div class="workflow-step">
+
+          <div class="step-number">
+            05
+          </div>
+
+          <div>
+
+            <strong>
+              Form & Move Rake
+            </strong>
+
+            <p>
+              Prepare the rake and dispatch it toward destination.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="workflow-footer">
+
+        <span class="online-dot"></span>
+
+        <div>
+
+          <strong>
+            Workflow validation active
+          </strong>
+
+          <p>
+            Consignment starts from an APPROVED demand.
+          </p>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>

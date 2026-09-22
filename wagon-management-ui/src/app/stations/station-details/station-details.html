@@ -1,0 +1,495 @@
+<div class="details-page">
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div class="loading-content">
+
+        <strong>
+          Loading station details
+        </strong>
+
+        <span>
+          Retrieving railway station information...
+        </span>
+
+      </div>
+
+    </div>
+
+  }
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  @else if (errorMessage()) {
+
+    <div class="error-page">
+
+      <div class="error-icon">
+        <svg
+          lucideCircleAlert
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+      </div>
+
+      <div class="eyebrow">
+        NETWORK MASTER DATA
+      </div>
+
+      <h2>
+        Unable to load station
+      </h2>
+
+      <p>
+        {{ errorMessage() }}
+      </p>
+
+      <a
+        routerLink="/stations"
+        class="back-button"
+      >
+        <svg
+          lucideArrowLeft
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+        Back to Stations
+      </a>
+
+    </div>
+
+  }
+
+  <!-- =====================================================
+       DETAILS
+       ===================================================== -->
+
+  @else if (station()) {
+
+    <!-- ===================================================
+         PAGE HEADER
+         =================================================== -->
+
+    <section class="page-header">
+
+      <div class="page-header-left">
+
+        <div class="eyebrow">
+          NETWORK MASTER DATA
+        </div>
+
+        <div class="title-row">
+
+          <h1>
+            Station #{{ station()!.stationId }}
+          </h1>
+
+          <span class="station-code-badge">
+            {{ station()!.stationCode }}
+          </span>
+
+        </div>
+
+        <p>
+          Detailed information about the selected railway station.
+        </p>
+
+      </div>
+
+      <div class="page-header-actions">
+
+        @if (lastRefreshTime()) {
+
+          <span class="last-refresh">
+            Updated {{ lastRefreshTime() | date:'HH:mm:ss' }}
+          </span>
+
+        }
+
+        <a
+          routerLink="/stations"
+          class="back-button"
+        >
+          <svg
+            lucideArrowLeft
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.8">
+          </svg>
+          Stations
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SUMMARY STRIP
+         =================================================== -->
+
+    <section class="summary-strip">
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          STATION
+        </span>
+
+        <strong class="summary-value">
+          #{{ station()!.stationId }}
+        </strong>
+
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          CODE
+        </span>
+
+        <strong class="summary-value blue">
+          {{ station()!.stationCode }}
+        </strong>
+
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-item station-summary">
+
+        <span class="summary-label">
+          STATION NAME
+        </span>
+
+        <strong class="summary-value">
+          {{ station()!.stationName }}
+        </strong>
+
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-item">
+
+        <span class="summary-label">
+          ZONE
+        </span>
+
+        <strong class="summary-value">
+          {{ station()!.zone }}
+        </strong>
+
+      </div>
+
+      <div class="summary-status">
+
+        <span class="summary-label">
+          NETWORK STATUS
+        </span>
+
+        <span class="status-badge active">
+          <span class="status-dot"></span>
+          ACTIVE
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MAIN INFORMATION
+         =================================================== -->
+
+    <section class="details-grid">
+
+      <!-- =================================================
+           STATION INFORMATION
+           ================================================= -->
+
+      <article class="panel station-information-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              STATION REGISTER
+            </div>
+
+            <h2>
+              Station Information
+            </h2>
+
+            <p>
+              Core railway station master-data details.
+            </p>
+
+          </div>
+
+          <span class="panel-tag">
+            MASTER DATA
+          </span>
+
+        </div>
+
+
+        <div class="information-grid">
+
+          <!-- STATION ID -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              STATION ID
+            </span>
+
+            <strong class="field-value">
+              #{{ station()!.stationId }}
+            </strong>
+
+          </div>
+
+
+          <!-- STATION CODE -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              STATION CODE
+            </span>
+
+            <strong class="field-value code-value">
+              {{ station()!.stationCode }}
+            </strong>
+
+          </div>
+
+
+          <!-- STATION NAME -->
+
+          <div class="information-item wide">
+
+            <span class="field-label">
+              STATION NAME
+            </span>
+
+            <strong class="field-value">
+              {{ station()!.stationName }}
+            </strong>
+
+            <span class="field-secondary">
+              Railway station
+            </span>
+
+          </div>
+
+
+          <!-- ZONE -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              OPERATING ZONE
+            </span>
+
+            <span class="master-value">
+              {{ station()!.zone }}
+            </span>
+
+          </div>
+
+
+          <!-- DIVISION -->
+
+          <div class="information-item">
+
+            <span class="field-label">
+              OPERATING DIVISION
+            </span>
+
+            <span class="master-value">
+              {{ station()!.division }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           NETWORK CONTEXT
+           ================================================= -->
+
+      <article class="panel network-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              NETWORK CONTEXT
+            </div>
+
+            <h2>
+              Operating Location
+            </h2>
+
+            <p>
+              Railway network classification for this station.
+            </p>
+
+          </div>
+
+          <span class="panel-tag">
+            NETWORK
+          </span>
+
+        </div>
+
+
+        <div class="network-content">
+
+          <div class="network-location">
+
+            <div class="location-icon">
+              <svg
+                lucideMapPin
+                [attr.width]="18"
+                [attr.height]="18"
+                [attr.stroke-width]="1.8">
+              </svg>
+            </div>
+
+            <div>
+
+              <span class="field-label">
+                STATION
+              </span>
+
+              <strong>
+                {{ station()!.stationName }}
+              </strong>
+
+              <span>
+                {{ station()!.stationCode }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="network-route">
+
+            <div class="network-line"></div>
+
+            <div class="network-node">
+              {{ station()!.zone }}
+            </div>
+
+            <div class="network-line"></div>
+
+            <div class="network-node division">
+              {{ station()!.division }}
+            </div>
+
+          </div>
+
+
+          <div class="classification-grid">
+
+            <div class="classification-item">
+
+              <span class="field-label">
+                ZONE
+              </span>
+
+              <strong>
+                {{ station()!.zone }}
+              </strong>
+
+              <span>
+                Railway zone
+              </span>
+
+            </div>
+
+            <div class="classification-item">
+
+              <span class="field-label">
+                DIVISION
+              </span>
+
+              <strong>
+                {{ station()!.division }}
+              </strong>
+
+              <span>
+                Operating division
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         FOOTER ACTIONS
+         =================================================== -->
+
+    <section class="details-footer">
+
+      <div>
+
+        <span class="footer-eyebrow">
+          STATION MASTER
+        </span>
+
+        <span class="footer-text">
+          Station information is maintained as network master data.
+        </span>
+
+      </div>
+
+      <a
+        routerLink="/stations"
+        class="back-button"
+      >
+        <svg
+          lucideArrowLeft
+          [attr.width]="15"
+          [attr.height]="15"
+          [attr.stroke-width]="1.8">
+        </svg>
+        Back to Station Register
+      </a>
+
+    </section>
+
+  }
+
+</div>

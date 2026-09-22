@@ -1,0 +1,590 @@
+<div class="demand-page">
+
+
+  <!-- =================================================
+       PAGE HEADER
+  ================================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <div class="page-eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Demand Management
+      </h1>
+
+      <p>
+        Monitor and manage freight demands across the network.
+      </p>
+
+    </div>
+
+
+    <a
+      routerLink="/demands/add"
+      class="primary-action"
+    >
+
+      <span class="action-icon" aria-hidden="true">
+        <svg lucidePackagePlus [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.9"></svg>
+      </span>
+
+      Register Demand
+
+    </a>
+
+  </div>
+
+
+  <!-- =================================================
+       SUCCESS MESSAGE
+  ================================================== -->
+
+  @if (successMessage()) {
+
+    <div class="message success-message">
+
+      <span class="message-icon" aria-hidden="true">
+        <svg lucideCircleCheck [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.9"></svg>
+      </span>
+
+      <span>
+        {{ successMessage() }}
+      </span>
+
+    </div>
+
+  }
+
+
+  <!-- =================================================
+       ERROR MESSAGE
+  ================================================== -->
+
+  @if (errorMessage()) {
+
+    <div class="message error-message">
+
+      <span class="message-icon" aria-hidden="true">
+        <svg lucideTriangleAlert [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.9"></svg>
+      </span>
+
+      <span>
+        {{ errorMessage() }}
+      </span>
+
+    </div>
+
+  }
+
+
+  <!-- =================================================
+       KPI SUMMARY
+  ================================================== -->
+
+  <div class="kpi-grid">
+
+
+    <!-- TOTAL -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-top">
+
+        <span class="kpi-label">
+          TOTAL DEMANDS
+        </span>
+
+        <span class="kpi-icon" aria-hidden="true">
+          <svg lucideClipboardList [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+      </div>
+
+      <div class="kpi-value">
+        {{ getTotalCount() }}
+      </div>
+
+      <div class="kpi-description">
+        All registered demands
+      </div>
+
+    </div>
+
+
+    <!-- REGISTERED -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-top">
+
+        <span class="kpi-label">
+          REGISTERED
+        </span>
+
+        <span class="kpi-icon registered-icon" aria-hidden="true">
+          <svg lucideClipboardPenLine [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+      </div>
+
+      <div class="kpi-value">
+        {{ getRegisteredCount() }}
+      </div>
+
+      <div class="kpi-description">
+        Awaiting approval
+      </div>
+
+    </div>
+
+
+    <!-- APPROVED -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-top">
+
+        <span class="kpi-label">
+          APPROVED
+        </span>
+
+        <span class="kpi-icon approved-icon" aria-hidden="true">
+          <svg lucideClipboardCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+      </div>
+
+      <div class="kpi-value">
+        {{ getApprovedCount() }}
+      </div>
+
+      <div class="kpi-description">
+        Ready for allocation
+      </div>
+
+    </div>
+
+
+    <!-- LOADED -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-top">
+
+        <span class="kpi-label">
+          LOADED
+        </span>
+
+        <span class="kpi-icon loaded-icon" aria-hidden="true">
+          <svg lucidePackageCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+      </div>
+
+      <div class="kpi-value">
+        {{ getLoadedCount() }}
+      </div>
+
+      <div class="kpi-description">
+        Ready for rake operations
+      </div>
+
+    </div>
+
+
+    <!-- DELIVERED -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-top">
+
+        <span class="kpi-label">
+          DELIVERED
+        </span>
+
+        <span class="kpi-icon delivered-icon" aria-hidden="true">
+          <svg lucidePackageCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+        </span>
+
+      </div>
+
+      <div class="kpi-value">
+        {{ getDeliveredCount() }}
+      </div>
+
+      <div class="kpi-description">
+        Completed demands
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       MAIN DATA PANEL
+  ================================================== -->
+
+  <div class="demand-panel">
+
+
+    <!-- PANEL HEADER -->
+
+    <div class="panel-header">
+
+      <div>
+
+        <div class="panel-title-row">
+          <h2>Freight Demands</h2>
+          <span class="panel-live-dot" aria-hidden="true"></span>
+          <span class="panel-live-label">LIVE REGISTER</span>
+        </div>
+
+        <span class="record-count">
+          <strong>{{ filteredDemands().length }}</strong>
+          matching records
+        </span>
+
+      </div>
+
+
+      <!-- FILTERS -->
+
+      <div class="filters">
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+          <span class="search-icon" aria-hidden="true">
+            <svg lucideSearch [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.9"></svg>
+          </span>
+
+          <input
+            type="text"
+            placeholder="Search demand, customer, commodity..."
+            [value]="searchText()"
+            (input)="onSearch($event)"
+          >
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <select
+          class="status-filter"
+          aria-label="Filter demands by status"
+          [value]="selectedStatus()"
+          (change)="onStatusChange($event)"
+        >
+
+          @for (
+            status of statusOptions;
+            track status
+          ) {
+
+            <option [value]="status">
+
+              @if (status === 'ALL') {
+                All Status
+              } @else {
+                {{ getStatusLabel(status) }}
+              }
+
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      <div class="filter-summary">
+        <span class="summary-dot" aria-hidden="true"></span>
+        Showing <strong>{{ filteredDemands().length }}</strong> of <strong>{{ demands().length }}</strong> demands
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         LOADING
+    ================================================== -->
+
+    @if (loading()) {
+
+      <div class="table-state">
+
+        <div class="loading-indicator"></div>
+
+        <p>
+          Loading demand records...
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- =================================================
+         EMPTY
+    ================================================== -->
+
+    @else if (filteredDemands().length === 0) {
+
+      <div class="table-state empty-state">
+
+        <div class="empty-icon" aria-hidden="true">
+          <svg lucideClipboardList [attr.width]="28" [attr.height]="28" [attr.stroke-width]="1.7"></svg>
+        </div>
+
+        <h3>
+          No demands found
+        </h3>
+
+        <p>
+          Try changing your search or status filter.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th><span class="th-label"><svg lucideHash [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> DEMAND</span></th>
+
+              <th><span class="th-label"><svg lucideUsers [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> CUSTOMER</span></th>
+
+              <th><span class="th-label"><svg lucidePackage [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> COMMODITY</span></th>
+
+              <th><span class="th-label"><svg lucideScale [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> QUANTITY</span></th>
+
+              <th><span class="th-label"><svg lucideTrainFront [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> WAGONS</span></th>
+
+              <th><span class="th-label"><svg lucideRoute [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> ROUTE</span></th>
+
+              <th><span class="th-label"><svg lucideCircleDot [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> STATUS</span></th>
+
+              <th><span class="th-label"><svg lucideZap [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> ACTION</span></th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              demand of filteredDemands();
+              track demand.demandId
+            ) {
+
+              <tr>
+
+
+                <!-- DEMAND ID -->
+
+                <td>
+
+                  <a
+                    [routerLink]="[
+                      '/demands',
+                      demand.demandId
+                    ]"
+                    class="demand-id"
+                  >
+
+                    #{{ demand.demandId }}
+
+                  </a>
+
+                  <div class="demand-date">
+
+                    {{ demand.demandDate | date:'dd MMM yyyy' }}
+
+                  </div>
+
+                </td>
+
+
+                <!-- CUSTOMER -->
+
+                <td>
+
+                  <div class="customer-name">
+
+                    {{ demand.customer.customerName }}
+
+                  </div>
+
+                  <div class="customer-type">
+
+                    {{ demand.customer.customerType }}
+
+                  </div>
+
+                </td>
+
+
+                <!-- COMMODITY -->
+
+                <td>
+
+                  <span class="commodity">
+
+                    {{ demand.commodity }}
+
+                  </span>
+
+                </td>
+
+
+                <!-- QUANTITY -->
+
+                <td>
+
+                  <span class="quantity">
+
+                    {{ demand.quantity }}
+
+                  </span>
+
+                  <span class="unit">
+                    T
+                  </span>
+
+                </td>
+
+
+                <!-- WAGONS -->
+
+                <td>
+
+                  <span class="wagon-count">
+
+                    {{ demand.requiredWagons }}
+
+                  </span>
+
+                  <span class="unit">
+                    wagons
+                  </span>
+
+                </td>
+
+
+                <!-- ROUTE -->
+
+                <td>
+
+                  <div class="route">
+
+                    <span>
+                      {{ demand.fromStation.stationCode }}
+                    </span>
+
+                    <span class="route-arrow" aria-hidden="true">
+                      <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                    </span>
+
+                    <span>
+                      {{ demand.toStation.stationCode }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class]="getStatusClass(demand.status)"
+                  >
+
+                    <span class="status-dot-small"></span>
+
+                    {{ getStatusLabel(demand.status) }}
+
+                  </span>
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                  <div class="actions">
+
+
+                    @if (
+                      demand.status === 'REGISTERED'
+                    ) {
+
+                      <button
+                        type="button"
+                        class="approve-button"
+                        (click)="approveDemand(demand)"
+                      >
+                        <svg lucideCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="2"></svg>
+                        <span>Approve</span>
+                      </button>
+
+                    }
+
+
+                    <a
+                      [routerLink]="[
+                        '/demands',
+                        demand.demandId
+                      ]"
+                      class="view-button"
+                    >
+                      <svg lucideEye [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                      <span>View</span>
+                    </a>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

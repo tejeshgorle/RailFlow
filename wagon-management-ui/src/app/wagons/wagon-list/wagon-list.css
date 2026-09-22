@@ -1,0 +1,1523 @@
+/* =========================================================
+   WAGON PAGE
+   ========================================================= */
+
+.wagon-page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin-bottom: 7px;
+
+  color: #1f4f7a;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #17283c;
+
+  font-size: 32px;
+  line-height: 1.15;
+
+  font-weight: 750;
+
+  letter-spacing: -0.7px;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+
+  color: #657f9f;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.last-refresh {
+  margin-right: 3px;
+
+  color: #7187a3;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   REFRESH
+   ========================================================= */
+
+.refresh-button {
+  height: 40px;
+
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: 1px solid #d6e0eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #25384d;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 5px rgba(26, 54, 82, 0.05);
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.refresh-button:hover {
+  border-color: #b7c9dc;
+
+  background: #fbfcfe;
+
+  box-shadow:
+    0 4px 9px rgba(26, 54, 82, 0.08);
+
+  transform: translateY(-1px);
+}
+
+.refresh-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ADD WAGON
+   IMPORTANT:
+   Explicit colors prevent global anchor styles
+   from turning this button white.
+   ========================================================= */
+
+.add-wagon-button {
+  height: 40px !important;
+
+  min-width: 124px;
+
+  padding: 0 17px !important;
+
+  box-sizing: border-box;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 7px;
+
+  border: 1px solid #1f4f7a !important;
+  border-radius: 7px !important;
+
+  background: #1f4f7a !important;
+
+  color: #ffffff !important;
+
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+
+  line-height: 1 !important;
+
+  text-decoration: none !important;
+
+  cursor: pointer;
+
+  opacity: 1 !important;
+
+  box-shadow:
+    0 3px 8px rgba(31, 79, 122, 0.18);
+
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.add-wagon-button:hover {
+  background: #173e61 !important;
+  border-color: #173e61 !important;
+  color: #ffffff !important;
+
+  box-shadow:
+    0 5px 12px rgba(31, 79, 122, 0.22);
+
+  transform: translateY(-1px);
+}
+
+.add-wagon-button:visited,
+.add-wagon-button:active,
+.add-wagon-button:focus {
+  color: #ffffff !important;
+}
+
+.button-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading-panel {
+  min-height: 120px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px rgba(25, 55, 85, 0.04);
+}
+
+.loading-panel strong {
+  display: block;
+
+  color: #25384d;
+
+  font-size: 14px;
+}
+
+.loading-panel span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #7890ad;
+
+  font-size: 12px;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+
+  border: 2px solid #dce5ef;
+  border-top-color: #2867e8;
+
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.error-banner {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+  padding: 14px 16px;
+
+  border: 1px solid #efd0d0;
+  border-radius: 10px;
+
+  background: #fff8f8;
+}
+
+.error-icon {
+  width: 29px;
+  height: 29px;
+
+  flex: 0 0 29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fdeaea;
+
+  color: #b42318;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.error-banner strong {
+  display: block;
+
+  color: #25384d;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.error-banner span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #617a98;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   FLEET SUMMARY
+   ========================================================= */
+
+.fleet-summary {
+  display: flex;
+  align-items: stretch;
+
+  min-height: 112px;
+
+  margin-bottom: 22px;
+
+  overflow: hidden;
+
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px rgba(25, 55, 85, 0.035);
+}
+
+.summary-item {
+  position: relative;
+
+  flex: 1;
+
+  padding: 20px 22px;
+}
+
+.summary-item.available {
+  border-top: 3px solid #15966b;
+}
+
+.summary-item.allocated {
+  border-top: 3px solid #d99a16;
+}
+
+.summary-item.loaded {
+  border-top: 3px solid #2867e8;
+}
+
+.summary-item.empty {
+  border-top: 3px solid #7c8798;
+}
+
+.summary-label {
+  display: block;
+
+  color: #6d86a3;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.1px;
+}
+
+.summary-value {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #17283c;
+
+  font-size: 28px;
+  line-height: 1;
+
+  font-weight: 750;
+}
+
+.summary-description {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #7c93ad;
+
+  font-size: 11px;
+}
+
+.summary-divider {
+  width: 1px;
+
+  margin: 20px 0;
+
+  background: #dbe4ee;
+}
+
+
+/* =========================================================
+   EDIT PANEL
+   ========================================================= */
+
+.edit-panel {
+  margin-bottom: 22px;
+
+  overflow: hidden;
+
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px rgba(25, 55, 85, 0.04);
+}
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 21px 24px;
+
+  border-bottom: 1px solid #e0e7ef;
+
+  background: #fafbfd;
+}
+
+.panel-eyebrow {
+  margin-bottom: 6px;
+
+  color: #5f7c9e;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.edit-header h2 {
+  margin: 0;
+
+  color: #1c2d42;
+
+  font-size: 20px;
+  line-height: 1.3;
+
+  font-weight: 750;
+}
+
+.edit-header p {
+  margin: 6px 0 0;
+
+  color: #7890ad;
+
+  font-size: 13px;
+}
+
+.edit-id {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border: 1px solid #d5e2f1;
+  border-radius: 6px;
+
+  background: #f5f9fe;
+
+  color: #315f8d;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   EDIT FORM
+   ========================================================= */
+
+.edit-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 22px 28px;
+
+  padding: 26px 24px;
+}
+
+.form-field {
+  min-width: 0;
+}
+
+.form-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #304b69;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.form-field input {
+  width: 100%;
+  height: 42px;
+
+  box-sizing: border-box;
+
+  padding: 0 12px;
+
+  border: 1px solid #cfdbe8;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #17283c;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.form-field input:focus {
+  border-color: #4d7fb9;
+
+  box-shadow:
+    0 0 0 3px rgba(48, 104, 177, 0.09);
+}
+
+.form-field small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #7890ad;
+
+  font-size: 11px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   CAPACITY
+   ========================================================= */
+
+.input-with-unit {
+  position: relative;
+}
+
+.input-with-unit input {
+  padding-right: 35px;
+}
+
+.input-with-unit span {
+  position: absolute;
+
+  right: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #7890ad;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   READONLY
+   ========================================================= */
+
+.readonly-value {
+  min-height: 42px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 12px;
+
+  border: 1px solid #d7e0ea;
+  border-radius: 7px;
+
+  background: #f7f9fb;
+}
+
+.station-value {
+  flex-direction: column;
+
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.station-value strong {
+  color: #1c2d42;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.station-value span {
+  margin-top: 2px;
+
+  color: #7890ad;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   EDIT MESSAGES
+   ========================================================= */
+
+.success-message,
+.edit-error-message {
+  margin: 0 24px 16px;
+
+  padding: 11px 13px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.success-message {
+  border: 1px solid #ccebdd;
+
+  background: #f1fbf6;
+
+  color: #087a55;
+}
+
+.edit-error-message {
+  border: 1px solid #f0cccc;
+
+  background: #fff7f7;
+
+  color: #a51d1d;
+}
+
+.message-icon {
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   EDIT ACTIONS
+   ========================================================= */
+
+.edit-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 17px 24px;
+
+  border-top: 1px solid #e0e7ef;
+
+  background: #fafbfd;
+}
+
+
+/* =========================================================
+   COMMON BUTTONS
+   ========================================================= */
+
+.secondary-button,
+.primary-button {
+  min-height: 40px;
+
+  padding: 0 16px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.secondary-button {
+  border: 1px solid #d5dfe9;
+
+  background: #ffffff;
+
+  color: #30465f;
+}
+
+.secondary-button:hover {
+  border-color: #b7c8da;
+
+  background: #f9fbfd;
+
+  box-shadow:
+    0 3px 8px rgba(25, 55, 85, 0.07);
+
+  transform: translateY(-1px);
+}
+
+.primary-button {
+  border: 1px solid #1f4f7a;
+
+  background: #1f4f7a;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 3px 8px rgba(31, 79, 122, 0.16);
+}
+
+.primary-button:hover {
+  border-color: #173e61;
+
+  background: #173e61;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 12px rgba(31, 79, 122, 0.21);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   WAGON REGISTER PANEL
+   ========================================================= */
+
+.register-panel {
+  overflow: hidden;
+
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 16px rgba(25, 55, 85, 0.04);
+}
+
+.panel-header {
+  min-height: 88px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #e0e7ef;
+
+  background: #fafbfd;
+}
+
+.panel-header h2 {
+  margin: 0;
+
+  color: #1c2d42;
+
+  font-size: 21px;
+  line-height: 1.3;
+
+  font-weight: 750;
+
+  letter-spacing: -0.2px;
+}
+
+.panel-header p {
+  margin: 6px 0 0;
+
+  color: #7890ad;
+
+  font-size: 13px;
+}
+
+.record-count {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border: 1px solid #d6e2ee;
+  border-radius: 7px;
+
+  background: #f7faff;
+
+  color: #536f8e;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+
+  min-width: 1080px;
+
+  border-collapse: collapse;
+
+  table-layout: auto;
+}
+
+thead {
+  background: #f7f9fc;
+}
+
+th {
+  height: 50px;
+
+  padding: 0 20px;
+
+  border-bottom: 1px solid #dfe6ee;
+
+  color: #647d99;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+td {
+  padding: 17px 20px;
+
+  border-bottom: 1px solid #edf1f5;
+
+  color: #273a50;
+
+  font-size: 13px;
+
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition:
+    background 120ms ease;
+}
+
+tbody tr:hover {
+  background: #fbfcfe;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   WAGON NUMBER
+   ========================================================= */
+
+.wagon-number {
+  display: block;
+
+  color: #1f4f7a;
+
+  font-size: 14px;
+  font-weight: 750;
+
+  text-decoration: none;
+}
+
+.wagon-number:hover {
+  color: #2867e8;
+
+  text-decoration: underline;
+}
+
+.wagon-id {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #93a4b7;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   TYPE
+   ========================================================= */
+
+.wagon-type {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 27px;
+
+  padding: 0 10px;
+
+  border: 1px solid #dfe6ee;
+  border-radius: 5px;
+
+  background: #f7f9fb;
+
+  color: #30445b;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   CAPACITY
+   ========================================================= */
+
+.capacity {
+  color: #1d2e43;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.capacity span {
+  color: #7d91a8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   STATION
+   ========================================================= */
+
+.station-cell {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.station-cell strong {
+  color: #25394f;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.station-cell span {
+  color: #7890ad;
+
+  font-size: 11px;
+}
+
+.muted {
+  color: #9aaabd;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+  min-height: 26px;
+
+  padding: 0 10px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+}
+
+
+/* AVAILABLE */
+
+.status-available {
+  background: #eaf8f2;
+
+  color: #087a55;
+}
+
+.status-available .status-dot {
+  background: #15966b;
+}
+
+
+/* ALLOCATED */
+
+.status-allocated {
+  background: #eef4ff;
+
+  color: #1f5fd1;
+}
+
+.status-allocated .status-dot {
+  background: #2867e8;
+}
+
+
+/* LOADED */
+
+.status-loaded {
+  background: #edf3ff;
+
+  color: #245dc7;
+}
+
+.status-loaded .status-dot {
+  background: #2867e8;
+}
+
+
+/* EMPTY */
+
+.status-empty {
+  background: #f1f3f6;
+
+  color: #596575;
+}
+
+.status-empty .status-dot {
+  background: #7c8798;
+}
+
+
+/* DEFAULT */
+
+.status-default {
+  background: #f3f4f6;
+
+  color: #667085;
+}
+
+.status-default .status-dot {
+  background: #98a2b3;
+}
+
+
+/* =========================================================
+   ACTION COLUMN
+   ========================================================= */
+
+.action-column {
+  width: 250px;
+
+  min-width: 250px;
+}
+
+
+/* =========================================================
+   ACTION GROUP
+   ========================================================= */
+
+.action-group {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTION BUTTON
+   ========================================================= */
+
+.action-button {
+  height: 35px;
+
+  padding: 0 12px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+
+/* =========================================================
+   VIEW BUTTON
+   ========================================================= */
+
+.view-button {
+  border: 1px solid #cbdced;
+
+  background: #f6f9fd;
+
+  color: #1f4f7a;
+}
+
+.view-button:hover {
+  border-color: #a9c2df;
+
+  background: #edf4fb;
+
+  color: #2867e8;
+
+  box-shadow:
+    0 2px 6px rgba(30, 72, 112, 0.08);
+
+  transform: translateY(-1px);
+}
+
+.action-arrow {
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+   ========================================================= */
+
+.edit-button {
+  border: 1px solid #d3dce6;
+
+  background: #ffffff;
+
+  color: #30445b;
+}
+
+.edit-button:hover {
+  border-color: #aebdce;
+
+  background: #f7f9fb;
+
+  color: #1f4f7a;
+
+  box-shadow:
+    0 2px 6px rgba(30, 45, 65, 0.07);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+   ========================================================= */
+
+.delete-button {
+  border: 1px solid #e5caca;
+
+  background: #fffafa;
+
+  color: #a52222;
+}
+
+.delete-button:hover {
+  border-color: #dcaeae;
+
+  background: #fff2f2;
+
+  color: #8f1717;
+
+  box-shadow:
+    0 2px 6px rgba(145, 35, 35, 0.08);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+  min-height: 300px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px;
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  border-radius: 10px;
+
+  background: #f1f4f8;
+
+  color: #7187a3;
+
+  font-size: 18px;
+}
+
+.empty-state strong {
+  color: #30445b;
+
+  font-size: 15px;
+}
+
+.empty-state span {
+  max-width: 420px;
+
+  margin: 6px 0 18px;
+
+  color: #7890ad;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .page-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .fleet-summary {
+    flex-wrap: wrap;
+  }
+
+  .summary-item {
+    min-width: 30%;
+  }
+
+  .summary-divider {
+    display: none;
+  }
+
+  .edit-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
+  .fleet-summary {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .summary-item {
+    border-bottom: 1px solid #dbe4ee;
+  }
+
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .header-actions {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .refresh-button,
+  .add-wagon-button {
+    width: 100%;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+
+  .edit-actions button {
+    width: 100%;
+  }
+
+  .action-group {
+    gap: 7px;
+  }
+
+  .action-button {
+    padding: 0 10px;
+  }
+
+}
+
+/* =========================================================
+   LUCIDE ICONS
+   Compact operational sizing
+========================================================= */
+
+.refresh-icon,
+.button-icon,
+.error-icon,
+.message-icon,
+.action-arrow,
+.empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.refresh-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+}
+
+.refresh-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+  display: block;
+}
+
+.button-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.button-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+  display: block;
+}
+
+.error-icon svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.message-icon svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.action-arrow {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+}
+
+.action-arrow svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.empty-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.refresh-icon,
+.button-icon,
+.error-icon,
+.message-icon,
+.action-arrow,
+.empty-icon {
+  font-size: 0;
+}

@@ -1,0 +1,685 @@
+<div class="dashboard dashboard-control-center">
+
+  <!-- =====================================================
+       DASHBOARD HEADER
+       ===================================================== -->
+
+  <section class="dashboard-header">
+    <div class="header-left">
+      <div class="eyebrow">OPERATIONS CONTROL CENTER</div>
+
+      <div class="title-row">
+        <div>
+          <h1>Operational Dashboard</h1>
+          <p>Network-wide visibility across freight demand, wagon fleet and rake movement.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="live-indicator">
+        <span class="live-dot" aria-hidden="true"></span>
+        LIVE DATA
+      </div>
+
+      @if (lastRefreshTime()) {
+        <span class="last-refresh">
+          Updated {{ lastRefreshTime() | date:'HH:mm:ss' }}
+        </span>
+      }
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshDashboard()"
+        [disabled]="loading() || isRefreshing()"
+      >
+        <span class="refresh-icon" [class.refreshing]="isRefreshing()" aria-hidden="true"><svg lucideRefreshCw [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+        {{ isRefreshing() ? 'Refreshing...' : 'Refresh' }}
+      </button>
+    </div>
+  </section>
+
+  @if (isRefreshing()) {
+    <div class="refresh-progress" aria-live="polite">
+      <span></span>
+      Updating operational data...
+    </div>
+  }
+
+  @if (loading()) {
+
+    <section class="dashboard-skeleton" aria-label="Loading dashboard">
+
+      <div class="skeleton-kpi-grid">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="skeleton-kpi">
+            <span class="skeleton-line short"></span>
+            <span class="skeleton-number"></span>
+            <span class="skeleton-line"></span>
+          </div>
+        }
+      </div>
+
+      <div class="skeleton-panel">
+        <span class="skeleton-line medium"></span>
+        <span class="skeleton-line wide"></span>
+        <div class="skeleton-row-grid">
+          @for (item of [1, 2, 3, 4]; track item) {
+            <span class="skeleton-block"></span>
+          }
+        </div>
+      </div>
+
+      <div class="skeleton-two-column">
+        <div class="skeleton-panel large"></div>
+        <div class="skeleton-panel large"></div>
+      </div>
+
+      <div class="skeleton-panel table-skeleton">
+        <span class="skeleton-line medium"></span>
+        @for (item of [1, 2, 3, 4, 5]; track item) {
+          <span class="skeleton-table-row"></span>
+        }
+      </div>
+
+    </section>
+
+  } @else {
+
+    @if (errorMessage()) {
+      <div class="error-banner">
+        <div class="error-icon" aria-hidden="true"><svg lucideTriangleAlert [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.9"></svg></div>
+        <div>
+          <strong>Dashboard data partially unavailable</strong>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- ===================================================
+         EXECUTIVE KPI STRIP
+         =================================================== -->
+
+    <section class="kpi-grid">
+
+      <article class="kpi-card fleet-kpi">
+        <div class="kpi-accent"></div>
+        <div class="kpi-header">
+          <span>TOTAL WAGONS</span>
+          <div class="kpi-symbol wagon-symbol">
+            <svg lucideTrainFront [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+          </div>
+        </div>
+        <div class="kpi-number">{{ totalWagons() }}</div>
+        <div class="kpi-bottom">
+          <span>Registered fleet</span>
+          <strong>{{ getWagonUtilization() }}% engaged</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card demand-kpi">
+        <div class="kpi-accent blue"></div>
+        <div class="kpi-header">
+          <span>ACTIVE DEMANDS</span>
+          <div class="kpi-symbol demand-symbol">
+            <svg lucideClipboardList [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+          </div>
+        </div>
+        <div class="kpi-number">{{ getActiveDemands() }}</div>
+        <div class="kpi-bottom">
+          <span>In operational workflow</span>
+          <strong>{{ approvedDemands() }} approved</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card rake-kpi">
+        <div class="kpi-accent orange"></div>
+        <div class="kpi-header">
+          <span>ACTIVE RAKES</span>
+          <div class="kpi-symbol rake-symbol">
+            <svg lucideTrainFront [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+          </div>
+        </div>
+        <div class="kpi-number">{{ getActiveRakes() }}</div>
+        <div class="kpi-bottom">
+          <span>Formed or in transit</span>
+          <strong>{{ dispatchedRakes() }} moving</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card delivered-kpi">
+        <div class="kpi-accent green"></div>
+        <div class="kpi-header">
+          <span>DELIVERED DEMANDS</span>
+          <div class="kpi-symbol delivered-symbol">
+            <svg lucidePackageCheck [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+          </div>
+        </div>
+        <div class="kpi-number">{{ deliveredDemands() }}</div>
+        <div class="kpi-bottom">
+          <span>Completed freight</span>
+          <strong>{{ totalDemands() }} total demands</strong>
+        </div>
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         QUICK OPERATIONS
+         =================================================== -->
+
+    <section class="quick-actions panel">
+      <div class="quick-actions-heading">
+        <div>
+          <div class="panel-eyebrow">OPERATIONAL SHORTCUTS</div>
+          <h2>Quick Operations</h2>
+          <p>Start the next freight operation directly from the control center.</p>
+        </div>
+        <span class="panel-count">CONTROL</span>
+      </div>
+
+      <div class="quick-actions-grid">
+
+        @if (canPerformAction('REGISTER_DEMAND')) {
+          <a routerLink="/demands/add" class="quick-action">
+            <span class="quick-action-icon blue">
+              <svg lucidePackagePlus [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+            </span>
+            <span class="quick-action-content">
+              <strong>Register Demand</strong>
+              <small>Create a new freight demand</small>
+            </span>
+            <span class="quick-arrow" aria-hidden="true"><svg lucideArrowRight [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.8"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('ALLOCATE_WAGON')) {
+          <a routerLink="/allocations/add" class="quick-action">
+            <span class="quick-action-icon navy">
+              <svg lucidePackageCheck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+            </span>
+            <span class="quick-action-content">
+              <strong>Allocate Wagon</strong>
+              <small>Assign available fleet to demand</small>
+            </span>
+            <span class="quick-arrow" aria-hidden="true"><svg lucideArrowRight [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.8"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('LOAD_WAGON')) {
+          <a routerLink="/loadings/add" class="quick-action">
+            <span class="quick-action-icon amber">
+              <svg lucidePackagePlus [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+            </span>
+            <span class="quick-action-content">
+              <strong>Load Wagon</strong>
+              <small>Record freight loading activity</small>
+            </span>
+            <span class="quick-arrow" aria-hidden="true"><svg lucideArrowRight [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.8"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('FORM_RAKE')) {
+          <a routerLink="/rakes/form" class="quick-action">
+            <span class="quick-action-icon orange">
+              <svg lucideTrainFront [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+            </span>
+            <span class="quick-action-content">
+              <strong>Form Rake</strong>
+              <small>Prepare a loaded rake for movement</small>
+            </span>
+            <span class="quick-arrow" aria-hidden="true"><svg lucideArrowRight [attr.width]="17" [attr.height]="17" [attr.stroke-width]="1.8"></svg></span>
+          </a>
+        }
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         FLEET + DEMAND WORKFLOW
+         =================================================== -->
+
+    <section class="operations-grid">
+
+      <article class="panel fleet-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-eyebrow">FLEET MONITORING</div>
+            <h2>Wagon Status</h2>
+            <p>Current distribution of the registered wagon fleet.</p>
+          </div>
+          <span class="panel-count">{{ totalWagons() }} TOTAL</span>
+        </div>
+
+        <div class="fleet-content">
+          <div class="fleet-overview">
+            <div>
+              <span>Fleet utilization</span>
+              <strong>{{ getWagonUtilization() }}%</strong>
+            </div>
+            <span>{{ allocatedWagons() + loadedWagons() }} engaged wagons</span>
+          </div>
+
+          <div class="fleet-row">
+            <div class="fleet-row-top">
+              <div class="fleet-name"><span class="fleet-dot available"></span>Available</div>
+              <strong>{{ availableWagons() }}</strong>
+            </div>
+            <div class="fleet-track">
+              <div class="fleet-progress available" [style.width.%]="getFleetPercentage(availableWagons())"></div>
+            </div>
+            <span class="fleet-percentage">{{ getFleetPercentage(availableWagons()) }}%</span>
+          </div>
+
+          <div class="fleet-row">
+            <div class="fleet-row-top">
+              <div class="fleet-name"><span class="fleet-dot allocated"></span>Allocated</div>
+              <strong>{{ allocatedWagons() }}</strong>
+            </div>
+            <div class="fleet-track">
+              <div class="fleet-progress allocated" [style.width.%]="getFleetPercentage(allocatedWagons())"></div>
+            </div>
+            <span class="fleet-percentage">{{ getFleetPercentage(allocatedWagons()) }}%</span>
+          </div>
+
+          <div class="fleet-row">
+            <div class="fleet-row-top">
+              <div class="fleet-name"><span class="fleet-dot loaded"></span>Loaded</div>
+              <strong>{{ loadedWagons() }}</strong>
+            </div>
+            <div class="fleet-track">
+              <div class="fleet-progress loaded" [style.width.%]="getFleetPercentage(loadedWagons())"></div>
+            </div>
+            <span class="fleet-percentage">{{ getFleetPercentage(loadedWagons()) }}%</span>
+          </div>
+
+          <div class="fleet-row">
+            <div class="fleet-row-top">
+              <div class="fleet-name"><span class="fleet-dot empty"></span>Empty</div>
+              <strong>{{ emptyWagons() }}</strong>
+            </div>
+            <div class="fleet-track">
+              <div class="fleet-progress empty" [style.width.%]="getFleetPercentage(emptyWagons())"></div>
+            </div>
+            <span class="fleet-percentage">{{ getFleetPercentage(emptyWagons()) }}%</span>
+          </div>
+        </div>
+
+        <div class="fleet-footer">
+          <span>Allocated + Loaded</span>
+          <strong>{{ allocatedWagons() + loadedWagons() }}</strong>
+        </div>
+      </article>
+
+
+      <article class="panel demand-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-eyebrow">FREIGHT WORKFLOW</div>
+            <h2>Demand Pipeline</h2>
+            <p>Live demand progression from registration to delivery.</p>
+          </div>
+          <span class="panel-count">{{ totalDemands() }} TOTAL</span>
+        </div>
+
+        <div class="demand-content">
+          <div class="demand-stats">
+            <button type="button" class="demand-stat" [class.selected]="selectedDemandFilter() === 'REGISTERED'" (click)="setDemandFilter('REGISTERED')">
+              <span class="stat-number">{{ registeredDemands() }}</span>
+              <span class="stat-label">Registered</span>
+            </button>
+            <button type="button" class="demand-stat" [class.selected]="selectedDemandFilter() === 'APPROVED'" (click)="setDemandFilter('APPROVED')">
+              <span class="stat-number">{{ approvedDemands() }}</span>
+              <span class="stat-label">Approved</span>
+            </button>
+            <button type="button" class="demand-stat" [class.selected]="selectedDemandFilter() === 'WAGONS_ALLOCATED'" (click)="setDemandFilter('WAGONS_ALLOCATED')">
+              <span class="stat-number">{{ allocatedDemands() }}</span>
+              <span class="stat-label">Allocated</span>
+            </button>
+            <button type="button" class="demand-stat" [class.selected]="selectedDemandFilter() === 'LOADED'" (click)="setDemandFilter('LOADED')">
+              <span class="stat-number">{{ loadedDemands() }}</span>
+              <span class="stat-label">Loaded</span>
+            </button>
+            <button type="button" class="demand-stat completed" [class.selected]="selectedDemandFilter() === 'DELIVERED'" (click)="setDemandFilter('DELIVERED')">
+              <span class="stat-number">{{ deliveredDemands() }}</span>
+              <span class="stat-label">Delivered</span>
+            </button>
+          </div>
+
+          <div class="pipeline">
+            <button type="button" class="pipeline-stage" (click)="filterFromAttention('REGISTERED')">
+              <span class="pipeline-node" [class.active]="registeredDemands() > 0"></span>
+              <span>Registration</span>
+            </button>
+            <div class="pipeline-connector"></div>
+            <button type="button" class="pipeline-stage" (click)="filterFromAttention('APPROVED')">
+              <span class="pipeline-node" [class.active]="approvedDemands() > 0"></span>
+              <span>Approval</span>
+            </button>
+            <div class="pipeline-connector"></div>
+            <button type="button" class="pipeline-stage" (click)="filterFromAttention('WAGONS_ALLOCATED')">
+              <span class="pipeline-node" [class.active]="allocatedDemands() > 0"></span>
+              <span>Allocation</span>
+            </button>
+            <div class="pipeline-connector"></div>
+            <button type="button" class="pipeline-stage" (click)="filterFromAttention('LOADED')">
+              <span class="pipeline-node" [class.active]="loadedDemands() > 0"></span>
+              <span>Loading</span>
+            </button>
+            <div class="pipeline-connector"></div>
+            <button type="button" class="pipeline-stage completed" (click)="filterFromAttention('DELIVERED')">
+              <span class="pipeline-node"></span>
+              <span>Delivery</span>
+            </button>
+          </div>
+
+          <div class="workflow-note">
+            <span class="workflow-note-icon" aria-hidden="true"><svg lucideInfo [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg></span>
+            <span>
+              Active workflow: <strong>{{ getActiveDemands() }}</strong>
+              demands currently require operational processing.
+            </span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         OPERATIONAL ATTENTION
+         =================================================== -->
+
+    <article class="panel attention-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-eyebrow">OPERATIONAL ATTENTION</div>
+          <h2>Items Requiring Attention</h2>
+          <p>Queues below mirror the current backend workflow states.</p>
+        </div>
+        <span class="panel-count">{{ getAttentionTotal() }} OPEN</span>
+      </div>
+
+      <div class="attention-grid">
+
+        @if (canPerformAction('APPROVE_DEMAND')) {
+          <a routerLink="/demands" class="attention-item warning">
+            <div class="attention-icon" aria-hidden="true"><svg lucideClipboardCheck [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ registeredDemands() }}</strong>
+              <span>Registered demands awaiting approval</span>
+            </div>
+            <span class="attention-action">Review <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('ALLOCATE_WAGON')) {
+          <a routerLink="/allocations/add" class="attention-item info">
+            <div class="attention-icon" aria-hidden="true"><svg lucidePackageCheck [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ approvedDemands() }}</strong>
+              <span>Approved demands awaiting wagon allocation</span>
+            </div>
+            <span class="attention-action">Allocate <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('LOAD_WAGON')) {
+          <a routerLink="/loadings/add" class="attention-item loading-attention">
+            <div class="attention-icon" aria-hidden="true"><svg lucidePackagePlus [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ allocatedDemands() }}</strong>
+              <span>Allocated demands awaiting loading</span>
+            </div>
+            <span class="attention-action">Load <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('FORM_RAKE')) {
+          <a routerLink="/rakes/form" class="attention-item form-attention">
+            <div class="attention-icon" aria-hidden="true"><svg lucideTrainFront [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ getLoadedDemandsAwaitingRake() }}</strong>
+              <span>Loaded demands awaiting rake formation</span>
+            </div>
+            <span class="attention-action">Form <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('DISPATCH_RAKE')) {
+          <a routerLink="/rakes" class="attention-item dispatch-attention">
+            <div class="attention-icon" aria-hidden="true"><svg lucideSend [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ formedRakes() }}</strong>
+              <span>Formed rakes awaiting dispatch</span>
+            </div>
+            <span class="attention-action">Dispatch <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('ARRIVE_RAKE')) {
+          <a routerLink="/rakes" class="attention-item transit">
+            <div class="attention-icon" aria-hidden="true"><svg lucideMapPin [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ dispatchedRakes() }}</strong>
+              <span>Dispatched rakes awaiting arrival</span>
+            </div>
+            <span class="attention-action">Arrive <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+        @if (canPerformAction('UNLOAD_WAGON')) {
+          <a routerLink="/unloadings/add" class="attention-item unload-attention">
+            <div class="attention-icon" aria-hidden="true"><svg lucidePackageMinus [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
+            <div class="attention-content">
+              <strong>{{ getArrivedRakesAwaitingUnloading() }}</strong>
+              <span>Arrived rakes awaiting unloading</span>
+            </div>
+            <span class="attention-action">Unload <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
+          </a>
+        }
+
+      </div>
+    </article>
+
+
+    <!-- ===================================================
+         RAKE MOVEMENT
+         =================================================== -->
+
+    <article class="panel rake-summary-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-eyebrow">TRAIN OPERATIONS</div>
+          <h2>Rake Movement</h2>
+          <p>Formation, dispatch and arrival status across active rakes.</p>
+        </div>
+        <a routerLink="/rakes" class="panel-link">View movement <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg></a>
+      </div>
+
+      <div class="rake-summary">
+        <div class="rake-status">
+          <div class="rake-icon formed" aria-hidden="true"><svg lucideTrainFront [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg></div>
+          <div class="rake-status-text">
+            <strong>{{ formedRakes() }}</strong>
+            <span>Formed</span>
+          </div>
+        </div>
+
+        <div class="rake-status">
+          <div class="rake-icon dispatched" aria-hidden="true"><svg lucideSend [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg></div>
+          <div class="rake-status-text">
+            <strong>{{ dispatchedRakes() }}</strong>
+            <span>Dispatched</span>
+          </div>
+        </div>
+
+        <div class="rake-status">
+          <div class="rake-icon arrived" aria-hidden="true"><svg lucideCircleCheck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg></div>
+          <div class="rake-status-text">
+            <strong>{{ arrivedRakes() }}</strong>
+            <span>Arrived</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="transit-section">
+        <div class="transit-heading">
+          <span>CURRENT MOVEMENT</span>
+          <span class="transit-live-count"><span class="mini-live-dot"></span>{{ dispatchedRakes() }} ACTIVE IN TRANSIT</span>
+        </div>
+
+        @if (getTransitRakes().length === 0) {
+          <div class="no-transit empty-operational-state">
+            <span class="no-transit-icon" aria-hidden="true"><svg lucideCircleCheck [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></span>
+            <div>
+              <strong>No rakes currently in transit</strong>
+              <span>Dispatched rakes will appear here while moving between stations.</span>
+            </div>
+          </div>
+        } @else {
+          <div class="transit-list">
+            @for (rake of getTransitRakes(); track rake.rakeId) {
+              <a [routerLink]="['/rakes']" class="transit-rake">
+                <div class="transit-rake-main">
+                  <strong>{{ rake.rakeNumber }}</strong>
+                  <span>{{ rake.wagonCount }} wagons</span>
+                </div>
+
+                <div class="transit-route" aria-label="Rake route">
+                  <span class="station-end">
+                    <strong>{{ rake.fromStation.stationCode }}</strong>
+                    <small>{{ rake.fromStation.stationName }}</small>
+                  </span>
+                  <span class="transit-line">
+                    <span class="route-progress"></span>
+                    <span class="moving-dot" aria-hidden="true"><svg lucideTrainFront [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg></span>
+                  </span>
+                  <span class="station-end destination">
+                    <strong>{{ rake.toStation.stationCode }}</strong>
+                    <small>{{ rake.toStation.stationName }}</small>
+                  </span>
+                </div>
+
+                <span class="transit-status">IN TRANSIT</span>
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </article>
+
+
+    <!-- ===================================================
+         RECENT DEMANDS
+         =================================================== -->
+
+    <article class="panel recent-panel" id="recent-demands">
+      <div class="panel-header recent-header">
+        <div>
+          <div class="panel-eyebrow">FREIGHT REGISTER</div>
+          <h2>Recent Demands</h2>
+          <p>Latest freight demand records entering the network workflow.</p>
+        </div>
+        <a routerLink="/demands" class="panel-link">View all <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg></a>
+      </div>
+
+      <div class="demand-filter-bar">
+        <span class="filter-caption">FILTER BY STATUS</span>
+
+        <div class="filter-options">
+          <button type="button" class="filter-chip" [class.active]="selectedDemandFilter() === 'ALL'" (click)="setDemandFilter('ALL')">
+            All <span>{{ getDemandFilterCount('ALL') }}</span>
+          </button>
+          <button type="button" class="filter-chip registered" [class.active]="selectedDemandFilter() === 'REGISTERED'" (click)="setDemandFilter('REGISTERED')">
+            Registered <span>{{ getDemandFilterCount('REGISTERED') }}</span>
+          </button>
+          <button type="button" class="filter-chip approved" [class.active]="selectedDemandFilter() === 'APPROVED'" (click)="setDemandFilter('APPROVED')">
+            Approved <span>{{ getDemandFilterCount('APPROVED') }}</span>
+          </button>
+          <button type="button" class="filter-chip allocated" [class.active]="selectedDemandFilter() === 'WAGONS_ALLOCATED'" (click)="setDemandFilter('WAGONS_ALLOCATED')">
+            Allocated <span>{{ getDemandFilterCount('WAGONS_ALLOCATED') }}</span>
+          </button>
+          <button type="button" class="filter-chip loaded" [class.active]="selectedDemandFilter() === 'LOADED'" (click)="setDemandFilter('LOADED')">
+            Loaded <span>{{ getDemandFilterCount('LOADED') }}</span>
+          </button>
+          <button type="button" class="filter-chip delivered" [class.active]="selectedDemandFilter() === 'DELIVERED'" (click)="setDemandFilter('DELIVERED')">
+            Delivered <span>{{ getDemandFilterCount('DELIVERED') }}</span>
+          </button>
+        </div>
+      </div>
+
+      @if (getFilteredDemands().length === 0) {
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true"><svg lucideClipboardList [attr.width]="23" [attr.height]="23" [attr.stroke-width]="1.8"></svg></div>
+          <strong>No demands match this filter</strong>
+          <span>Try another workflow status or return to All demands.</span>
+          <button type="button" class="empty-action" (click)="setDemandFilter('ALL')">Show all demands</button>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>DEMAND</th>
+                <th>CUSTOMER</th>
+                <th>COMMODITY</th>
+                <th>ROUTE</th>
+                <th>WAGONS</th>
+                <th>STATUS</th>
+                <th>DATE</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (demand of getFilteredDemands(); track demand.demandId) {
+                <tr>
+                  <td>
+                    <a [routerLink]="['/demands', demand.demandId]" class="demand-id" title="Open demand details">
+                      #{{ demand.demandId }}
+                    </a>
+                  </td>
+
+                  <td>
+                    <strong class="customer-name">{{ demand.customer.customerName }}</strong>
+                  </td>
+
+                  <td>
+                    <span class="commodity">{{ demand.commodity }}</span>
+                  </td>
+
+                  <td>
+                    <div class="route-cell">
+                      <span>{{ demand.fromStation.stationCode }}</span>
+                      <span class="route-arrow" aria-hidden="true"><svg lucideArrowRight [attr.width]="12" [attr.height]="12" [attr.stroke-width]="1.8"></svg></span>
+                      <span>{{ demand.toStation.stationCode }}</span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="wagon-requirement">{{ demand.requiredWagons }}</span>
+                  </td>
+
+                  <td>
+                    <span class="demand-status" [class]="getDemandStatusClass(demand.status)">
+                      <span class="status-dot"></span>
+                      {{ getDemandStatusLabel(demand.status) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="demand-date">{{ demand.demandDate | date:'dd MMM yyyy' }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </article>
+
+  }
+</div>

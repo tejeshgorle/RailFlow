@@ -1,0 +1,76 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+
+/* ================================
+   TOPBAR
+================================ */
+
+.topbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--rf-border);
+}
+
+
+/* ================================
+   PAGE CONTENT
+================================ */
+
+.page-content {
+  animation: pageEnter 280ms ease both;
+}
+
+.breadcrumb-current {
+  color: var(--rf-text);
+  font-weight: 600;
+}
+
+@keyframes pageEnter {
+
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 20px;
+}
+
+.nav-icon svg {
+  display: block;
+}
+
+
+.brand-mark svg {
+  display: block;
+}
+/* 
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+}
+
+.railways-logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+} */

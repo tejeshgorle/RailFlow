@@ -1,0 +1,39 @@
+/*
+ * The RailFlow shell styles already live in the global styles.css.
+ * Keep this file available for layout-specific refinements without
+ * changing the existing visual language.
+ */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   RAILFLOW BRAND LOGO
+   ========================================================= */
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 46px;
+
+  width: 46px;
+  height: 46px;
+
+  overflow: hidden;
+}
+
+.railways-logo {
+  display: block;
+
+  width: 38px;
+  height: 38px;
+
+  max-width: 38px;
+  max-height: 38px;
+
+  object-fit: contain;
+}

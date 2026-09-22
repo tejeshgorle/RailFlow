@@ -1,0 +1,766 @@
+<div class="loading-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-heading">
+
+    <div>
+      <div class="page-eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Wagon Loading
+      </h1>
+
+      <p>
+        Load freight into a wagon allocated to the selected consignment.
+      </p>
+    </div>
+
+    <div class="heading-actions">
+
+      @if (demandId) {
+
+        <button
+          type="button"
+          class="back-demand-button"
+          (click)="backToDemand()">
+          <svg lucideArrowLeft [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg> Back to Demand
+        </button>
+
+      }
+
+      <div class="operation-status">
+        <span class="status-dot"></span>
+        Loading Operation
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ACTIVE DEMAND
+  ====================================================== -->
+
+  @if (demandId) {
+
+    <div class="demand-context">
+
+      <div class="context-marker">
+        LOAD
+      </div>
+
+      <div class="context-main">
+
+        <span class="context-label">
+          ACTIVE DEMAND
+        </span>
+
+        <strong>
+          Demand #{{ demandId }}
+        </strong>
+
+        <span>
+          Loading operation initiated from the demand workflow.
+        </span>
+
+      </div>
+
+      <div class="context-arrow">
+        <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       MESSAGES
+  ====================================================== -->
+
+  @if (message) {
+
+    <div class="message success-message">
+
+      <span class="message-icon">
+        <svg lucideCircleCheck [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.9"></svg>
+      </span>
+
+      <div>
+        <strong>
+          Loading completed
+        </strong>
+
+        <span>
+          {{ message }}
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+
+  @if (errorMessage) {
+
+    <div class="message error-message">
+
+      <span class="message-icon">
+        <svg lucideCircleAlert [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.9"></svg>
+      </span>
+
+      <div>
+        <strong>
+          Loading could not be completed
+        </strong>
+
+        <span>
+          {{ errorMessage }}
+        </span>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       LOADING PROGRESS
+  ====================================================== -->
+
+  @if (getSelectedConsignment(); as consignment) {
+
+    <section class="progress-card">
+
+      <div class="progress-header">
+
+        <div>
+          <span class="panel-kicker">
+            LOADING PROGRESS
+          </span>
+
+          <h2>
+            {{ consignment.commodity }} · Consignment #{{ consignment.consignmentId }}
+          </h2>
+        </div>
+
+        <div class="progress-percentage">
+          {{ getLoadingPercentage() | number:'1.0-0' }}%
+        </div>
+
+      </div>
+
+      <div class="progress-main">
+
+        <div class="progress-track">
+
+          <div
+            class="progress-fill"
+            [class.complete]="isLoadingComplete()"
+            [style.width.%]="getLoadingPercentage()">
+          </div>
+
+        </div>
+
+        <div class="progress-quantity">
+
+          <strong>
+            {{ getLoadedQuantity() }} / {{ getRequiredQuantity() }} tons
+          </strong>
+
+          @if (getRemainingQuantity() > 0) {
+
+            <span>
+              {{ getRemainingQuantity() }} tons remaining
+            </span>
+
+          } @else {
+
+            <span class="complete-text">
+              Required loading quantity satisfied
+            </span>
+
+          }
+
+        </div>
+
+      </div>
+
+      <div class="progress-metrics">
+
+        <div>
+          <span>LOADED WAGONS</span>
+          <strong>{{ getLoadedWagonCount() }}</strong>
+        </div>
+
+        <div>
+          <span>TARGET QUANTITY</span>
+          <strong>{{ getRequiredQuantity() }} <small>TONS</small></strong>
+        </div>
+
+        <div>
+          <span>REMAINING</span>
+          <strong>
+            {{ getRemainingQuantity() }}
+            <small>TONS</small>
+          </strong>
+        </div>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <div class="operation-layout">
+
+
+    <!-- ===================================================
+         LOADING INSTRUCTION
+    ==================================================== -->
+
+    <section class="operation-panel">
+
+      <div class="panel-header">
+
+        <div>
+          <span class="panel-kicker">
+            LOAD INSTRUCTION
+          </span>
+
+          <h2>
+            Loading Details
+          </h2>
+        </div>
+
+      </div>
+
+
+      <form (ngSubmit)="submitLoading()">
+
+
+        <!-- CONSIGNMENT -->
+
+        <div class="form-group">
+
+          <label for="consignment">
+            Consignment
+          </label>
+
+          <select
+            id="consignment"
+            name="consignmentId"
+            [(ngModel)]="consignmentId"
+            (ngModelChange)="onConsignmentChange()">
+
+            <option [ngValue]="null">
+              Select Consignment
+            </option>
+
+            @for (
+              consignment of consignments();
+              track consignment.consignmentId
+            ) {
+
+              <option
+                [ngValue]="consignment.consignmentId">
+
+                #{{ consignment.consignmentId }}
+                ·
+                {{ consignment.commodity }}
+                ·
+                {{ consignment.quantity }} tons
+
+              </option>
+
+            }
+
+          </select>
+
+          @if (
+            demandId &&
+            consignments().length === 0
+          ) {
+
+            <small class="field-hint error-hint">
+              No consignment is available for Demand #{{ demandId }}.
+            </small>
+
+          }
+
+        </div>
+
+
+        <!-- CONSIGNMENT SUMMARY -->
+
+        @if (getSelectedConsignment(); as consignment) {
+
+          <div class="selection-summary">
+
+            <div>
+              <span>COMMODITY</span>
+              <strong>{{ consignment.commodity }}</strong>
+            </div>
+
+            <div>
+              <span>QUANTITY</span>
+              <strong>
+                {{ consignment.quantity }}
+                <small>TONS</small>
+              </strong>
+            </div>
+
+            <div>
+              <span>ROUTE</span>
+              <strong>
+                {{ consignment.fromStation.stationCode }}
+                <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+                {{ consignment.toStation.stationCode }}
+              </strong>
+            </div>
+
+            <div>
+              <span>CONSIGNEE</span>
+              <strong>
+                {{ consignment.consignee.customerName }}
+              </strong>
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- WAGON -->
+
+        <div class="form-group">
+
+          <label for="wagon">
+            Allocated Wagon
+          </label>
+
+          <select
+            id="wagon"
+            name="wagonId"
+            [(ngModel)]="wagonId"
+            [disabled]="
+              consignmentId === null ||
+              isLoadingComplete()
+            ">
+
+            <option [ngValue]="null">
+              Select Wagon
+            </option>
+
+            @for (
+              wagon of wagons();
+              track wagon.wagonId
+            ) {
+
+              <option [ngValue]="wagon.wagonId">
+
+                {{ wagon.wagonNumber }}
+                ·
+                {{ wagon.wagonType }}
+                ·
+                {{ wagon.capacity }} tons
+
+              </option>
+
+            }
+
+          </select>
+
+
+          @if (
+            consignmentId === null
+          ) {
+
+            <small class="field-hint">
+              Select a consignment to view its allocated wagons.
+            </small>
+
+          }
+
+
+          @if (
+            consignmentId !== null &&
+            wagons().length === 0 &&
+            !isLoadingComplete()
+          ) {
+
+            <div class="empty-wagon-state">
+
+              <div class="empty-wagon-icon">
+                <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+              </div>
+
+              <div>
+
+                <strong>
+                  No wagon currently available
+                </strong>
+
+                <span>
+                  All allocated wagons for this consignment have already
+                  been processed or are not currently in ALLOCATED status.
+                </span>
+
+                <button
+                  type="button"
+                  class="refresh-button"
+                  (click)="refreshAvailability()">
+                  Refresh availability
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- SELECTED WAGON -->
+
+        @if (getSelectedWagon(); as wagon) {
+
+          <div class="wagon-summary">
+
+            <div class="wagon-id-block">
+
+              <span class="wagon-label">
+                SELECTED WAGON
+              </span>
+
+              <strong>
+                {{ wagon.wagonNumber }}
+              </strong>
+
+              <span>
+                {{ wagon.wagonType }}
+                · Wagon #{{ wagon.wagonId }}
+              </span>
+
+            </div>
+
+            <div class="wagon-status">
+
+              <span class="status-dot"></span>
+
+              ALLOCATED
+
+            </div>
+
+          </div>
+
+
+          <div class="capacity-reference">
+
+            <div class="capacity-head">
+
+              <span>
+                Wagon capacity
+              </span>
+
+              <strong>
+                {{ wagon.capacity }} tons
+              </strong>
+
+            </div>
+
+            <div class="capacity-track">
+
+              <div
+                class="capacity-fill"
+                [style.width.%]="getCapacityPercentage()">
+              </div>
+
+            </div>
+
+            <div class="capacity-foot">
+
+              <span>
+                0 tons
+              </span>
+
+              <span>
+                Selected load:
+                {{ loadedQuantity ?? 0 }} tons
+              </span>
+
+              <span>
+                {{ wagon.capacity }} tons
+              </span>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- QUANTITY -->
+
+        <div class="form-group quantity-group">
+
+          <label for="loadedQuantity">
+            Loaded Quantity
+          </label>
+
+          <div class="quantity-input">
+
+            <input
+              id="loadedQuantity"
+              name="loadedQuantity"
+              type="number"
+              min="1"
+              step="0.01"
+              [(ngModel)]="loadedQuantity"
+              [disabled]="isLoadingComplete()"
+              placeholder="Enter quantity">
+
+            <span>
+              TONS
+            </span>
+
+          </div>
+
+          <small class="field-hint">
+            Quantity must be positive, within wagon capacity, and within the remaining consignment quantity.
+          </small>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+          type="submit"
+          [disabled]="
+            loading() ||
+            isLoadingComplete() ||
+            wagonId === null ||
+            consignmentId === null ||
+            loadedQuantity === null
+          ">
+
+          @if (loading()) {
+
+            <span class="button-loader"></span>
+            Processing Loading...
+
+          } @else if (isLoadingComplete()) {
+
+            <span>
+              Loading Requirement Completed
+            </span>
+
+            <span>
+              <svg lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg>
+            </span>
+
+          } @else {
+
+            <span>
+              Confirm Wagon Loading
+            </span>
+
+            <span class="button-arrow">
+              <svg lucideArrowRight [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+            </span>
+
+          }
+
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- ===================================================
+         OPERATIONAL CHECK
+    ==================================================== -->
+
+    <aside class="operations-panel">
+
+      <div class="panel-header compact">
+
+        <div>
+          <span class="panel-kicker">
+            OPERATIONAL CHECK
+          </span>
+
+          <h2>
+            Before Loading
+          </h2>
+        </div>
+
+      </div>
+
+
+      <div class="check-list">
+
+        <div class="check-item">
+
+          <span class="check-marker">
+            01
+          </span>
+
+          <div>
+            <strong>
+              Consignment
+            </strong>
+
+            <span>
+              Confirm the freight consignment selected for loading.
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="check-item">
+
+          <span class="check-marker">
+            02
+          </span>
+
+          <div>
+            <strong>
+              Wagon Allocation
+            </strong>
+
+            <span>
+              Only wagons allocated to this consignment can be loaded.
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="check-item">
+
+          <span class="check-marker">
+            03
+          </span>
+
+          <div>
+            <strong>
+              Capacity
+            </strong>
+
+            <span>
+              Loaded quantity must remain within wagon capacity.
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="check-item">
+
+          <span class="check-marker">
+            04
+          </span>
+
+          <div>
+            <strong>
+              Operational Status
+            </strong>
+
+            <span>
+              The wagon must be in ALLOCATED status before loading.
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- EMPTY WAGON EXPLANATION -->
+
+      @if (
+        consignmentId !== null &&
+        wagons().length === 0 &&
+        !isLoadingComplete()
+      ) {
+
+        <div class="availability-note">
+
+          <span class="note-line"></span>
+
+          <div>
+
+            <span class="note-label">
+              CURRENT STATUS
+            </span>
+
+            <strong>
+              {{ getLoadedQuantity() }} of
+              {{ getRequiredQuantity() }} tons loaded
+            </strong>
+
+            <p>
+              The remaining quantity requires an operational wagon
+              in ALLOCATED status before another loading can be recorded.
+            </p>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- WORKFLOW -->
+
+      <div class="workflow-note">
+
+        <span class="note-line"></span>
+
+        <div>
+
+          <span class="note-label">
+            WORKFLOW
+          </span>
+
+          <strong>
+            Allocation <svg class="workflow-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> Loading <svg class="workflow-inline-icon" lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg> Rake Formation
+          </strong>
+
+          <p>
+            Successful loading advances the freight demand when its
+            loading requirements are satisfied.
+          </p>
+
+          @if (demandId) {
+
+            <button
+              type="button"
+              class="panel-link"
+              (click)="backToDemand()">
+              View Demand #{{ demandId }} <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+            </button>
+
+          }
+
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>

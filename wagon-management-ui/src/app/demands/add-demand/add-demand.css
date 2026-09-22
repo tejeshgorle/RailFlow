@@ -1,0 +1,773 @@
+/* =====================================================
+   REGISTER DEMAND
+   ===================================================== */
+
+.demand-page {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 34px 8px 60px;
+  color: #1d2939;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+   ===================================================== */
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: #6d829f;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #192c46;
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+
+.page-header p {
+  max-width: 720px;
+  margin: 9px 0 0;
+  color: #7d92ae;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.operation-indicator {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 15px;
+  border: 1px solid #dbe5ef;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #536b88;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.indicator-dot,
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a36d;
+  box-shadow: 0 0 0 5px rgba(22, 163, 109, 0.10);
+}
+
+
+/* =====================================================
+   MAIN GRID
+   ===================================================== */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 22px;
+  align-items: start;
+}
+
+
+/* =====================================================
+   PANELS
+   ===================================================== */
+
+.form-panel,
+.workflow-panel {
+  overflow: hidden;
+  border: 1px solid #dce5ee;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(24, 45, 70, 0.06);
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 25px 28px 23px;
+  border-bottom: 1px solid #e4ebf2;
+}
+
+.panel-eyebrow {
+  margin-bottom: 7px;
+  color: #7085a1;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  color: #1c2c42;
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.panel-header p {
+  margin: 7px 0 0;
+  color: #8195af;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.new-badge {
+  padding: 7px 10px;
+  border: 1px solid #dce6ef;
+  border-radius: 7px;
+  background: #f7f9fb;
+  color: #637994;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   FORM BODY
+   ===================================================== */
+
+.form-body {
+  padding: 26px 28px 28px;
+}
+
+.form-section {
+  padding-bottom: 25px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e7edf3;
+}
+
+.section-title {
+  margin-bottom: 18px;
+  color: #273c56;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+
+/* =====================================================
+   FORM GROUP
+   ===================================================== */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #344b66;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.form-group label span {
+  color: #d58b00;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 46px;
+  box-sizing: border-box;
+  padding: 0 13px;
+  border: 1px solid #ccd9e6;
+  border-radius: 7px;
+  outline: none;
+  background: #ffffff;
+  color: #24374f;
+  font-family: inherit;
+  font-size: 14px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.form-group input::placeholder {
+  color: #a2b1c2;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4c7cae;
+  box-shadow: 0 0 0 3px rgba(76, 124, 174, 0.11);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 7px;
+  color: #91a2b7;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+
+/* =====================================================
+   TWO COLUMN
+   ===================================================== */
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+
+/* =====================================================
+   INPUT UNIT
+   ===================================================== */
+
+.input-with-unit {
+  position: relative;
+}
+
+.input-with-unit input {
+  padding-right: 70px;
+}
+
+.input-with-unit span {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  transform: translateY(-50%);
+  color: #7b8fa8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   ROUTE
+   ===================================================== */
+
+.route-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.route-fields .form-group {
+  margin-bottom: 0;
+}
+
+.route-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 46px;
+  margin-top: 24px;
+
+  box-sizing: border-box;
+
+  color: #c58a18;
+  font-weight: 700;
+}
+
+
+.route-note {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5ebf1;
+  border-radius: 7px;
+  background: #f8fafc;
+  color: #8295ad;
+  font-size: 12px;
+}
+
+.note-icon {
+  color: #7188a4;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   VALIDATION
+   ===================================================== */
+
+.validation-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 1px solid #d9e7e2;
+  border-radius: 8px;
+  background: #f5faf8;
+}
+
+.validation-icon {
+  display: flex;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e0f5ec;
+  color: #159465;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.validation-box strong,
+.validation-box span {
+  display: block;
+}
+
+.validation-box strong {
+  margin-bottom: 3px;
+  color: #34576a;
+  font-size: 12px;
+}
+
+.validation-box span {
+  color: #8aa0b5;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* =====================================================
+   ACTION
+   ===================================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  min-width: 190px;
+  height: 46px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 7px;
+  background: #183f67;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: #123653;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(24, 63, 103, 0.18);
+}
+
+.primary-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.button-arrow {
+  font-size: 17px;
+}
+
+
+/* =====================================================
+   BUTTON SPINNER
+   ===================================================== */
+
+.button-spinner,
+.loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   MESSAGES
+   ===================================================== */
+
+.success-message,
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 18px;
+  padding: 13px 15px;
+  border-radius: 8px;
+}
+
+.success-message {
+  border: 1px solid #d4e9df;
+  background: #f2faf6;
+}
+
+.error-message {
+  border: 1px solid #efd9d9;
+  background: #fff6f6;
+}
+
+.message-icon {
+  display: flex;
+  flex: 0 0 29px;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.success-message .message-icon {
+  background: #dff4e9;
+  color: #168d61;
+}
+
+.error-message .message-icon {
+  background: #f9e2e2;
+  color: #c34c4c;
+}
+
+.success-message strong,
+.success-message span,
+.error-message strong,
+.error-message span {
+  display: block;
+}
+
+.success-message strong,
+.error-message strong {
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+.success-message strong {
+  color: #237052;
+}
+
+.error-message strong {
+  color: #a43e3e;
+}
+
+.success-message span,
+.error-message span {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.success-message span {
+  color: #638d7d;
+}
+
+.error-message span {
+  color: #a86d6d;
+}
+
+
+/* =====================================================
+   WORKFLOW PANEL
+   ===================================================== */
+
+.workflow-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.workflow-body {
+  padding: 25px 25px 23px;
+}
+
+.workflow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.step-number {
+  display: flex;
+  flex: 0 0 39px;
+  align-items: center;
+  justify-content: center;
+  width: 39px;
+  height: 39px;
+  box-sizing: border-box;
+  border: 1px solid #d9e4ee;
+  border-radius: 8px;
+  background: #f7f9fb;
+  color: #5e7895;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.workflow-step.active .step-number {
+  border-color: #c8dceb;
+  background: #edf5fb;
+  color: #275d89;
+}
+
+.step-content {
+  padding-top: 3px;
+}
+
+.step-content strong,
+.step-content span {
+  display: block;
+}
+
+.step-content strong {
+  margin-bottom: 4px;
+  color: #314863;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.step-content span {
+  color: #91a3b8;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.workflow-line {
+  width: 1px;
+  height: 27px;
+  margin: 4px 0 4px 19px;
+  background: #dce6ef;
+}
+
+.workflow-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #e4ebf2;
+  background: #f8fafc;
+}
+
+.workflow-footer strong,
+.workflow-footer span {
+  display: block;
+}
+
+.workflow-footer strong {
+  margin-bottom: 2px;
+  color: #4b6480;
+  font-size: 11px;
+}
+
+.workflow-footer span {
+  color: #93a5b9;
+  font-size: 10px;
+}
+
+
+/* =====================================================
+   LOADING PANEL
+   ===================================================== */
+
+.loading-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid #dce5ee;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #6f849e;
+}
+
+.loading-panel .loading-spinner {
+  border-color: #dce5ee;
+  border-top-color: #1c4c78;
+}
+
+.loading-panel strong,
+.loading-panel span {
+  display: block;
+}
+
+.loading-panel strong {
+  margin-bottom: 3px;
+  color: #344b66;
+  font-size: 13px;
+}
+
+.loading-panel span {
+  color: #8ea0b4;
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1050px) {
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-panel {
+    position: static;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .demand-page {
+    padding: 24px 0 40px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .operation-indicator {
+    display: none;
+  }
+
+  .panel-header,
+  .form-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .route-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .route-arrow {
+    display: none;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+}
+
+/* =====================================================
+   REGISTER DEMAND — COMPACT SEMANTIC ICONS
+   ===================================================== */
+
+.demand-page svg {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.route-arrow {
+  font-size: 0;
+}
+
+.route-arrow svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.note-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  font-size: 0;
+}
+
+.note-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.validation-icon {
+  font-size: 0;
+}
+
+.validation-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.button-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
+}
+
+.button-arrow svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.message-icon {
+  font-size: 0;
+}
+
+.message-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}

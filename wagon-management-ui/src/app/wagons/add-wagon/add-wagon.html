@@ -1,0 +1,139 @@
+<div class="add-wagon-page">
+
+  <section class="page-header">
+    <div class="page-heading">
+      <div class="eyebrow">FLEET OPERATIONS</div>
+      <h1>Register Wagon</h1>
+      <p>
+        Register a new wagon in the operations network
+        and assign its current station.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/wagons" class="back-button">
+        <svg lucideArrowLeft [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+        Wagons
+      </a>
+    </div>
+  </section>
+
+  @if (message) {
+    <div class="message-banner success-banner">
+      <div class="message-icon">
+        <svg lucideCircleCheck [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg>
+      </div>
+      <div class="message-content">
+        <strong>Wagon registered successfully</strong>
+        <span>{{ message }}</span>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="message-banner error-banner">
+      <div class="message-icon">
+        <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg>
+      </div>
+      <div class="message-content">
+        <strong>Registration could not be completed</strong>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </div>
+  }
+
+  <section class="registration-card">
+    <div class="card-header">
+      <div>
+        <div class="card-eyebrow">WAGON REGISTRATION</div>
+        <h2>Wagon Information</h2>
+        <p>
+          Enter the identification, equipment type,
+          carrying capacity and current station.
+        </p>
+      </div>
+      <div class="card-badge">NEW WAGON</div>
+    </div>
+
+    <form class="wagon-form" (ngSubmit)="addWagon()">
+
+      <div class="form-field">
+        <label for="wagonNumber">
+          Wagon Number <span class="required">*</span>
+        </label>
+        <input id="wagonNumber" type="text" name="wagonNumber"
+          [(ngModel)]="wagonNumber" placeholder="e.g. CR800004" autocomplete="off" />
+        <small>Enter the unique wagon identification number.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="wagonType">
+          Wagon Type <span class="required">*</span>
+        </label>
+        <input id="wagonType" type="text" name="wagonType"
+          [(ngModel)]="wagonType" placeholder="e.g. BOXN" autocomplete="off" />
+        <small>Specify the wagon equipment or stock type.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="capacity">
+          Capacity <span class="required">*</span>
+        </label>
+        <div class="input-with-unit">
+          <input id="capacity" type="number" name="capacity"
+            [(ngModel)]="capacity" min="1" placeholder="e.g. 60" />
+          <span>tons</span>
+        </div>
+        <small>Maximum freight carrying capacity of the wagon.</small>
+      </div>
+
+      <div class="form-field">
+        <label for="stationId">
+          Current Station <span class="required">*</span>
+        </label>
+        <select id="stationId" name="stationId"
+          [ngModel]="stationId()" (ngModelChange)="stationId.set($event)">
+          <option [ngValue]="null">Select station</option>
+          @for (station of stations(); track station.stationId) {
+            <option [ngValue]="station.stationId">
+              {{ station.stationCode }} — {{ station.stationName }}
+            </option>
+          }
+        </select>
+        <small>Station where the wagon is currently positioned.</small>
+      </div>
+
+      <div class="form-footer">
+        <div class="required-note">
+          <span>*</span>
+          Required fields
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/wagons" class="secondary-button">Cancel</a>
+
+          <button type="submit" class="primary-button">
+            <svg lucidePlus [attr.width]="12" [attr.height]="12" [attr.stroke-width]="1.8"></svg>
+            Register Wagon
+            <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg>
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="information-panel">
+    <div class="information-icon">
+      <svg lucideInfo [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.9"></svg>
+    </div>
+    <div class="information-content">
+      <strong>Operational Information</strong>
+      <p>
+        Newly registered wagons are automatically assigned
+        <strong>AVAILABLE</strong> status and can then be
+        allocated to an approved freight demand.
+      </p>
+    </div>
+  </section>
+
+</div>

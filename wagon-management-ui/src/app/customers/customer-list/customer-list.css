@@ -1,0 +1,746 @@
+
+/* ============================================================
+   RAILFLOW OPS
+   CUSTOMER LIST
+   Same visual language as Demand Management / Stations /
+   Movement History
+   ============================================================ */
+
+.customers-page {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+.page-header {
+  min-height: 92px;
+  margin-bottom: 22px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-header-left {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin-bottom: 7px;
+
+  color: var(--rf-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: var(--rf-text-950);
+
+  font-size: 32px;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.7px;
+}
+
+.page-header p {
+  margin: 7px 0 0;
+
+  color: var(--rf-text-500);
+
+  font-size: 14px;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 2px;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.refresh-button {
+  height: 38px;
+  padding: 0 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: var(--rf-text-800);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  box-shadow: var(--rf-shadow-sm);
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.refresh-button:hover {
+  border-color: #c8d7e8;
+  box-shadow: var(--rf-shadow-md);
+  transform: translateY(-1px);
+}
+
+.refresh-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+
+/* ============================================================
+   KPI GRID
+   ============================================================ */
+
+.kpi-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+.kpi-card {
+  min-height: 126px;
+  padding: 20px 22px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow-sm);
+
+  transition:
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--rf-shadow-md);
+  transform: translateY(-1px);
+}
+
+.kpi-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 13px;
+}
+
+.kpi-label {
+  color: var(--rf-text-500);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.kpi-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.kpi-icon.blue {
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+}
+
+.kpi-icon.green {
+  background: var(--rf-green-soft);
+  color: var(--rf-green);
+}
+
+.kpi-icon.amber {
+  background: var(--rf-amber-soft);
+  color: var(--rf-amber);
+}
+
+.kpi-value {
+  color: var(--rf-text-950);
+
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.kpi-value.status-value {
+  font-size: 25px;
+}
+
+.kpi-description {
+  margin-top: auto;
+
+  color: var(--rf-text-400);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading-panel {
+  min-height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loading-content strong {
+  color: var(--rf-text-800);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.loading-content span {
+  color: var(--rf-text-500);
+
+  font-size: 12px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid var(--rf-border);
+  border-top-color: var(--rf-blue);
+
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error-banner {
+  min-height: 68px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #f0d8c8;
+  border-radius: 10px;
+
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.error-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: var(--rf-red-soft);
+  color: var(--rf-red);
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.error-content strong {
+  color: var(--rf-text-800);
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.error-content span {
+  color: var(--rf-text-500);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   CUSTOMER PANEL
+   ============================================================ */
+
+.customer-panel {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+
+  box-shadow: var(--rf-shadow-sm);
+}
+
+.panel-header {
+  min-height: 82px;
+  padding: 17px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  border-bottom: 1px solid var(--rf-border);
+}
+
+.panel-eyebrow {
+  margin-bottom: 5px;
+
+  color: var(--rf-text-500);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.panel-header h2 {
+  margin: 0;
+
+  color: var(--rf-text-900);
+
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.panel-header p {
+  margin: 5px 0 0;
+
+  color: var(--rf-text-500);
+
+  font-size: 12px;
+}
+
+.record-count {
+  flex-shrink: 0;
+
+  padding: 8px 11px;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: var(--rf-text-700);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 900px;
+
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  height: 52px;
+  padding: 0 20px;
+
+  color: var(--rf-text-500);
+
+  border-bottom: 1px solid var(--rf-border);
+
+  text-align: left;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+td {
+  height: 76px;
+  padding: 12px 20px;
+
+  color: var(--rf-text-800);
+
+  border-bottom: 1px solid var(--rf-border-light);
+
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+tbody tr {
+  background: #ffffff;
+
+  transition:
+    background-color 120ms ease;
+}
+
+tbody tr:hover {
+  background: #f8fbff;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+
+/* ============================================================
+   CUSTOMER ID
+   ============================================================ */
+
+.customer-id {
+  color: var(--rf-blue);
+
+  font-size: 13px;
+  font-weight: 750;
+
+  text-decoration: none;
+}
+
+.customer-id:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   CUSTOMER NAME
+   ============================================================ */
+
+.customer-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.customer-name-cell strong {
+  color: var(--rf-text-900);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.customer-name-cell span {
+  color: var(--rf-text-400);
+
+  font-size: 11px;
+}
+
+
+/* ============================================================
+   CUSTOMER TYPE
+   ============================================================ */
+
+.customer-type {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 9px;
+
+  border-radius: 6px;
+
+  background: #f1f4f7;
+  color: var(--rf-text-700);
+
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .2px;
+}
+
+
+/* ============================================================
+   ADDRESS / CONTACT
+   ============================================================ */
+
+.address-value {
+  color: var(--rf-text-700);
+
+  font-size: 13px;
+}
+
+.contact-value {
+  color: var(--rf-text-800);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   VIEW BUTTON
+   ============================================================ */
+
+.view-button {
+  height: 36px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--rf-border);
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: var(--rf-text-800);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  box-shadow: 0 1px 2px rgba(18, 40, 64, 0.04);
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    color 150ms ease;
+}
+
+.view-button:hover {
+  border-color: #c8d7e8;
+  color: var(--rf-blue);
+
+  box-shadow: var(--rf-shadow-sm);
+
+  transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.empty-state {
+  min-height: 250px;
+  padding: 40px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: var(--rf-blue-soft);
+  color: var(--rf-blue);
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.empty-state strong {
+  color: var(--rf-text-800);
+
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.empty-state span {
+  max-width: 440px;
+  margin-top: 6px;
+
+  color: var(--rf-text-400);
+
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+  .kpi-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 720px) {
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .record-count {
+    align-self: flex-start;
+  }
+
+}
+
+
+
+/* ============================================================
+   LUCIDE ICONS
+   Compact RailFlow sizing
+   ============================================================ */
+
+.refresh-button,
+.kpi-icon,
+.error-icon,
+.empty-icon,
+.view-button {
+  line-height: 0;
+}
+
+.refresh-button svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+}
+
+.kpi-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+.error-icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+
+.empty-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+
+.view-button {
+  gap: 6px;
+}
+
+.view-button svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+/* Prevent old text-symbol sizing from affecting SVG icons. */
+.refresh-icon {
+  display: none;
+}

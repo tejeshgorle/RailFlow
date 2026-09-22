@@ -1,0 +1,949 @@
+.loading-page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 30px 28px 44px;
+  box-sizing: border-box;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #172033;
+}
+
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.page-eyebrow,
+.panel-kicker,
+.context-label,
+.wagon-label,
+.note-label {
+  display: block;
+  color: #718096;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.page-heading h1 {
+  margin: 5px 0 5px;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  font-weight: 750;
+}
+
+.page-heading p {
+  margin: 0;
+  color: #68758a;
+  font-size: 14px;
+}
+
+.operation-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border: 1px solid #dce5ef;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #536176;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #24a36a;
+  box-shadow: 0 0 0 3px rgba(36, 163, 106, 0.12);
+}
+
+.demand-context {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 15px 18px;
+  border: 1px solid #d8e2ed;
+  border-left: 4px solid #c58a24;
+  border-radius: 11px;
+  background: linear-gradient(90deg, #f7f9fc 0%, #ffffff 100%);
+}
+
+.context-marker {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  background: #1c3557;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .7px;
+}
+
+.context-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.context-main strong {
+  color: #18263a;
+  font-size: 16px;
+}
+
+.context-main > span:last-child {
+  color: #778398;
+  font-size: 12px;
+}
+
+.context-arrow {
+  margin-left: auto;
+  color: #98a5b6;
+  font-size: 22px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px 15px;
+  border: 1px solid;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.message-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.message div {
+  display: grid;
+  gap: 2px;
+}
+
+.message strong {
+  font-size: 13px;
+}
+
+.message span:last-child {
+  font-size: 12px;
+}
+
+.success-message {
+  border-color: #cce7d9;
+  background: #f3fbf6;
+  color: #216c49;
+}
+
+.success-message .message-icon {
+  background: #d8f2e3;
+  color: #218051;
+}
+
+.error-message {
+  border-color: #efd0d0;
+  background: #fff7f7;
+  color: #a33a3a;
+}
+
+.error-message .message-icon {
+  background: #f9dfdf;
+  color: #b73e3e;
+}
+
+
+/* =====================================================
+   LOADING PROGRESS
+===================================================== */
+
+.progress-card {
+  margin-bottom: 20px;
+  padding: 19px 21px;
+  border: 1px solid #dbe4ee;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(25, 42, 65, 0.045);
+}
+
+.progress-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.progress-header h2 {
+  margin: 4px 0 0;
+  color: #1b2a41;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.progress-percentage {
+  color: #1c3557;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.progress-main {
+  padding: 12px 0 14px;
+  border-top: 1px solid #e7ecf2;
+  border-bottom: 1px solid #e7ecf2;
+}
+
+.progress-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #e7edf3;
+}
+
+.progress-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: #c58a24;
+  transition: width .3s ease;
+}
+
+.progress-fill.complete {
+  background: #2b9a68;
+}
+
+.progress-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.progress-quantity strong {
+  color: #34445a;
+  font-size: 12px;
+}
+
+.progress-quantity span {
+  color: #7a8798;
+  font-size: 11px;
+}
+
+.complete-text {
+  color: #287653 !important;
+  font-weight: 700;
+}
+
+.progress-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 13px;
+}
+
+.progress-metrics > div {
+  padding-right: 16px;
+  border-right: 1px solid #e2e8ef;
+}
+
+.progress-metrics > div + div {
+  padding-left: 16px;
+}
+
+.progress-metrics > div:last-child {
+  border-right: 0;
+}
+
+.progress-metrics span {
+  display: block;
+  color: #8490a1;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.progress-metrics strong {
+  display: block;
+  margin-top: 4px;
+  color: #26374e;
+  font-size: 15px;
+}
+
+.progress-metrics small {
+  color: #8290a2;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
+.operation-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, .85fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.operation-panel,
+.operations-panel {
+  border: 1px solid #dfe6ee;
+  border-radius: 13px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(25, 42, 65, 0.055);
+}
+
+.operation-panel {
+  padding: 25px;
+}
+
+.operations-panel {
+  padding: 22px;
+  background: #f9fbfd;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #e7ecf2;
+}
+
+.panel-header.compact {
+  margin-bottom: 18px;
+}
+
+.panel-header h2 {
+  margin: 4px 0 0;
+  color: #1a2940;
+  font-size: 19px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group {
+  margin-bottom: 19px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #ccd6e2;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #1d2939;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  border-color: #496b91;
+  box-shadow: 0 0 0 3px rgba(73, 107, 145, 0.11);
+}
+
+.form-group select:disabled,
+.form-group input:disabled {
+  background: #f1f4f7;
+  color: #929dad;
+  cursor: not-allowed;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  color: #7a8798;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.error-hint {
+  color: #b14a4a;
+}
+
+
+/* =====================================================
+   CONSIGNMENT SUMMARY
+===================================================== */
+
+.selection-summary {
+  display: grid;
+  grid-template-columns: .8fr .8fr 1.2fr;
+  gap: 1px;
+  margin: -2px 0 19px;
+  overflow: hidden;
+  border: 1px solid #e0e7ef;
+  border-radius: 9px;
+  background: #e0e7ef;
+}
+
+.selection-summary > div {
+  padding: 11px 13px;
+  background: #f7f9fc;
+}
+
+.selection-summary span,
+.wagon-id-block > span {
+  display: block;
+  color: #8390a1;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.selection-summary strong {
+  display: block;
+  margin-top: 4px;
+  color: #27374d;
+  font-size: 13px;
+}
+
+.selection-summary small {
+  font-size: 9px;
+  color: #8390a1;
+}
+
+
+/* =====================================================
+   EMPTY WAGON STATE
+===================================================== */
+
+.empty-wagon-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 9px;
+  padding: 11px 12px;
+  border: 1px solid #ecd7d7;
+  border-radius: 8px;
+  background: #fff9f9;
+}
+
+.empty-wagon-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #f8e7e7;
+  color: #b44a4a;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.empty-wagon-state strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #934040;
+  font-size: 11px;
+}
+
+.empty-wagon-state span {
+  display: block;
+  color: #8d6f6f;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+
+/* =====================================================
+   WAGON
+===================================================== */
+
+.wagon-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: -2px 0 13px;
+  padding: 13px 14px;
+  border: 1px solid #d9e3ed;
+  border-radius: 9px;
+  background: #f7f9fc;
+}
+
+.wagon-id-block {
+  display: grid;
+  gap: 3px;
+}
+
+.wagon-id-block strong {
+  color: #1c3557;
+  font-size: 16px;
+}
+
+.wagon-id-block > span:last-child {
+  color: #718096;
+  font-size: 11px;
+}
+
+.wagon-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #287653;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .7px;
+  white-space: nowrap;
+}
+
+.capacity-reference {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.capacity-head,
+.capacity-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #758196;
+  font-size: 10px;
+}
+
+.capacity-head strong {
+  color: #34445a;
+  font-size: 11px;
+}
+
+.capacity-track {
+  height: 6px;
+  margin: 9px 0 7px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #e7edf3;
+}
+
+.capacity-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #c58a24;
+  transition: width .2s ease;
+}
+
+.capacity-foot {
+  font-size: 9px;
+}
+
+
+/* =====================================================
+   QUANTITY / BUTTON
+===================================================== */
+
+.quantity-input {
+  position: relative;
+}
+
+.quantity-input input {
+  padding-right: 58px;
+}
+
+.quantity-input > span {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #7b8798;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .7px;
+}
+
+button[type="submit"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: #1c3557;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: .15px;
+  cursor: pointer;
+  transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background: #24466f;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 13px rgba(28, 53, 87, 0.16);
+}
+
+button[type="submit"]:disabled {
+  opacity: .52;
+  cursor: not-allowed;
+}
+
+.button-arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.button-loader {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: loadingSpin .7s linear infinite;
+}
+
+@keyframes loadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   OPERATIONAL CHECK
+===================================================== */
+
+.check-list {
+  display: grid;
+  gap: 0;
+}
+
+.check-item {
+  display: grid;
+  grid-template-columns: 31px 1fr;
+  gap: 11px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e4e9ef;
+}
+
+.check-item:first-child {
+  padding-top: 2px;
+}
+
+.check-item:last-child {
+  border-bottom: 0;
+}
+
+.check-marker {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid #d4dee9;
+  border-radius: 7px;
+  color: #68778b;
+  background: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.check-item strong {
+  display: block;
+  margin-bottom: 3px;
+  color: #35445a;
+  font-size: 12px;
+}
+
+.check-item div span {
+  display: block;
+  color: #778397;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+
+/* =====================================================
+   AVAILABILITY / WORKFLOW NOTES
+===================================================== */
+
+.availability-note,
+.workflow-note {
+  display: flex;
+  gap: 11px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #dfe6ee;
+}
+
+.note-line {
+  width: 3px;
+  min-height: 52px;
+  border-radius: 3px;
+  background: #c58a24;
+}
+
+.availability-note .note-line {
+  background: #b44a4a;
+}
+
+.availability-note > div,
+.workflow-note > div {
+  display: grid;
+  gap: 4px;
+}
+
+.availability-note strong,
+.workflow-note strong {
+  color: #34445a;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.availability-note p,
+.workflow-note p {
+  margin: 0;
+  color: #7a8798;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+  .operation-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+
+  .loading-page {
+    padding: 22px 16px 32px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .heading-actions {
+    justify-content: flex-start;
+  }
+
+  .page-heading h1 {
+    font-size: 26px;
+  }
+
+  .progress-header {
+    align-items: flex-start;
+  }
+
+  .progress-metrics {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .progress-metrics > div,
+  .progress-metrics > div + div {
+    padding: 0;
+    border-right: 0;
+  }
+
+  .progress-quantity {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .operation-panel,
+  .operations-panel {
+    padding: 18px;
+  }
+
+  .selection-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .wagon-summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .demand-context {
+    padding: 12px;
+  }
+}
+
+
+/* =====================================================
+   HEADING ACTIONS
+===================================================== */
+
+.heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.back-demand-button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #d8e1eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #536176;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color .16s ease, color .16s ease, background .16s ease;
+}
+
+.back-demand-button:hover {
+  border-color: #b9c8d8;
+  background: #f7f9fc;
+  color: #1c3557;
+}
+
+
+/* =====================================================
+   ACTIONS IN EMPTY STATE / WORKFLOW
+===================================================== */
+
+.refresh-button,
+.panel-link {
+  border: 0;
+  background: transparent;
+  color: #1c5d91;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.refresh-button {
+  margin-top: 7px;
+  padding: 0;
+}
+
+.refresh-button:hover,
+.panel-link:hover {
+  text-decoration: underline;
+}
+
+.panel-link {
+  justify-self: start;
+  margin-top: 5px;
+  padding: 0;
+}
+
+/* =====================================================
+   LUCIDE ICONS
+   ===================================================== */
+
+.message-icon svg,
+.empty-wagon-icon svg,
+.button-arrow svg,
+.back-demand-button svg,
+.context-arrow svg,
+.panel-link svg {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.back-demand-button,
+.panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.context-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.message-icon {
+  line-height: 0;
+}
+
+.empty-wagon-icon {
+  line-height: 0;
+}
+
+.button-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+
+.status-dot {
+  flex: 0 0 8px;
+}
+
+.workflow-note .workflow-arrow {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  color: #53657b;
+  vertical-align: middle;
+}
+
+.workflow-note strong {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.workflow-inline-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: #53657b;
+  vertical-align: middle;
+}

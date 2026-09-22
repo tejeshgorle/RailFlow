@@ -1,0 +1,446 @@
+<div class="station-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <section class="page-header">
+
+    <div class="page-header-left">
+
+      <div class="eyebrow">
+        NETWORK MASTER DATA
+      </div>
+
+      <h1>
+        Stations
+      </h1>
+
+      <p>
+        View railway stations and their network operating details.
+      </p>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      @if (lastRefreshTime()) {
+
+        <span class="last-refresh">
+          Updated {{ lastRefreshTime() | date:'HH:mm:ss' }}
+        </span>
+
+      }
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshStations()"
+      >
+        <svg
+          lucideRefreshCw
+          [attr.width]="14"
+          [attr.height]="14"
+          [attr.stroke-width]="1.8">
+        </svg>
+        Refresh
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       KPI CARDS
+       ===================================================== -->
+
+  <section class="kpi-grid">
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+
+        <span class="kpi-label">
+          TOTAL STATIONS
+        </span>
+
+        <span class="kpi-icon blue">
+          <svg
+            lucideMapPin
+            [attr.width]="19"
+            [attr.height]="19"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </span>
+
+      </div>
+
+      <strong class="kpi-value">
+        {{ getTotalStations() }}
+      </strong>
+
+      <span class="kpi-description">
+        Stations registered in network
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+
+        <span class="kpi-label">
+          ZONES
+        </span>
+
+        <span class="kpi-icon green">
+          <svg
+            lucideCheckCircle
+            [attr.width]="19"
+            [attr.height]="19"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </span>
+
+      </div>
+
+      <strong class="kpi-value">
+        {{ getTotalZones() }}
+      </strong>
+
+      <span class="kpi-description">
+        Railway zones represented
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+
+        <span class="kpi-label">
+          DIVISIONS
+        </span>
+
+        <span class="kpi-icon gray">
+          <svg
+            lucideBuilding2
+            [attr.width]="19"
+            [attr.height]="19"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </span>
+
+      </div>
+
+      <strong class="kpi-value">
+        {{ getTotalDivisions() }}
+      </strong>
+
+      <span class="kpi-description">
+        Operating divisions represented
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+
+        <span class="kpi-label">
+          MASTER DATA
+        </span>
+
+        <span class="kpi-icon amber">
+          <svg
+            lucideDatabase
+            [attr.width]="19"
+            [attr.height]="19"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </span>
+
+      </div>
+
+      <strong class="kpi-value">
+        Active
+      </strong>
+
+      <span class="kpi-description">
+        Station master available
+      </span>
+
+    </article>
+
+
+    <article class="kpi-card">
+
+      <div class="kpi-card-top">
+
+        <span class="kpi-label">
+          NETWORK STATUS
+        </span>
+
+        <span class="kpi-icon green">
+          <svg
+            lucideCircleCheck
+            [attr.width]="19"
+            [attr.height]="19"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </span>
+
+      </div>
+
+      <strong class="kpi-value latest-value">
+        Online
+      </strong>
+
+      <span class="kpi-description">
+        Station data available
+      </span>
+
+    </article>
+
+  </section>
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div class="loading-content">
+
+        <strong>
+          Loading stations
+        </strong>
+
+        <span>
+          Retrieving station master records...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-banner">
+
+        <div class="error-icon">
+          <svg
+            lucideCircleAlert
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.8">
+          </svg>
+        </div>
+
+        <div class="error-content">
+
+          <strong>
+            Station master unavailable
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- ===================================================
+         STATION REGISTER
+         =================================================== -->
+
+    <section class="station-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <div class="panel-eyebrow">
+            STATION REGISTER
+          </div>
+
+          <h2>
+            Railway Station Records
+          </h2>
+
+          <span class="panel-description">
+            Station codes, operating zones and divisions
+          </span>
+
+        </div>
+
+        <span class="record-count">
+
+          {{ stations().length }}
+          {{ stations().length === 1 ? 'record' : 'records' }}
+
+        </span>
+
+      </div>
+
+
+      @if (stations().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg
+              lucideMapPinOff
+              [attr.width]="22"
+              [attr.height]="22"
+              [attr.stroke-width]="1.8">
+            </svg>
+          </div>
+
+          <strong>
+            No stations found
+          </strong>
+
+          <span>
+            Station master records will appear here when
+            stations are available.
+          </span>
+
+        </div>
+
+      } @else {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>STATION</th>
+                <th>STATION CODE</th>
+                <th>STATION NAME</th>
+                <th>ZONE</th>
+                <th>DIVISION</th>
+                <th>ACTION</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              @for (
+                station of stations();
+                track station.stationId
+              ) {
+
+                <tr>
+
+                  <td>
+                    <span class="station-id">
+                      #{{ station.stationId }}
+                    </span>
+                  </td>
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/stations',
+                        station.stationId
+                      ]"
+                      class="station-code-link"
+                    >
+                      {{ station.stationCode }}
+                    </a>
+
+                  </td>
+
+                  <td>
+
+                    <div class="station-name-cell">
+
+                      <strong>
+                        {{ station.stationName }}
+                      </strong>
+
+                      <span>
+                        Railway station
+                      </span>
+
+                    </div>
+
+                  </td>
+
+                  <td>
+
+                    <span class="zone-badge">
+                      {{ station.zone }}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <span class="division-text">
+                      {{ station.division }}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <a
+                      [routerLink]="[
+                        '/stations',
+                        station.stationId
+                      ]"
+                      class="view-button"
+                    >
+                      View
+                      <svg
+                        lucideEye
+                        [attr.width]="14"
+                        [attr.height]="14"
+                        [attr.stroke-width]="1.8">
+                      </svg>
+                    </a>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>

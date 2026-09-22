@@ -1,0 +1,656 @@
+<div class="release-page">
+
+
+  <!-- ================================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ================================================= -->
+
+  <section class="page-header">
+
+    <div>
+
+      <div class="eyebrow">
+        FREIGHT OPERATIONS
+      </div>
+
+      <h1>
+        Wagon Release
+      </h1>
+
+      <p>
+        Release empty wagons back into the available fleet
+        for future operational allocation.
+      </p>
+
+    </div>
+
+
+    <div class="operation-indicator">
+
+      <span class="indicator-dot"></span>
+
+      <span>
+        Operations Control
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================================================= -->
+  <!-- KPI SUMMARY -->
+  <!-- ================================================= -->
+
+  @if (!loading()) {
+
+    <section class="kpi-grid">
+
+
+      <!-- Release Ready -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon wagon-icon">
+          <svg lucideTrainFront [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="kpi-content">
+
+          <div class="kpi-label">
+            RELEASE READY
+          </div>
+
+          <div class="kpi-value">
+            {{ wagons().length }}
+          </div>
+
+          <div class="kpi-description">
+            Empty wagons
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Operational State -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon status-icon">
+          <svg lucideCircleCheck [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="kpi-content">
+
+          <div class="kpi-label">
+            CURRENT STATE
+          </div>
+
+          <div class="kpi-value state-value">
+            EMPTY
+          </div>
+
+          <div class="kpi-description">
+            Eligible for release
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Next State -->
+
+      <div class="kpi-card">
+
+        <div class="kpi-icon available-icon">
+          <svg lucideArrowRight [attr.width]="20" [attr.height]="20" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div class="kpi-content">
+
+          <div class="kpi-label">
+            NEXT STATE
+          </div>
+
+          <div class="kpi-value state-value">
+            AVAILABLE
+          </div>
+
+          <div class="kpi-description">
+            Ready for allocation
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  }
+
+
+
+  <!-- ================================================= -->
+  <!-- LOADING -->
+  <!-- ================================================= -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="loading-spinner"></div>
+
+      <div>
+
+        <strong>
+          Loading release-ready wagons
+        </strong>
+
+        <p>
+          Checking the current wagon fleet...
+        </p>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+
+    <!-- =============================================== -->
+    <!-- SUCCESS MESSAGE -->
+    <!-- =============================================== -->
+
+    @if (successMessage()) {
+
+      <div class="message success-message">
+
+        <div class="message-icon">
+          <svg lucideCircleCheck [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <strong>
+            Release completed
+          </strong>
+
+          <p>
+            {{ successMessage() }}
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- =============================================== -->
+    <!-- ERROR MESSAGE -->
+    <!-- =============================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="message error-message">
+
+        <div class="message-icon">
+          <svg lucideCircleAlert [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+        </div>
+
+        <div>
+
+          <strong>
+            Release operation failed
+          </strong>
+
+          <p>
+            {{ errorMessage() }}
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+
+
+
+    <!-- =============================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- =============================================== -->
+
+    <section class="content-grid">
+
+
+      <!-- ============================================= -->
+      <!-- RELEASE REGISTER -->
+      <!-- ============================================= -->
+
+      <div class="register-card">
+
+
+        <div class="card-header">
+
+          <div>
+
+            <div class="section-eyebrow">
+              RELEASE QUEUE
+            </div>
+
+            <h2>
+              Empty Wagons Ready for Release
+            </h2>
+
+            <p>
+              These wagons have completed unloading and
+              can be returned to the available fleet.
+            </p>
+
+          </div>
+
+
+          <div class="record-count">
+
+            {{ wagons().length }}
+
+            <span>
+              wagons
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================== -->
+        <!-- NO WAGONS -->
+        <!-- =========================================== -->
+
+        @if (wagons().length === 0) {
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              <svg lucideCircleCheck [attr.width]="22" [attr.height]="22" [attr.stroke-width]="1.8"></svg>
+            </div>
+
+            <h3>
+              No wagons awaiting release
+            </h3>
+
+            <p>
+              There are currently no EMPTY wagons in the
+              release queue. Wagons become eligible after
+              their freight has been unloaded.
+            </p>
+
+            <div class="empty-state-note">
+
+              <span class="status-dot"></span>
+
+              Fleet release queue is clear
+
+            </div>
+
+          </div>
+
+        } @else {
+
+
+          <!-- ========================================= -->
+          <!-- TABLE -->
+          <!-- ========================================= -->
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    WAGON
+                  </th>
+
+                  <th>
+                    TYPE
+                  </th>
+
+                  <th>
+                    CAPACITY
+                  </th>
+
+                  <th>
+                    CURRENT LOCATION
+                  </th>
+
+                  <th>
+                    STATUS
+                  </th>
+
+                  <th class="action-column">
+                    ACTION
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  wagon of wagons();
+                  track wagon.wagonId
+                ) {
+
+                  <tr>
+
+
+                    <!-- Wagon -->
+
+                    <td>
+
+                      <div class="wagon-cell">
+
+                        <div class="wagon-avatar">
+                          <svg lucideTrainFront [attr.width]="16" [attr.height]="16" [attr.stroke-width]="1.8"></svg>
+                        </div>
+
+                        <div>
+
+                          <strong>
+                            {{ wagon.wagonNumber }}
+                          </strong>
+
+                          <span>
+                            Wagon #{{ wagon.wagonId }}
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+
+                    <!-- Type -->
+
+                    <td>
+
+                      <span class="wagon-type">
+
+                        {{ wagon.wagonType }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- Capacity -->
+
+                    <td>
+
+                      <strong class="capacity-value">
+
+                        {{ wagon.capacity }}
+
+                      </strong>
+
+                      <span class="unit">
+                        tons
+                      </span>
+
+                    </td>
+
+
+                    <!-- Station -->
+
+                    <td>
+
+                      <div class="station-cell">
+
+                        <strong>
+                          {{ wagon.station.stationCode }}
+                        </strong>
+
+                        <span>
+                          {{ wagon.station.stationName }}
+                        </span>
+
+                      </div>
+
+                    </td>
+
+
+                    <!-- Status -->
+
+                    <td>
+
+                      <span class="status-badge">
+
+                        <span class="status-dot"></span>
+
+                        {{ wagon.status }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- Action -->
+
+                    <td class="action-column">
+
+                      <button
+                        type="button"
+                        class="release-button"
+                        [disabled]="releasingWagonId() !== null"
+                        (click)="releaseWagon(wagon)"
+                      >
+
+                        @if (
+                          releasingWagonId() === wagon.wagonId
+                        ) {
+
+                          <span class="button-spinner"></span>
+
+                          Releasing...
+
+                        } @else {
+
+                          Release Wagon
+
+                          <span class="button-arrow">
+                            <svg lucideArrowRight [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+                          </span>
+
+                        }
+
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        }
+
+      </div>
+
+
+
+      <!-- ============================================= -->
+      <!-- OPERATION FLOW -->
+      <!-- ============================================= -->
+
+      <aside class="flow-card">
+
+
+        <div class="card-header flow-header">
+
+          <div>
+
+            <div class="section-eyebrow">
+              OPERATION FLOW
+            </div>
+
+            <h2>
+              Wagon Release
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="flow-content">
+
+
+          <!-- Step 01 -->
+
+          <div class="flow-step">
+
+            <div class="step-number">
+              01
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Wagon unloaded
+              </strong>
+
+              <span>
+                Freight has been removed at the
+                destination station.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="flow-line"></div>
+
+
+          <!-- Step 02 -->
+
+          <div class="flow-step active">
+
+            <div class="step-number">
+              02
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Wagon is EMPTY
+              </strong>
+
+              <span>
+                Wagon is now eligible for release.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="flow-line"></div>
+
+
+          <!-- Step 03 -->
+
+          <div class="flow-step">
+
+            <div class="step-number">
+              03
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                Release wagon
+              </strong>
+
+              <span>
+                Operator returns the wagon to
+                the available fleet.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="flow-line"></div>
+
+
+          <!-- Step 04 -->
+
+          <div class="flow-step">
+
+            <div class="step-number">
+              04
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                AVAILABLE
+              </strong>
+
+              <span>
+                Wagon can be allocated to a
+                future consignment.
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Validation -->
+
+        <div class="validation-footer">
+
+          <span class="validation-dot"></span>
+
+          <div>
+
+            <strong>
+              Operational validation enabled
+            </strong>
+
+            <span>
+              Only EMPTY wagons are shown.
+            </span>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </section>
+
+  }
+
+</div>

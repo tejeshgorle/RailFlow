@@ -1,0 +1,496 @@
+<div class="customers-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <section class="page-header">
+
+    <div class="page-header-left">
+
+      <div class="eyebrow">
+        COMMERCIAL MASTER DATA
+      </div>
+
+      <h1>
+        Customers
+      </h1>
+
+      <p>
+        View registered freight customers and their commercial details.
+      </p>
+
+    </div>
+
+    <div class="page-header-actions">
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="loadCustomers()"
+      >
+
+        <svg
+          lucideRefreshCw
+          [attr.width]="17"
+          [attr.height]="17"
+          [attr.stroke-width]="1.8">
+        </svg>
+
+        Refresh
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       KPI CARDS
+       ===================================================== -->
+
+  @if (!loading() && !errorMessage()) {
+
+    <section class="kpi-grid">
+
+      <!-- TOTAL CUSTOMERS -->
+
+      <article class="kpi-card">
+
+        <div class="kpi-card-top">
+
+          <span class="kpi-label">
+            TOTAL CUSTOMERS
+          </span>
+
+          <span class="kpi-icon blue">
+
+            <svg
+              lucideUsers
+              [attr.width]="18"
+              [attr.height]="18"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+        </div>
+
+        <strong class="kpi-value">
+          {{ customers().length }}
+        </strong>
+
+        <span class="kpi-description">
+          Registered commercial customers
+        </span>
+
+      </article>
+
+
+      <!-- CUSTOMER TYPES -->
+
+      <article class="kpi-card">
+
+        <div class="kpi-card-top">
+
+          <span class="kpi-label">
+            CUSTOMER TYPES
+          </span>
+
+          <span class="kpi-icon green">
+
+            <svg
+              lucideTags
+              [attr.width]="18"
+              [attr.height]="18"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+        </div>
+
+        <strong class="kpi-value">
+          {{ getCustomerTypeCount() }}
+        </strong>
+
+        <span class="kpi-description">
+          Customer categories represented
+        </span>
+
+      </article>
+
+
+      <!-- MASTER DATA -->
+
+      <article class="kpi-card">
+
+        <div class="kpi-card-top">
+
+          <span class="kpi-label">
+            MASTER DATA
+          </span>
+
+          <span class="kpi-icon amber">
+
+            <svg
+              lucideDatabase
+              [attr.width]="18"
+              [attr.height]="18"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+        </div>
+
+        <strong class="kpi-value status-value">
+          Active
+        </strong>
+
+        <span class="kpi-description">
+          Customer master available
+        </span>
+
+      </article>
+
+
+      <!-- NETWORK -->
+
+      <article class="kpi-card">
+
+        <div class="kpi-card-top">
+
+          <span class="kpi-label">
+            CUSTOMER DATA
+          </span>
+
+          <span class="kpi-icon green">
+
+            <svg
+              lucideCircleCheck
+              [attr.width]="18"
+              [attr.height]="18"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+          </span>
+
+        </div>
+
+        <strong class="kpi-value status-value">
+          Online
+        </strong>
+
+        <span class="kpi-description">
+          Commercial records available
+        </span>
+
+      </article>
+
+    </section>
+
+  }
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-panel">
+
+      <div class="spinner"></div>
+
+      <div class="loading-content">
+
+        <strong>
+          Loading customer records
+        </strong>
+
+        <span>
+          Retrieving commercial master data...
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+
+    <!-- ===================================================
+         ERROR
+         =================================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-banner">
+
+        <div class="error-icon">
+
+          <svg
+            lucideCircleAlert
+            [attr.width]="16"
+            [attr.height]="16"
+            [attr.stroke-width]="1.8">
+          </svg>
+
+        </div>
+
+        <div class="error-content">
+
+          <strong>
+            Customer data unavailable
+          </strong>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      </div>
+
+    } @else {
+
+
+      <!-- =================================================
+           CUSTOMER REGISTER
+           ================================================= -->
+
+      <section class="customer-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <div class="panel-eyebrow">
+              CUSTOMER REGISTER
+            </div>
+
+            <h2>
+              Freight Customer Records
+            </h2>
+
+            <p>
+              Registered consignors, consignees and commercial parties.
+            </p>
+
+          </div>
+
+          <span class="record-count">
+
+            {{ customers().length }}
+
+            {{ customers().length === 1 ? 'record' : 'records' }}
+
+          </span>
+
+        </div>
+
+
+        <!-- ===============================================
+             EMPTY STATE
+             =============================================== -->
+
+        @if (customers().length === 0) {
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+
+              <svg
+                lucideUsers
+                [attr.width]="24"
+                [attr.height]="24"
+                [attr.stroke-width]="1.7">
+              </svg>
+
+            </div>
+
+            <strong>
+              No customer records found
+            </strong>
+
+            <span>
+              Registered customer information will appear here.
+            </span>
+
+          </div>
+
+        } @else {
+
+
+          <!-- =============================================
+               TABLE
+               ============================================= -->
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    CUSTOMER
+                  </th>
+
+                  <th>
+                    CUSTOMER NAME
+                  </th>
+
+                  <th>
+                    TYPE
+                  </th>
+
+                  <th>
+                    ADDRESS
+                  </th>
+
+                  <th>
+                    CONTACT
+                  </th>
+
+                  <th>
+                    ACTION
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  customer of customers();
+                  track customer.customerId
+                ) {
+
+                  <tr>
+
+
+                    <!-- CUSTOMER ID -->
+
+                    <td>
+
+                      <a
+                        [routerLink]="[
+                          '/customers',
+                          customer.customerId
+                        ]"
+                        class="customer-id"
+                      >
+
+                        #{{ customer.customerId }}
+
+                      </a>
+
+                    </td>
+
+
+                    <!-- CUSTOMER NAME -->
+
+                    <td>
+
+                      <div class="customer-name-cell">
+
+                        <strong>
+                          {{ customer.customerName }}
+                        </strong>
+
+                        <span>
+                          Commercial customer
+                        </span>
+
+                      </div>
+
+                    </td>
+
+
+                    <!-- TYPE -->
+
+                    <td>
+
+                      <span class="customer-type">
+                        {{ customer.customerType }}
+                      </span>
+
+                    </td>
+
+
+                    <!-- ADDRESS -->
+
+                    <td>
+
+                      <span class="address-value">
+
+                        {{ customer.address || '—' }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- CONTACT -->
+
+                    <td>
+
+                      <span class="contact-value">
+
+                        {{ customer.contactNumber || '—' }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                      <a
+                        [routerLink]="[
+                          '/customers',
+                          customer.customerId
+                        ]"
+                        class="view-button"
+                      >
+
+                        View
+
+                        <svg
+                          lucideEye
+                          [attr.width]="15"
+                          [attr.height]="15"
+                          [attr.stroke-width]="1.8">
+                        </svg>
+
+                      </a>
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+  }
+
+</div>
