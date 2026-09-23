@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.railway.wagonmanagement.dto.OtpVerifyRequest;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -36,34 +39,40 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<LoginResponse> verifyOtp(
-            @RequestBody OtpVerifyRequest request
-    ) {
+        public ResponseEntity<LoginResponse> verifyOtp(
+                @RequestBody OtpVerifyRequest request
+        ) {
 
-        boolean verified =
+        LoginResponse response =
                 authService.verifyOtp(request);
 
-        if (!verified) {
+        if (!response.isSuccess()) {
 
-            return ResponseEntity
-                    .status(401)
-                    .body(
-                            new LoginResponse(
-                                    false,
-                                    "Invalid or expired OTP",
-                                    null,
-                                    null
-                            )
-                    );
+                return ResponseEntity
+                        .status(401)
+                        .body(response);
         }
 
-        return ResponseEntity.ok(
-                new LoginResponse(
-                        true,
-                        "OTP verified successfully",
-                        request.getUsername(),
-                        null
-                )
-        );
-    }
+        return ResponseEntity.ok(response);
+        }
+
+    @PostMapping("/resend-otp")
+        public ResponseEntity<LoginResponse> resendOtp(
+                @RequestBody OtpVerifyRequest request
+        ) {
+
+        LoginResponse response =
+                authService.resendOtp(
+                        request.getUsername()
+                );
+
+        if (!response.isSuccess()) {
+
+                return ResponseEntity
+                        .status(401)
+                        .body(response);
+        }
+
+        return ResponseEntity.ok(response);
+        }
 }

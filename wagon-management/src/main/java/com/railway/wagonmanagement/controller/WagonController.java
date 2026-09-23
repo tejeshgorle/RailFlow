@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 
 @RestController 
 public class WagonController {
@@ -31,6 +33,8 @@ public class WagonController {
     public String hello(){
         return "Welcome to Wagon Management System";
     }
+
+    @PreAuthorize("hasRole('OPERATOR')")
     @GetMapping("/api/wagons")
     public List<Wagon> getWagons(){
         return wagonService.getAllWagons();

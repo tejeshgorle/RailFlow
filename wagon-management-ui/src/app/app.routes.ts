@@ -36,6 +36,7 @@ import { ReleaseWagon } from './unloadings/release-wagon/release-wagon';
 
 import { MovementHistory } from './movements/movement-history/movement-history';
 
+import { authGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
 
@@ -67,6 +68,8 @@ export const routes: Routes = [
   {
     path: '',
     component: AppLayout,
+
+    canActivate: [authGuard],
 
     children: [
 

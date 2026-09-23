@@ -1270,28 +1270,72 @@
   background: #fffafa;
 }
 
-.otp-helper {
-  min-height: 18px;
+.otp-status-row {
+  width: 100%;
+  min-height: 22px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 12px;
 
-  color: var(--rf-text-muted);
+  margin-top: 2px;
+}
+
+.otp-status-actions {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+
+  min-width: 0;
+}
+
+.otp-countdown {
+  display: inline-flex;
+  align-items: center;
+
+  color: var(--rf-text-secondary);
 
   font-size: 10px;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
-.otp-helper strong {
+.otp-countdown strong {
+  margin-left: 3px;
+
   color: var(--rf-navy);
-
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.otp-helper .field-error {
-  flex: 1;
+.otp-expired {
+  color: var(--rf-red);
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.otp-error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  flex: 1 1 auto;
+  min-width: 0;
+
+  color: var(--rf-red);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.otp-error-message span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .resend-button {
@@ -1305,16 +1349,19 @@
   color: var(--rf-blue);
 
   font-family: inherit;
-
   font-size: 10px;
   font-weight: 700;
 
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.resend-button:hover:not(:disabled) {
+  text-decoration: underline;
 }
 
 .resend-button:disabled {
   color: #a7b0bb;
-
   cursor: not-allowed;
 }
 
@@ -1358,10 +1405,19 @@
     letter-spacing: 5px;
   }
 
-  .otp-helper {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
+  .otp-status-row {
+    align-items: flex-end;
+  }
+
+  .otp-status-actions {
+    gap: 10px;
+  }
+
+  .otp-countdown,
+  .otp-expired,
+  .resend-button,
+  .otp-error-message {
+    font-size: 9px;
   }
 
 }

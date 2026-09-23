@@ -551,57 +551,68 @@
                 maxlength="6"
                 [(ngModel)]="otpInput"
                 (input)="onOtpInput($event)"
-                (blur)="onOtpBlur()"
                 [class.input-error]="otpInvalid"
                 placeholder="Enter 6-digit code"
                 aria-label="Enter 6-digit verification code">
 
-              <div class="otp-helper">
+              <!-- OTP STATUS -->
+              <div class="otp-status-row">
 
-                <span *ngIf="!otpInvalid">
-                  Code expires in
-                  <strong>
-                    00:{{
-                      otpSecondsRemaining < 10
-                        ? '0' + otpSecondsRemaining
-                        : otpSecondsRemaining
-                    }}
-                  </strong>
-                </span>
-
-                <span
+                <!-- Validation appears only after Verify & Continue is submitted. -->
+                <div
                   *ngIf="otpInvalid"
-                  class="field-error">
+                  class="field-error otp-error-message">
 
                   <svg
                     lucideCircleAlert
-                    [attr.width]="13"
-                    [attr.height]="13"
+                    [attr.width]="14"
+                    [attr.height]="14"
                     [attr.stroke-width]="2">
                   </svg>
 
-                  {{
-                    otpError || 'Enter the 6-digit verification code.'
-                  }}
+                  <span>
+                    {{
+                      otpError || 'Enter the 6-digit verification code.'
+                    }}
+                  </span>
 
-                </span>
+                </div>
 
-                <button
-                  type="button"
-                  class="resend-button"
-                  [disabled]="!otpResendAvailable"
-                  (click)="resendOtp()">
+                <!-- Countdown / expiry / resend stay on the right. -->
+                <div class="otp-status-actions">
 
-                  {{
-                    otpResendAvailable
-                      ? 'Resend code'
-                      : 'Resend'
-                  }}
+                  <span
+                    *ngIf="!otpResendAvailable"
+                    class="otp-countdown">
 
-                </button>
+                    <span>
+                      Code expires in
+                      <strong>
+                        {{ otpMinutes }}:{{ otpSeconds }}
+                      </strong>
+                    </span>
+
+                  </span>
+
+                  <span
+                    *ngIf="otpResendAvailable"
+                    class="otp-expired">
+                    Verification code expired
+                  </span>
+
+                  <button
+                    type="button"
+                    class="resend-button"
+                    [disabled]="!otpResendAvailable || isLoading"
+                    (click)="resendOtp()">
+
+                    Resend OTP
+
+                  </button>
+
+                </div>
 
               </div>
-
             </div>
 
 

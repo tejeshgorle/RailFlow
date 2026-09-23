@@ -7,7 +7,7 @@ public class LoginResponse {
     private String username;
     private String role;
     private boolean otpRequired;
-    private String developmentOtp;
+    private String token;
 
     public LoginResponse() {
     }
@@ -64,11 +64,11 @@ public class LoginResponse {
         this.otpRequired = otpRequired;
     }
 
-    public String getDevelopmentOtp() {
-        return developmentOtp;
+    public String getToken() {
+        return token;
     }
 
-    public void setDevelopmentOtp(String developmentOtp) {
-        this.developmentOtp = developmentOtp;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

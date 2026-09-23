@@ -6,6 +6,8 @@ import {
   RouterOutlet
 } from '@angular/router';
 
+import { AuthService } from '../../auth/auth.service';
+
 import {
   LucideLayoutDashboard,
   LucideClipboardList,
@@ -17,7 +19,8 @@ import {
   LucideHistory,
   LucidePackageMinus,
   LucideMapPin,
-  LucideUsers
+  LucideUsers,
+  LucideLogOut
 } from '@lucide/angular';
 
 @Component({
@@ -39,7 +42,8 @@ import {
     LucideHistory,
     LucidePackageMinus,
     LucideMapPin,
-    LucideUsers
+    LucideUsers,
+    LucideLogOut
   ],
 
   templateUrl: './app-layout.html',
@@ -50,6 +54,7 @@ export class AppLayout {
   sidebarCollapsed = signal(false);
 
   constructor(
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -167,5 +172,29 @@ export class AppLayout {
     }
 
     return 'Operations';
+  }
+
+  logout(): void {
+    this.authService.logout();
+
+    this.router.navigate(['/login']);
+  }
+
+  get loggedInUsername(): string {
+    return localStorage.getItem(
+      'railflow_username'
+    ) || 'Operator';
+  }
+
+  get loggedInRole(): string {
+    return localStorage.getItem(
+      'railflow_role'
+    ) || 'OPERATOR';
+  }
+
+  get userInitials(): string {
+    return this.loggedInUsername
+      .substring(0, 2)
+      .toUpperCase();
   }
 }

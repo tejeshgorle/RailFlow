@@ -13,7 +13,7 @@ export interface LoginResponse {
   username: string | null;
   role: string | null;
   otpRequired: boolean;
-  developmentOtp: string | null;
+  token?: string | null;
 }
 
 export interface OtpVerifyRequest {
@@ -63,5 +63,21 @@ export class AuthService {
       `${this.apiUrl}/verify-otp`,
       request
     );
+  }
+
+  resendOtp(username: string): Observable<LoginResponse> {
+
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/resend-otp`,
+      {
+        username
+      }
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('railflow_token');
+    localStorage.removeItem('railflow_username');
+    localStorage.removeItem('railflow_role');
   }
 }

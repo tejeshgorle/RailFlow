@@ -23,8 +23,22 @@ public class OtpService {
     public String generateOtp(String username) {
 
         /*
-         * Generate a 6-digit OTP.
-         */
+        * Invalidate the previous active OTP.
+        */
+        otpRepository
+                .findTopByUsernameAndVerifiedFalseOrderByCreatedAtDesc(
+                        username
+                )
+                .ifPresent(previousOtp -> {
+
+                        previousOtp.setVerified(true);
+
+                        otpRepository.save(previousOtp);
+                });
+
+        /*
+        * Generate a new 6-digit OTP.
+        */
         String otp = String.format(
                 "%06d",
                 random.nextInt(1_000_000)
@@ -36,8 +50,13 @@ public class OtpService {
         verification.setUsername(username);
         verification.setOtp(otp);
 
+        /*
+        * Development validity:
+        * 5 minutes.
+        */
         verification.setExpiresAt(
-                LocalDateTime.now().plusSeconds(60)
+                LocalDateTime.now().plusSeconds(30)
+                //LocalDateTime.now().plusMinutes(5)
         );
 
         verification.setVerified(false);
@@ -45,7 +64,7 @@ public class OtpService {
         otpRepository.save(verification);
 
         return otp;
-    }
+        }
 
     public boolean verifyOtp(
             String username,

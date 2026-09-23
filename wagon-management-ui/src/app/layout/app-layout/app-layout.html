@@ -563,22 +563,39 @@
         <div class="user-profile">
 
           <div class="user-avatar">
-            OP
+            {{ userInitials }}
           </div>
 
           <div class="user-info">
 
             <strong>
-              Operator
+              {{ loggedInUsername }}
             </strong>
 
             <span>
-              Operations
+              {{ loggedInRole }}
             </span>
 
           </div>
 
         </div>
+
+        <button
+            type="button"
+            class="logout-button"
+            (click)="logout()"
+            title="Logout"
+            aria-label="Logout"
+          >
+            <svg
+              lucideLogOut
+              [attr.width]="18"
+              [attr.height]="18"
+              [attr.stroke-width]="1.8">
+            </svg>
+
+            <span>Logout</span>
+        </button>
 
       </div>
 
