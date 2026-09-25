@@ -1,3 +1,4 @@
+
 <div class="dashboard dashboard-control-center">
 
   <!-- =====================================================
@@ -400,7 +401,7 @@
           <h2>Items Requiring Attention</h2>
           <p>Queues below mirror the current backend workflow states.</p>
         </div>
-        <span class="panel-count">{{ getAttentionTotal() }} OPEN</span>
+        <span class="panel-count">{{ dashboardData()?.attentionTotal ?? 0  }} OPEN</span>
       </div>
 
       <div class="attention-grid">
@@ -442,7 +443,9 @@
           <a routerLink="/rakes/form" class="attention-item form-attention">
             <div class="attention-icon" aria-hidden="true"><svg lucideTrainFront [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
             <div class="attention-content">
-              <strong>{{ getLoadedDemandsAwaitingRake() }}</strong>
+              <strong>
+              {{ loadedDemandsAwaitingRake() }}
+            </strong>
               <span>Loaded demands awaiting rake formation</span>
             </div>
             <span class="attention-action">Form <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>
@@ -475,7 +478,7 @@
           <a routerLink="/unloadings/add" class="attention-item unload-attention">
             <div class="attention-icon" aria-hidden="true"><svg lucidePackageMinus [attr.width]="19" [attr.height]="19" [attr.stroke-width]="1.8"></svg></div>
             <div class="attention-content">
-              <strong>{{ getArrivedRakesAwaitingUnloading() }}</strong>
+              <strong>{{ arrivedRakesAwaitingUnloading()  }}</strong>
               <span>Arrived rakes awaiting unloading</span>
             </div>
             <span class="attention-action">Unload <svg lucideArrowRight [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.9"></svg></span>

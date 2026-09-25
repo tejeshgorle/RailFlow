@@ -16,6 +16,14 @@ import {
 } from '@lucide/angular';
 
 import {
+  DashboardResponse
+} from './dashboard.model';
+
+import {
+  DashboardService
+} from './dashboard.service';
+
+import {
   Component,
   OnDestroy,
   OnInit,
@@ -117,6 +125,9 @@ export class Dashboard implements OnInit, OnDestroy {
   consignments = signal<Consignment[]>([]);
   unloadings = signal<any[]>([]);
 
+  loadedDemandsAwaitingRake = signal(0);
+  arrivedRakesAwaitingUnloading = signal(0);
+  attentionTotal = signal(0);
 
   // =====================================================
   // PAGE STATE
@@ -131,6 +142,8 @@ export class Dashboard implements OnInit, OnDestroy {
   errorMessage = signal('');
 
   lastRefreshTime = signal<Date | null>(null);
+
+  dashboardData = signal<DashboardResponse | null>(null);
 
 
   // =====================================================
@@ -232,7 +245,8 @@ export class Dashboard implements OnInit, OnDestroy {
     private demandService: DemandService,
     private rakeService: RakeService,
     private consignmentService: ConsignmentService,
-    private unloadingService: UnloadingService
+    private unloadingService: UnloadingService,
+    private dashboardService: DashboardService
   ) {}
 
 
@@ -318,18 +332,6 @@ export class Dashboard implements OnInit, OnDestroy {
     const firstLoad =
       !this.hasLoadedOnce();
 
-
-    /*
-     * First load:
-     *
-     * Show skeleton loading.
-     *
-     * Subsequent refresh:
-     *
-     * Keep the existing dashboard visible and show
-     * refresh state instead.
-     */
-
     if (firstLoad) {
 
       this.loading.set(true);
@@ -340,23 +342,11 @@ export class Dashboard implements OnInit, OnDestroy {
 
     }
 
-
     this.errorMessage.set('');
-
 
     let completedRequests = 0;
 
-    /*
-     * Five backend data sources:
-     *
-     * 1. Wagons
-     * 2. Demands
-     * 3. Rakes
-     * 4. Consignments
-     * 5. Unloadings
-     */
-
-    const totalRequests = 5;
+    const totalRequests = 6;
 
     const errors: string[] = [];
 
@@ -365,10 +355,12 @@ export class Dashboard implements OnInit, OnDestroy {
 
       completedRequests++;
 
+      console.log(
+        `Dashboard request completed: ${completedRequests}/${totalRequests}`
+      );
 
       if (
-        completedRequests ===
-        totalRequests
+        completedRequests >= totalRequests
       ) {
 
         this.loading.set(false);
@@ -380,12 +372,6 @@ export class Dashboard implements OnInit, OnDestroy {
         this.lastRefreshTime.set(
           new Date()
         );
-
-
-        /*
-         * Partial failure should not destroy the
-         * complete dashboard.
-         */
 
         if (errors.length > 0) {
 
@@ -400,9 +386,15 @@ export class Dashboard implements OnInit, OnDestroy {
     };
 
 
-    // ===================================================
-    // WAGONS
-    // ===================================================
+    // 1. Dashboard statistics
+
+    this.loadDashboardStatistics(
+      checkComplete,
+      errors
+    );
+
+
+    // 2. Wagons
 
     this.wagonService
       .getAllWagons()
@@ -411,10 +403,6 @@ export class Dashboard implements OnInit, OnDestroy {
         next: (data) => {
 
           this.wagons.set(data);
-
-          this.calculateWagonStatistics(
-            data
-          );
 
           checkComplete();
 
@@ -436,9 +424,7 @@ export class Dashboard implements OnInit, OnDestroy {
       });
 
 
-    // ===================================================
-    // DEMANDS
-    // ===================================================
+    // 3. Demands
 
     this.demandService
       .getAllDemands()
@@ -447,10 +433,6 @@ export class Dashboard implements OnInit, OnDestroy {
         next: (data) => {
 
           this.demands.set(data);
-
-          this.calculateDemandStatistics(
-            data
-          );
 
           checkComplete();
 
@@ -472,9 +454,7 @@ export class Dashboard implements OnInit, OnDestroy {
       });
 
 
-    // ===================================================
-    // RAKES
-    // ===================================================
+    // 4. Rakes
 
     this.rakeService
       .getAllRakes()
@@ -483,10 +463,6 @@ export class Dashboard implements OnInit, OnDestroy {
         next: (data) => {
 
           this.rakes.set(data);
-
-          this.calculateRakeStatistics(
-            data
-          );
 
           checkComplete();
 
@@ -508,9 +484,7 @@ export class Dashboard implements OnInit, OnDestroy {
       });
 
 
-    // ===================================================
-    // CONSIGNMENTS
-    // ===================================================
+    // 5. Consignments
 
     this.consignmentService
       .getAllConsignments()
@@ -540,14 +514,7 @@ export class Dashboard implements OnInit, OnDestroy {
       });
 
 
-    // ===================================================
-    // UNLOADING RECORDS
-    // ===================================================
-
-    /*
-     * Used to determine whether an ARRIVED rake still
-     * has unloading work pending.
-     */
+    // 6. Unloadings
 
     this.unloadingService
       .getAllUnloadings()
@@ -1315,21 +1282,9 @@ export class Dashboard implements OnInit, OnDestroy {
   private resolveUserRole():
     DashboardRole {
 
-    /*
-     * Temporary authentication bridge.
-     *
-     * Future:
-     *
-     * Replace this with something like:
-     *
-     * authService.getCurrentUserRole()
-     *
-     * or a JWT claim.
-     */
-
     const storedRole =
       localStorage.getItem(
-        'railflow.userRole'
+        'railflow_role'
       );
 
 
@@ -1433,6 +1388,90 @@ export class Dashboard implements OnInit, OnDestroy {
 
     }
 
+  }
+
+  loadDashboardStatistics(
+    onComplete: () => void,
+    errors: string[]
+  ): void {
+
+    this.dashboardService
+      .getDashboard()
+      .subscribe({
+
+        next: (data) => {
+
+          console.log(
+            'Dashboard API response:',
+            data
+          );
+
+          this.dashboardData.set(data);
+
+          // =================================================
+          // WAGON STATISTICS
+          // =================================================
+
+          this.totalWagons.set(data.totalWagons);
+          this.availableWagons.set(data.availableWagons);
+          this.allocatedWagons.set(data.allocatedWagons);
+          this.loadedWagons.set(data.loadedWagons);
+          this.emptyWagons.set(data.emptyWagons);
+
+          // =================================================
+          // DEMAND STATISTICS
+          // =================================================
+
+          this.totalDemands.set(data.totalDemands);
+          this.registeredDemands.set(data.registeredDemands);
+          this.approvedDemands.set(data.approvedDemands);
+          this.allocatedDemands.set(data.allocatedDemands);
+          this.loadedDemands.set(data.loadedDemands);
+          this.deliveredDemands.set(data.deliveredDemands);
+
+          // =================================================
+          // RAKE STATISTICS
+          // =================================================
+
+          this.totalRakes.set(data.totalRakes);
+          this.formedRakes.set(data.formedRakes);
+          this.dispatchedRakes.set(data.dispatchedRakes);
+          this.arrivedRakes.set(data.arrivedRakes);
+
+          // =================================================
+          // OPERATIONAL ATTENTION
+          // =================================================
+
+          this.loadedDemandsAwaitingRake.set(
+            data.loadedDemandsAwaitingRake ?? 0
+          );
+
+          this.arrivedRakesAwaitingUnloading.set(
+            data.arrivedRakesAwaitingUnloading ?? 0
+          );
+
+          this.attentionTotal.set(
+            data.attentionTotal ?? 0
+          );
+
+          // Mark this request as completed.
+          onComplete();
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Dashboard statistics error:',
+            error
+          );
+
+          errors.push('dashboard');
+
+          // Mark this request as completed even on failure.
+          onComplete();
+        }
+
+      });
   }
 
 }
