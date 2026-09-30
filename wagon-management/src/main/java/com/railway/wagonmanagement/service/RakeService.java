@@ -430,6 +430,7 @@ public class RakeService {
         // 7. Change Rake Status
         // -------------------------------------------------
 
+        rake.setArrivalTime(arrivalTime);
         rake.setStatus(RakeStatus.ARRIVED);
 
         return rakeRepository.save(rake);

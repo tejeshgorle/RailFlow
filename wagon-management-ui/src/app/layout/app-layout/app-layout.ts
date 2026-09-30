@@ -24,6 +24,11 @@ import {
   LucideBell
 } from '@lucide/angular';
 
+import { CommonModule } from '@angular/common';
+import {
+  AlertCountService
+} from '../../alerts/alert-count.service';
+
 @Component({
   selector: 'app-layout',
   standalone: true,
@@ -45,7 +50,8 @@ import {
     LucideMapPin,
     LucideUsers,
     LucideLogOut,
-    LucideBell
+    LucideBell,
+    CommonModule
   ],
 
   templateUrl: './app-layout.html',
@@ -57,7 +63,8 @@ export class AppLayout {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public alertCountService: AlertCountService
   ) {}
 
   toggleSidebar(): void {
@@ -188,7 +195,7 @@ export class AppLayout {
     if (url === '/alerts') {
       return 'Operational Alerts';
     }
-    
+
     return 'Operations';
   }
 

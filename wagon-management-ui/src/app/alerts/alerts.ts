@@ -65,6 +65,10 @@ import {
 } from '../unloadings/unloading.service';
 
 
+import {
+  AlertCountService
+} from './alert-count.service';
+
 type AlertType =
   | 'APPROVAL'
   | 'ALLOCATION'
@@ -121,10 +125,13 @@ interface OperationalAlert {
 
   route: string;
 
+  queryParams?: Record<string, number | string>;
+
   createdAt: Date;
 
-}
+  eventTime: Date;
 
+}
 
 @Component({
 
@@ -224,6 +231,8 @@ export class Alerts implements OnInit {
     private consignmentService: ConsignmentService,
 
     private unloadingService: UnloadingService,
+
+    private alertCountService: AlertCountService,
 
     private cdr: ChangeDetectorRef
 
@@ -525,6 +534,9 @@ export class Alerts implements OnInit {
               '/demands',
 
             createdAt:
+              new Date(),
+
+            eventTime:
               this.getDateValue(
                 demand.demandDate
               )
@@ -577,9 +589,16 @@ export class Alerts implements OnInit {
               'Allocate Wagon',
 
             route:
-              '/allocations',
+              '/allocations/add',
+
+            queryParams: {
+              demandId: demand.demandId
+            },
 
             createdAt:
+              new Date(),
+
+            eventTime:
               this.getDateValue(
                 demand.demandDate
               )
@@ -632,9 +651,16 @@ export class Alerts implements OnInit {
               'Open Loading',
 
             route:
-              '/loadings',
+              '/loadings/add',
+
+            queryParams: {
+              demandId: demand.demandId
+            },
 
             createdAt:
+              new Date(),
+
+            eventTime:
               this.getDateValue(
                 demand.demandDate
               )
@@ -727,9 +753,16 @@ export class Alerts implements OnInit {
                 'Form Rake',
 
               route:
-                '/rakes',
+                '/rakes/form',
 
+              queryParams: {
+                demandId: demand.demandId
+              },
+              
               createdAt:
+                new Date(),
+
+              eventTime:
                 this.getDateValue(
                   demand.demandDate
                 )
@@ -786,8 +819,11 @@ export class Alerts implements OnInit {
             route:
               '/rakes',
 
-            createdAt:
-              new Date()
+            createdAt: new Date(),
+
+          eventTime: this.getDateValue(
+            rake.formationTime
+          )
 
           });
 
@@ -840,7 +876,12 @@ export class Alerts implements OnInit {
               '/rakes',
 
             createdAt:
-              new Date()
+              new Date(),
+
+              eventTime:
+              this.getDateValue(
+                rake.dispatchTime
+              )
 
           });
 
@@ -906,11 +947,19 @@ export class Alerts implements OnInit {
                 'Open Unloading',
 
               route:
-                '/unloadings',
+                '/unloadings/add',
+
+              queryParams: {
+                rakeId: rake.rakeId
+              },
 
               createdAt:
-                new Date()
+                new Date(),
 
+                eventTime:
+              this.getDateValue(
+                rake.arrivalTime
+              )
             });
 
           }
@@ -932,9 +981,43 @@ export class Alerts implements OnInit {
           a.createdAt.getTime()
 
       );
+      this.alertCountService.setCount(
+      this.alerts.length
+    );
 
   }
 
+
+  getDetailsRoute(
+    alert: OperationalAlert
+  ): string[] {
+
+    switch (alert.referenceType) {
+
+      case 'DEMAND':
+        return [
+          '/demands',
+          String(alert.referenceId)
+        ];
+
+      case 'WAGON':
+        return [
+          '/wagons',
+          String(alert.referenceId)
+        ];
+
+      case 'RAKE':
+        return [
+          '/rakes',
+          String(alert.referenceId)
+        ];
+
+      default:
+        return ['/dashboard'];
+
+    }
+
+  }
 
   // =====================================================
   // DATE HELPER
@@ -963,6 +1046,60 @@ export class Alerts implements OnInit {
 
   }
 
+  getAlertAge(alert: OperationalAlert): string {
+
+    const eventTime =
+      alert.eventTime.getTime();
+
+    const now =
+      Date.now();
+
+    const difference =
+      Math.max(
+        0,
+        now - eventTime
+      );
+
+    const totalMinutes =
+      Math.floor(
+        difference / (1000 * 60)
+      );
+
+    if (totalMinutes < 1) {
+      return 'Just now';
+    }
+
+    if (totalMinutes < 60) {
+      return `${totalMinutes}m pending`;
+    }
+
+    const totalHours =
+      Math.floor(
+        totalMinutes / 60
+      );
+
+    if (totalHours < 24) {
+
+      const minutes =
+        totalMinutes % 60;
+
+      return minutes > 0
+        ? `${totalHours}h ${minutes}m pending`
+        : `${totalHours}h pending`;
+    }
+
+    const days =
+      Math.floor(
+        totalHours / 24
+      );
+
+    const hours =
+      totalHours % 24;
+
+    return hours > 0
+      ? `${days}d ${hours}h pending`
+      : `${days}d pending`;
+  }
 
   // =====================================================
   // FILTERED ALERTS

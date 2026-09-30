@@ -494,8 +494,19 @@
 
             </span>
 
-            <span class="nav-label">
-              Operational Alerts
+            <span class="nav-label nav-alert-label">
+
+              <span>
+                Operational Alerts
+              </span>
+
+              <span
+                *ngIf="alertCountService.count() > 0"
+                class="alert-count-badge"
+              >
+                {{ alertCountService.count() }}
+              </span>
+
             </span>
 
           </a>

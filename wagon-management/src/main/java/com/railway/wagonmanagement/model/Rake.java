@@ -31,6 +31,8 @@ public class Rake {
 
     private LocalDateTime dispatchTime;
 
+    private LocalDateTime arrivalTime;
+
     @Enumerated(EnumType.STRING)
     private RakeStatus status;
 
@@ -107,5 +109,13 @@ public class Rake {
 
     public void setStatus(RakeStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalDateTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }

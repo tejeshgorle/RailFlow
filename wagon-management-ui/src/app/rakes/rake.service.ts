@@ -10,6 +10,7 @@ export interface Rake {
 
   formationTime: string;
   dispatchTime: string | null;
+  arrivalTime?: string | Date;
 
   fromStation: {
     stationId: number;

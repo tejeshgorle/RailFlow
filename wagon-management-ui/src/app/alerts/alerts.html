@@ -439,9 +439,17 @@
 
           </div>
 
-          <time>
-            {{ alert.createdAt | date:'dd MMM yyyy, HH:mm' }}
-          </time>
+            <time class="alert-time">
+
+                <span>
+                    {{ alert.createdAt | date:'dd MMM yyyy, HH:mm' }}
+                </span>
+
+                <small>
+                    {{ getAlertAge(alert) }}
+                </small>
+
+            </time>
 
         </div>
 
@@ -474,20 +482,28 @@
 
       <!-- ACTION -->
 
-      <div class="alert-action">
+        <div class="alert-action">
 
-        <a
-          class="action-button"
-          [routerLink]="alert.route"
-        >
+            <a
+                class="details-button"
+                [routerLink]="getDetailsRoute(alert)"
+            >
+                View Details
+            </a>
 
-          {{ alert.actionLabel }}
+            <a
+                class="action-button"
+                [routerLink]="[alert.route]"
+                [queryParams]="alert.queryParams"
+            >
 
-          <svg lucideArrowRight></svg>
+                {{ alert.actionLabel }}
 
-        </a>
+                <svg lucideArrowRight></svg>
 
-      </div>
+            </a>
+
+        </div>
 
     </article>
 
