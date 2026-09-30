@@ -434,6 +434,74 @@
 
       </div>
 
+      <!-- ================= REPORTS ================= -->
+
+      <div class="nav-section">
+
+          <div class="nav-section-title">
+            REPORTS
+          </div>
+
+          <a
+            routerLink="/reports"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-item"
+            title="Reports"
+          >
+
+            <span class="nav-icon">
+              <svg
+                lucideFileText
+                [attr.width]="19"
+                [attr.height]="19"
+                [attr.stroke-width]="1.8">
+              </svg>
+            </span>
+
+            <span class="nav-label">
+              Reports
+            </span>
+
+          </a>
+
+        </div> <!-- end REPORTS -->
+
+        <!-- ================= ALERTS ================= -->
+
+        <div class="nav-section">
+
+          <div class="nav-section-title">
+            ALERTS
+          </div>
+
+          <a
+            routerLink="/alerts"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-item"
+            title="Operational Alerts"
+          >
+
+            <span class="nav-icon">
+
+              <svg
+                lucideBell
+                [attr.width]="19"
+                [attr.height]="19"
+                [attr.stroke-width]="1.8">
+              </svg>
+
+            </span>
+
+            <span class="nav-label">
+              Operational Alerts
+            </span>
+
+          </a>
+
+        </div>
+
     </nav>
 
 

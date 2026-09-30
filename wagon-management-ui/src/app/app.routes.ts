@@ -38,6 +38,10 @@ import { MovementHistory } from './movements/movement-history/movement-history';
 
 import { authGuard } from './auth/guards/auth.guard';
 
+import { Reports } from './reports/reports/reports';
+
+import { Alerts } from './alerts/alerts';
+
 export const routes: Routes = [
 
   // =====================================================
@@ -235,6 +239,24 @@ export const routes: Routes = [
       {
         path: 'movements',
         component: MovementHistory
+      },
+
+      // ===================================================
+      // REPORTS
+      // ===================================================
+
+      {
+        path: 'reports',
+        component: Reports
+      },
+
+      // ===================================================
+      // OPERATIONAL ALERTS
+      // ===================================================
+
+      {
+        path: 'alerts',
+        component: Alerts
       }
 
     ]

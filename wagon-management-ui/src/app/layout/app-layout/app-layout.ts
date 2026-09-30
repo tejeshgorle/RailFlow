@@ -20,7 +20,8 @@ import {
   LucidePackageMinus,
   LucideMapPin,
   LucideUsers,
-  LucideLogOut
+  LucideLogOut,
+  LucideBell
 } from '@lucide/angular';
 
 @Component({
@@ -43,7 +44,8 @@ import {
     LucidePackageMinus,
     LucideMapPin,
     LucideUsers,
-    LucideLogOut
+    LucideLogOut,
+    LucideBell
   ],
 
   templateUrl: './app-layout.html',
@@ -74,6 +76,14 @@ export class AppLayout {
       url.startsWith('/customers')
     ) {
       return 'Master Data';
+    }
+
+    if (url.startsWith('/reports')) {
+      return 'Reports';
+    }
+
+    if (url.startsWith('/alerts')) {
+      return 'Alerts';
     }
 
     return 'Operations';
@@ -171,6 +181,14 @@ export class AppLayout {
       return 'Customer Details';
     }
 
+    if (url === '/reports') {
+      return 'Wagon Status Report';
+    }
+
+    if (url === '/alerts') {
+      return 'Operational Alerts';
+    }
+    
     return 'Operations';
   }
 

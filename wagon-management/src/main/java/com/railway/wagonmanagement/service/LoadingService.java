@@ -144,12 +144,9 @@ public class LoadingService {
         // 8. Check Demand Status
         // -------------------------------------------------
 
-        if (demand.getStatus() != DemandStatus.APPROVED &&
-                demand.getStatus() != DemandStatus.WAGONS_ALLOCATED) {
-
-            throw new InvalidWagonAllocationException(
-                    "Wagons can only be loaded for an APPROVED "
-                            + "or WAGONS_ALLOCATED demand");
+        if (demand.getStatus() != DemandStatus.WAGONS_ALLOCATED) {
+        throw new InvalidWagonAllocationException(
+                "Wagons can only be loaded after all required wagons are allocated");
         }
 
         // -------------------------------------------------

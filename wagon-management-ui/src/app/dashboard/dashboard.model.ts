@@ -29,4 +29,14 @@ export interface DashboardResponse {
   loadedDemandsAwaitingRake: number;
   arrivedRakesAwaitingUnloading: number;
   attentionTotal: number;
+
+  recentMovements: RecentMovement[];
+}
+
+export interface RecentMovement {
+  movementId: number;
+  wagonNumber: string;
+  fromStation: string;
+  toStation: string;
+  movementTime: string;
 }

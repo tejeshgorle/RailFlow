@@ -554,10 +554,6 @@ tbody tr:last-child td {
   text-decoration: none;
 }
 
-.wagon-link:hover {
-  text-decoration: underline;
-}
-
 
 /* ============================================================
    WAGON TYPE
@@ -771,4 +767,87 @@ tbody tr:last-child td {
   width: 24px;
   height: 24px;
   display: block;
+}
+
+.movement-filter-label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.movement-filter-label strong {
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.clear-filter-link {
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+
+.movement-id {
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Overall KPI clarification */
+.kpi-summary-note {
+  grid-column: 1 / -1;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: -8px;
+}
+
+/* Wagon filter */
+.movement-filter-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.filter-description {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.wagon-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.clear-filter-link {
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.wagon-link,
+.clear-filter-link,
+.demand-id {
+  text-decoration: none;
+}
+
+.wagon-link:hover,
+.clear-filter-link:hover,
+.demand-id:hover {
+  text-decoration: none;
 }

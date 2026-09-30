@@ -15,7 +15,7 @@ export interface Wagon {
     stationName: string | null;
     zone: string | null;
     division: string | null;
-  };
+  } | null;
 }
 
 export interface CreateWagonRequest {

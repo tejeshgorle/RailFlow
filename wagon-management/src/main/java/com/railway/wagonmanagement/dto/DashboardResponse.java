@@ -1,5 +1,8 @@
 package com.railway.wagonmanagement.dto;
 
+import java.util.List;
+import com.railway.wagonmanagement.dto.RecentMovementResponse;
+
 public class DashboardResponse {
 
     // =====================================================
@@ -41,6 +44,7 @@ public class DashboardResponse {
 
     private long totalConsignments;
     private long totalMovements;
+    private List<RecentMovementResponse> recentMovements;
 
     private long loadedDemandsAwaitingRake;
     private long arrivedRakesAwaitingUnloading;
@@ -230,5 +234,13 @@ public class DashboardResponse {
     public void setAttentionTotal(
             long attentionTotal) {
         this.attentionTotal = attentionTotal;
+    }
+
+    public List<RecentMovementResponse> getRecentMovements() {
+        return recentMovements;
+    }
+
+    public void setRecentMovements(List<RecentMovementResponse> recentMovements) {
+        this.recentMovements = recentMovements;
     }
 }

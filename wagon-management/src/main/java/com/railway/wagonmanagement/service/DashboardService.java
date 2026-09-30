@@ -17,6 +17,9 @@ import com.railway.wagonmanagement.repository.UnloadingRepository;
 import com.railway.wagonmanagement.repository.WagonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.railway.wagonmanagement.dto.RecentMovementResponse;
+import com.railway.wagonmanagement.model.Movement;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Objects;
@@ -130,6 +133,30 @@ public class DashboardService {
         // OTHER OPERATION STATISTICS
         response.setTotalConsignments(consignmentRepository.count());
         response.setTotalMovements(movementRepository.count());
+        // RECENT MOVEMENTS
+        List<Movement> recentMovements =
+                movementRepository.findAllByOrderByMovementTimeDesc(
+                        PageRequest.of(0, 5)
+                );
+
+        List<RecentMovementResponse> recentMovementResponses =
+                recentMovements.stream()
+                        .map(movement -> new RecentMovementResponse(
+                                movement.getMovementId(),
+                                movement.getWagon() != null
+                                        ? movement.getWagon().getWagonNumber()
+                                        : "N/A",
+                                movement.getFromStation() != null
+                                        ? movement.getFromStation().getStationCode()
+                                        : "N/A",
+                                movement.getToStation() != null
+                                        ? movement.getToStation().getStationCode()
+                                        : "N/A",
+                                movement.getMovementTime()
+                        ))
+                        .toList();
+
+        response.setRecentMovements(recentMovementResponses);
 
         // OPERATIONAL ATTENTION
         List<Consignment> consignments = consignmentRepository.findAll();

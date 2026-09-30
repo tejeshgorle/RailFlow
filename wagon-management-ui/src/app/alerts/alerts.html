@@ -1,0 +1,496 @@
+<div class="alerts-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <section class="alerts-header">
+
+    <div class="header-content">
+
+      <div class="eyebrow">
+        OPERATIONS CONTROL CENTER
+      </div>
+
+      <h1>
+        Operational Alerts
+      </h1>
+
+      <p>
+        Actionable operational conditions requiring attention
+        across the freight movement workflow.
+      </p>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <div
+        class="last-refresh"
+        *ngIf="lastRefreshTime"
+      >
+        Updated
+        {{ lastRefreshTime | date:'HH:mm:ss' }}
+      </div>
+
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshAlerts()"
+        [disabled]="loading || isRefreshing"
+      >
+
+        <svg lucideRefreshCw></svg>
+
+        {{
+          isRefreshing
+            ? 'Refreshing...'
+            : 'Refresh'
+        }}
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SUMMARY CARDS
+       ===================================================== -->
+
+  <section class="alert-summary">
+
+    <!-- TOTAL -->
+
+    <article class="summary-card total-card">
+
+      <div class="summary-icon">
+
+        <svg lucideCircleAlert></svg>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          ACTIVE ALERTS
+        </span>
+
+        <strong>
+          {{ totalAlertCount }}
+        </strong>
+
+        <small>
+          Operational conditions
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <!-- WARNING -->
+
+    <article class="summary-card warning-card">
+
+      <div class="summary-icon">
+
+        <svg lucideAlertTriangle></svg>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          WARNINGS
+        </span>
+
+        <strong>
+          {{ warningAlertCount }}
+        </strong>
+
+        <small>
+          Pending operational tasks
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <!-- ACTION -->
+
+    <article class="summary-card action-card">
+
+      <div class="summary-icon">
+
+        <svg lucideCircleAlert></svg>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          ACTION REQUIRED
+        </span>
+
+        <strong>
+          {{ actionAlertCount }}
+        </strong>
+
+        <small>
+          Immediate operational attention
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <!-- INFORMATION -->
+
+    <article class="summary-card info-card">
+
+      <div class="summary-icon">
+
+        <svg lucideInfo></svg>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          INFORMATION
+        </span>
+
+        <strong>
+          {{ infoAlertCount }}
+        </strong>
+
+        <small>
+          Status updates
+        </small>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="error-banner"
+  >
+
+    <svg lucideAlertTriangle></svg>
+
+    <div>
+
+      <strong>
+        Operational data partially unavailable
+      </strong>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILTER BAR
+       ===================================================== -->
+
+  <section class="filter-panel">
+
+    <div class="filter-header">
+
+      <div>
+
+        <h2>
+          Alert Queue
+        </h2>
+
+        <p>
+          Review and act on current operational conditions.
+        </p>
+
+      </div>
+
+      <span class="result-count">
+        {{ filteredAlerts.length }} alerts
+      </span>
+
+    </div>
+
+
+    <div class="filters">
+
+      <!-- SEARCH -->
+
+      <label class="search-field">
+
+        <svg lucideSearch></svg>
+
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search alerts..."
+          aria-label="Search alerts"
+        />
+
+      </label>
+
+
+      <!-- PRIORITY -->
+
+      <select
+        [(ngModel)]="selectedPriority"
+        aria-label="Filter by priority"
+      >
+
+        <option value="ALL">
+          All Priorities
+        </option>
+
+        <option value="WARNING">
+          Warnings
+        </option>
+
+        <option value="ACTION">
+          Action Required
+        </option>
+
+        <option value="INFO">
+          Information
+        </option>
+
+      </select>
+
+
+      <!-- MODULE -->
+
+      <select
+        [(ngModel)]="selectedModule"
+        aria-label="Filter by module"
+      >
+
+        <option value="ALL">
+          All Modules
+        </option>
+
+        <option value="DEMAND">
+          Demand
+        </option>
+
+        <option value="ALLOCATION">
+          Allocation
+        </option>
+
+        <option value="LOADING">
+          Loading
+        </option>
+
+        <option value="RAKE">
+          Rake
+        </option>
+
+        <option value="UNLOADING">
+          Unloading
+        </option>
+
+      </select>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       LOADING STATE
+       ===================================================== -->
+
+  <section
+    *ngIf="loading"
+    class="message-state"
+  >
+
+    <div class="loading-spinner"></div>
+
+    <strong>
+      Loading operational alerts...
+    </strong>
+
+    <span>
+      Checking current demand, wagon, rake and unloading states.
+    </span>
+
+  </section>
+
+
+  <!-- =====================================================
+       EMPTY STATE
+       ===================================================== -->
+
+  <section
+    *ngIf="
+      !loading &&
+      !filteredAlerts.length
+    "
+    class="empty-state"
+  >
+
+    <div class="empty-icon">
+
+      <svg lucideCheckCircle2></svg>
+
+    </div>
+
+    <h3>
+      No active alerts
+    </h3>
+
+    <p>
+      No operational conditions match the selected filters.
+    </p>
+
+  </section>
+
+
+  <!-- =====================================================
+       ALERT LIST
+       ===================================================== -->
+
+  <section
+    *ngIf="
+      !loading &&
+      filteredAlerts.length
+    "
+    class="alerts-list"
+  >
+
+    <article
+      class="alert-card"
+      *ngFor="let alert of filteredAlerts"
+      [ngClass]="getPriorityClass(alert.priority)"
+    >
+
+      <!-- PRIORITY INDICATOR -->
+
+      <div class="alert-indicator"></div>
+
+
+      <!-- ICON -->
+
+      <div class="alert-icon">
+
+        <ng-container
+          [ngSwitch]="alert.priority"
+        >
+
+          <svg
+            *ngSwitchCase="'WARNING'"
+            lucideAlertTriangle
+          ></svg>
+
+          <svg
+            *ngSwitchCase="'ACTION'"
+            lucideCircleAlert
+          ></svg>
+
+          <svg
+            *ngSwitchCase="'INFO'"
+            lucideInfo
+          ></svg>
+
+        </ng-container>
+
+      </div>
+
+
+      <!-- CONTENT -->
+
+      <div class="alert-content">
+
+        <div class="alert-topline">
+
+          <div class="alert-title-group">
+
+            <span class="module-badge">
+              {{ getModuleLabel(alert) }}
+            </span>
+
+            <span
+              class="priority-badge"
+              [ngClass]="getPriorityClass(alert.priority)"
+            >
+              {{ getPriorityLabel(alert.priority) }}
+            </span>
+
+          </div>
+
+          <time>
+            {{ alert.createdAt | date:'dd MMM yyyy, HH:mm' }}
+          </time>
+
+        </div>
+
+
+        <h3>
+          {{ alert.title }}
+        </h3>
+
+
+        <p>
+          {{ alert.description }}
+        </p>
+
+
+        <div class="alert-reference">
+
+          <span>
+            Reference
+          </span>
+
+          <strong>
+            {{ alert.referenceType }}
+            #{{ alert.referenceId }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACTION -->
+
+      <div class="alert-action">
+
+        <a
+          class="action-button"
+          [routerLink]="alert.route"
+        >
+
+          {{ alert.actionLabel }}
+
+          <svg lucideArrowRight></svg>
+
+        </a>
+
+      </div>
+
+    </article>
+
+  </section>
+
+</div>

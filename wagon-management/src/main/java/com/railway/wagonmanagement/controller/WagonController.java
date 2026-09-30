@@ -12,13 +12,14 @@ import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.railway.wagonmanagement.model.WagonStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController 
 public class WagonController {
@@ -59,5 +60,18 @@ public class WagonController {
         wagonService.deleteWagon(id);
         return "Wagon deleted successfully";
     }
+
+    @GetMapping("/api/reports/wagons")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'SUPERVISOR', 'ADMIN')")
+    public List<Wagon> getWagonStatusReport(
+            @RequestParam(required = false) WagonStatus status) {
+
+        if (status == null) {
+            return wagonService.getAllWagons();
+        }
+
+        return wagonService.getWagonsByStatus(status);
+    }
+
 }
 

@@ -418,11 +418,11 @@
                       <div class="station-cell">
 
                         <strong>
-                          {{ wagon.station.stationCode }}
+                          {{ wagon.station?.stationCode ?? '—' }}
                         </strong>
 
                         <span>
-                          {{ wagon.station.stationName }}
+                          {{ wagon.station?.stationName ?? 'Not Assigned' }}
                         </span>
 
                       </div>

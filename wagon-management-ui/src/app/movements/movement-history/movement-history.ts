@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  signal
+  signal,
+  computed
 } from '@angular/core';
 
 import {
@@ -9,6 +10,7 @@ import {
 } from '@angular/common';
 
 import {
+  ActivatedRoute,
   RouterLink
 } from '@angular/router';
 
@@ -49,27 +51,50 @@ import {
 })
 export class MovementHistory implements OnInit {
 
-
   // =====================================================
   // DATA
   // =====================================================
 
-  movements =
-    signal<Movement[]>([]);
+  movements = signal<Movement[]>([]);
+
+  // Wagon number received through the URL query parameter.
+  // Example: /movements?wagonNumber=CR800003
+  selectedWagonNumber = signal('');
+
+
+  // =====================================================
+  // FILTERED DATA
+  // =====================================================
+
+  filteredMovements = computed(() => {
+
+    const wagonNumber =
+      this.selectedWagonNumber()
+        .trim()
+        .toLowerCase();
+
+    if (!wagonNumber) {
+      return this.movements();
+    }
+
+    return this.movements().filter(movement =>
+      movement.wagon?.wagonNumber
+        ?.toLowerCase()
+        .includes(wagonNumber)
+    );
+
+  });
 
 
   // =====================================================
   // PAGE STATE
   // =====================================================
 
-  loading =
-    signal(true);
+  loading = signal(true);
 
-  errorMessage =
-    signal('');
+  errorMessage = signal('');
 
-  lastRefreshTime =
-    signal<Date | null>(null);
+  lastRefreshTime = signal<Date | null>(null);
 
 
   // =====================================================
@@ -77,7 +102,8 @@ export class MovementHistory implements OnInit {
   // =====================================================
 
   constructor(
-    private movementService: MovementService
+    private movementService: MovementService,
+    private route: ActivatedRoute
   ) {}
 
 
@@ -86,6 +112,14 @@ export class MovementHistory implements OnInit {
   // =====================================================
 
   ngOnInit(): void {
+
+    this.route.queryParamMap.subscribe(params => {
+
+      this.selectedWagonNumber.set(
+        params.get('wagonNumber')?.trim() ?? ''
+      );
+
+    });
 
     this.loadMovements();
 
@@ -108,22 +142,17 @@ export class MovementHistory implements OnInit {
 
         next: (data) => {
 
-          const sortedMovements =
-            [...data].sort(
-              (a, b) =>
-                new Date(b.movementTime).getTime() -
-                new Date(a.movementTime).getTime()
-            );
-
-          this.movements.set(
-            sortedMovements
+          const sortedMovements = [...data].sort(
+            (a, b) =>
+              new Date(b.movementTime).getTime() -
+              new Date(a.movementTime).getTime()
           );
+
+          this.movements.set(sortedMovements);
 
           this.loading.set(false);
 
-          this.lastRefreshTime.set(
-            new Date()
-          );
+          this.lastRefreshTime.set(new Date());
 
         },
 
@@ -152,11 +181,14 @@ export class MovementHistory implements OnInit {
   // =====================================================
 
   refreshMovements(): void {
-
     this.loadMovements();
-
   }
 
+
+  // =====================================================
+  // KPI CALCULATIONS
+  // These continue to use all movements, not filtered rows.
+  // =====================================================
 
   getTodayMovementCount(): number {
 

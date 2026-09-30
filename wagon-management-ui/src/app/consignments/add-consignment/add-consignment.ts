@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 
 import {
   LucideArrowRight,
@@ -79,7 +84,8 @@ export class AddConsignment implements OnInit {
   constructor(
     private consignmentService: ConsignmentService,
     private demandService: DemandService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -101,52 +107,55 @@ export class AddConsignment implements OnInit {
   // -------------------------------------------------
 
   loadDemands(): void {
-
     this.loading = true;
+    this.errorMessage = '';
 
-    this.demandService
-      .getAllDemands()
-      .subscribe({
+    this.demandService.getAllDemands().subscribe({
+      next: (response: any) => {
+        console.log('Demand API response:', response);
+        console.log('Is response an array?', Array.isArray(response));
 
-        next: (data) => {
+        try {
+          if (!Array.isArray(response)) {
+            this.demands = [];
+            this.approvedDemands = [];
 
+            this.errorMessage =
+              'Demand API returned an unexpected response format. Check the browser console.';
+
+            return;
+          }
+
+          this.demands = response;
+
+          this.approvedDemands = response.filter(
+            (demand: Demand) =>
+              String(demand.status ?? '').trim().toUpperCase() === 'APPROVED'
+          );
+
+          console.log('All demands:', this.demands);
+          console.log('Approved demands:', this.approvedDemands);
           console.log(
-            'Demands received:',
-            data
+            'Approved demand IDs:',
+            this.approvedDemands.map(demand => demand.demandId)
           );
-
-          this.demands = data;
-
-          /*
-           * Only APPROVED demands are ready
-           * for consignment creation.
-           */
-          this.approvedDemands =
-            data.filter(
-              demand =>
-                demand.status === 'APPROVED'
-            );
-
-          this.loading = false;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error loading demands:',
-            error
-          );
+        } catch (error) {
+          console.error('Error processing demand response:', error);
 
           this.errorMessage =
-            'Unable to load demands.';
-
+            'Unable to process demands returned by the server.';
+        } finally {
           this.loading = false;
-
         }
+      },
 
-      });
+      error: (error) => {
+        console.error('Error loading demands:', error);
 
+        this.errorMessage = 'Unable to load demands.';
+        this.loading = false;
+      }
+    });
   }
 
 
@@ -314,70 +323,44 @@ export class AddConsignment implements OnInit {
 
     this.submitting = true;
 
+  this.consignmentService
+    .createConsignmentFromDemand(request)
+    .pipe(
+      finalize(() => {
+        this.submitting = false;
+      })
+    )
+    .subscribe({
+      next: (createdConsignment: Consignment) => {
+      console.log('Consignment created:', createdConsignment);
 
-    this.consignmentService
-      .createConsignmentFromDemand(request)
-      .subscribe({
+      this.message =
+        `Consignment #${createdConsignment.consignmentId} ` +
+        `created successfully from Demand #${this.demandId}.`;
 
-        next: (createdConsignment: Consignment) => {
+      this.demandId = null;
+      this.consigneeId = null;
+      this.submitting = false;
 
-          console.log(
-            'Consignment created:',
-            createdConsignment
-          );
+      this.cdr.detectChanges();
 
-          this.message =
-            `Consignment #${createdConsignment.consignmentId} ` +
-            `created successfully from Demand #${this.demandId}.`;
+      console.log('After reset:', this.submitting);
+    },
+      error: (error) => {
+        console.error('Error creating consignment:', error);
 
-
-          // Clear form
-
-          this.demandId = null;
-
-          this.consigneeId = null;
-
-          this.submitting = false;
-
-        },
-
-
-        error: (error) => {
-
-          console.error(
-            'Error creating consignment:',
-            error
-          );
-
-
-          if (
-            error.error?.message
-          ) {
-
-            this.errorMessage =
-              error.error.message;
-
-          } else if (
-            typeof error.error === 'string' &&
-            error.error
-          ) {
-
-            this.errorMessage =
-              error.error;
-
-          } else {
-
-            this.errorMessage =
-              'Unable to create consignment.';
-
-          }
-
-          this.submitting = false;
-
+        if (error.error?.message) {
+          this.errorMessage = error.error.message;
+        } else if (
+          typeof error.error === 'string' &&
+          error.error
+        ) {
+          this.errorMessage = error.error;
+        } else {
+          this.errorMessage = 'Unable to create consignment.';
         }
-
-      });
-
+      }
+    });
   }
 
 }

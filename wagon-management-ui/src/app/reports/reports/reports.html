@@ -1,0 +1,4367 @@
+<div class="report-page">
+
+  <!-- =====================================================
+       PAGE HEADING
+       ===================================================== -->
+
+  <header class="page-heading">
+
+    <div>
+      <p class="eyebrow">Reports &amp; MIS</p>
+
+      <h1>Reports</h1>
+
+      <p class="subtitle">
+        Operational reports and management insights across the complete wagon workflow.
+      </p>
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       REPORT SELECTOR
+       ===================================================== -->
+
+  <div class="report-selector" role="tablist" aria-label="Select report">
+
+    <!-- Wagon Status -->
+
+    <button type="button" role="tab" [attr.aria-selected]="selectedReport === 'WAGONS'"
+      [class.active]="selectedReport === 'WAGONS'" (click)="setReport('WAGONS')">
+
+      <svg lucideTrainFront></svg>
+
+      <span>Wagon Status</span>
+
+    </button>
+
+
+    <!-- Consignments -->
+
+    <button type="button" role="tab" [attr.aria-selected]="selectedReport === 'CONSIGNMENTS'"
+      [class.active]="selectedReport === 'CONSIGNMENTS'" (click)="setReport('CONSIGNMENTS')">
+
+      <svg lucideFileText></svg>
+
+      <span>Consignments</span>
+
+    </button>
+
+
+    <!-- Allocations -->
+
+    <button type="button" role="tab" [attr.aria-selected]="selectedReport === 'ALLOCATIONS'"
+      [class.active]="selectedReport === 'ALLOCATIONS'" (click)="setReport('ALLOCATIONS')">
+
+      <svg lucidePackageCheck></svg>
+
+      <span>Allocations</span>
+
+    </button>
+
+
+    <!-- Loadings -->
+
+    <button type="button" role="tab" [attr.aria-selected]="selectedReport === 'LOADINGS'"
+      [class.active]="selectedReport === 'LOADINGS'" (click)="setReport('LOADINGS')">
+
+      <svg lucidePackagePlus></svg>
+
+      <span>Loadings</span>
+
+    </button>
+
+    <!-- Rake Formation -->
+
+    <button type="button" role="tab" [attr.aria-selected]="selectedReport === 'RAKES'"
+      [class.active]="selectedReport === 'RAKES'" (click)="setReport('RAKES')">
+
+      <svg lucideTrainFront></svg>
+
+      <span>Rakes</span>
+
+    </button>
+
+
+   <!-- Movement History -->
+
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="selectedReport === 'MOVEMENTS'"
+      [class.active]="selectedReport === 'MOVEMENTS'"
+      (click)="setReport('MOVEMENTS')"
+    >
+      <svg lucideArrowLeftRight></svg>
+
+      <span>Movements</span>
+    </button>
+
+
+    <!-- Unloading -->
+
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="selectedReport === 'UNLOADINGS'"
+      [class.active]="selectedReport === 'UNLOADINGS'"
+      (click)="setReport('UNLOADINGS')"
+    >
+
+      <svg lucidePackageCheck></svg>
+
+      <span>Unloadings</span>
+
+    </button>
+
+
+    <!-- Demand Report -->
+
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="selectedReport === 'DEMANDS'"
+      [class.active]="selectedReport === 'DEMANDS'"
+      (click)="setReport('DEMANDS')"
+    >
+
+      <svg lucideFileText></svg>
+
+      <span>Demands</span>
+
+    </button>
+
+
+    <!-- Combined MIS / Operations Summary -->
+
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="selectedReport === 'MIS_SUMMARY'"
+      [class.active]="selectedReport === 'MIS_SUMMARY'"
+      (click)="setReport('MIS_SUMMARY')"
+    >
+
+      <svg lucideTrainFront></svg>
+
+      <span>MIS Summary</span>
+
+    </button>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       WAGON STATUS REPORT
+       ===================================================== -->
+
+  <ng-container *ngIf="selectedReport === 'WAGONS'; else nonWagonReport">
+
+    <div class="page-heading report-subheading">
+
+      <div>
+
+        <h2>Wagon Status Report</h2>
+
+        <p class="subtitle">
+          View wagon availability, operational status,
+          and current station.
+        </p>
+
+      </div>
+
+
+      <button type="button" class="action-button" (click)="loadWagons()" [disabled]="wagonLoading">
+
+        <svg lucideRefreshCw></svg>
+
+        {{ wagonLoading ? 'Refreshing...' : 'Refresh' }}
+
+      </button>
+
+    </div>
+
+
+    <!-- Wagon Summary Cards -->
+
+    <div class="summary-grid">
+
+      <div class="summary-card total-card">
+
+        <div class="summary-card-top">
+          <span>Total Wagons</span>
+          <svg lucideTrainFront></svg>
+        </div>
+
+        <strong>
+          {{ wagons.length }}
+        </strong>
+
+        <small>
+          All registered wagons
+        </small>
+
+      </div>
+
+
+      <div class="summary-card available-card">
+
+        <div class="summary-card-top">
+          <span>Available</span>
+          <svg lucidePackageCheck></svg>
+        </div>
+
+        <strong>
+          {{ availableCount }}
+        </strong>
+
+        <small>
+          Ready for allocation
+        </small>
+
+      </div>
+
+
+      <div class="summary-card loaded-card">
+
+        <div class="summary-card-top">
+          <span>Loaded</span>
+          <svg lucidePackagePlus></svg>
+        </div>
+
+        <strong>
+          {{ loadedCount }}
+        </strong>
+
+        <small>
+          Currently loaded
+        </small>
+
+      </div>
+
+
+      <div class="summary-card other-card">
+
+        <div class="summary-card-top">
+          <span>Other Statuses</span>
+          <svg lucideFileText></svg>
+        </div>
+
+        <strong>
+          {{ otherCount }}
+        </strong>
+
+        <small>
+          All remaining statuses
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- Wagon Records -->
+
+    <section class="report-panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <h2>Wagon Records</h2>
+
+          <p>
+            Search and filter the wagon list.
+          </p>
+
+        </div>
+
+
+        <div class="panel-actions">
+
+          <span class="record-count">
+            {{ filteredWagons.length }} records
+          </span>
+
+
+          <button type="button" class="action-button" (click)="exportWagonsToCsv()" [disabled]="!filteredWagons.length">
+
+            <svg lucideDownload></svg>
+
+            Export CSV
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Wagon Filters -->
+
+      <div class="filter-bar">
+
+        <label class="search-field">
+
+          <svg lucideSearch></svg>
+
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Search wagon number..."
+            aria-label="Search wagon number" />
+
+        </label>
+
+
+        <select [(ngModel)]="selectedStatus" aria-label="Filter wagon status">
+
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Wagon Loading -->
+
+      <div *ngIf="wagonLoading" class="message-state">
+        Loading wagon report...
+      </div>
+
+
+      <!-- Wagon Error -->
+
+      <div *ngIf="!wagonLoading && wagonErrorMessage" class="message-state error">
+
+        {{ wagonErrorMessage }}
+
+        <button type="button" class="text-button" (click)="loadWagons()">
+          Try again
+        </button>
+
+      </div>
+
+
+      <!-- Wagon Empty -->
+
+      <div *ngIf="
+          !wagonLoading &&
+          !wagonErrorMessage &&
+          !filteredWagons.length
+        " class="message-state">
+        No wagons match the selected filters.
+      </div>
+
+
+      <!-- Wagon Table -->
+
+      <div *ngIf="
+          !wagonLoading &&
+          !wagonErrorMessage &&
+          filteredWagons.length
+        " class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Wagon Number</th>
+              <th>Wagon Type</th>
+              <th>Capacity</th>
+              <th>Status</th>
+              <th>Current Station</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr *ngFor="let wagon of filteredWagons">
+
+              <td class="primary-cell">
+                {{ wagon.wagonNumber }}
+              </td>
+
+
+              <td>
+                {{ wagon.wagonType }}
+              </td>
+
+
+              <td>
+                {{ wagon.capacity | number }} tonnes
+              </td>
+
+
+              <td>
+
+                <span class="status-badge" [ngClass]="getStatusClass(wagon.status)">
+                  {{ getStatusLabel(wagon.status) }}
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <ng-container *ngIf="wagon.station; else noWagonStation">
+
+                  <div>
+                    {{ wagon.station.stationName || 'Unnamed Station' }}
+                  </div>
+
+                  <small>
+                    {{ wagon.station.stationCode || 'No station code' }}
+                  </small>
+
+                </ng-container>
+
+
+                <ng-template #noWagonStation>
+                  <span class="muted">
+                    Not Assigned
+                  </span>
+                </ng-template>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+
+
+  <!-- =====================================================
+       CONSIGNMENT / ALLOCATION / LOADING REPORTS
+       ===================================================== -->
+
+  <ng-template #nonWagonReport>
+
+
+    <!-- =====================================================
+         CONSIGNMENT REPORT
+         ===================================================== -->
+
+    <ng-container *ngIf="selectedReport === 'CONSIGNMENTS'">
+
+      <div class="page-heading report-subheading">
+
+        <div>
+
+          <h2>Consignment Report</h2>
+
+          <p class="subtitle">
+            Review commodity consignments, quantities,
+            customers, and routes.
+          </p>
+
+        </div>
+
+
+        <button type="button" class="action-button" (click)="loadConsignments()" [disabled]="consignmentLoading">
+
+          <svg lucideRefreshCw></svg>
+
+          {{
+          consignmentLoading
+          ? 'Refreshing...'
+          : 'Refresh'
+          }}
+
+        </button>
+
+      </div>
+
+
+      <!-- Consignment Summary Cards -->
+
+      <div class="summary-grid">
+
+        <div class="summary-card total-card">
+
+          <div class="summary-card-top">
+            <span>Total Consignments</span>
+            <svg lucideFileText></svg>
+          </div>
+
+          <strong>
+            {{ consignments.length }}
+          </strong>
+
+          <small>
+            All registered consignments
+          </small>
+
+        </div>
+
+
+        <div class="summary-card available-card">
+
+          <div class="summary-card-top">
+            <span>Total Quantity</span>
+            <svg lucidePackageCheck></svg>
+          </div>
+
+          <strong class="quantity">
+            {{
+            totalConsignmentQuantity
+            | number:'1.0-2'
+            }}
+          </strong>
+
+          <small>
+            Combined quantity
+          </small>
+
+        </div>
+
+
+        <div class="summary-card loaded-card">
+
+          <div class="summary-card-top">
+            <span>Commodity Types</span>
+            <svg lucidePackagePlus></svg>
+          </div>
+
+          <strong>
+            {{ commodityTypeCount }}
+          </strong>
+
+          <small>
+            Distinct commodities
+          </small>
+
+        </div>
+
+
+        <div class="summary-card other-card">
+
+          <div class="summary-card-top">
+            <span>Linked Demands</span>
+            <svg lucideTrainFront></svg>
+          </div>
+
+          <strong>
+            {{ linkedDemandCount }}
+          </strong>
+
+          <small>
+            Consignments with demand
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- Consignment Records -->
+
+      <section class="report-panel">
+
+        <div class="panel-heading">
+
+          <div>
+
+            <h2>Consignment Records</h2>
+
+            <p>
+              Search consignments and filter by route.
+            </p>
+
+          </div>
+
+
+          <div class="panel-actions">
+
+            <span class="record-count">
+              {{ filteredConsignments.length }} records
+            </span>
+
+
+            <button type="button" class="action-button" (click)="exportConsignmentsToCsv()"
+              [disabled]="!filteredConsignments.length">
+
+              <svg lucideDownload></svg>
+
+              Export CSV
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- Consignment Filters -->
+
+        <div class="filter-bar consignment-filters">
+
+          <label class="search-field">
+
+            <svg lucideSearch></svg>
+
+            <input type="text" [(ngModel)]="consignmentSearchTerm"
+              placeholder="Search ID, commodity, consignor, consignee..." aria-label="Search consignments" />
+
+          </label>
+
+
+          <select [(ngModel)]="selectedOrigin" aria-label="Filter origin station">
+
+            <option value="ALL">
+              All Origins
+            </option>
+
+            <option *ngFor="let station of originStations" [value]="station">
+              {{ station }}
+            </option>
+
+          </select>
+
+
+          <select [(ngModel)]="selectedDestination" aria-label="Filter destination station">
+
+            <option value="ALL">
+              All Destinations
+            </option>
+
+            <option *ngFor="let station of destinationStations" [value]="station">
+              {{ station }}
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Consignment Loading -->
+
+        <div *ngIf="consignmentLoading" class="message-state">
+          Loading consignment report...
+        </div>
+
+
+        <!-- Consignment Error -->
+
+        <div *ngIf="
+            !consignmentLoading &&
+            consignmentErrorMessage
+          " class="message-state error">
+
+          {{ consignmentErrorMessage }}
+
+          <button type="button" class="text-button" (click)="loadConsignments()">
+            Try again
+          </button>
+
+        </div>
+
+
+        <!-- Consignment Empty -->
+
+        <div *ngIf="
+            !consignmentLoading &&
+            !consignmentErrorMessage &&
+            !filteredConsignments.length
+          " class="message-state">
+          No consignments match the selected filters.
+        </div>
+
+
+        <!-- Consignment Table -->
+
+        <div *ngIf="
+            !consignmentLoading &&
+            !consignmentErrorMessage &&
+            filteredConsignments.length
+          " class="table-wrapper">
+
+          <table class="consignment-table">
+
+            <thead>
+
+              <tr>
+                <th>Consignment</th>
+                <th>Commodity</th>
+                <th>Quantity</th>
+                <th>Consignor</th>
+                <th>Consignee</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Demand</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr *ngFor="let item of filteredConsignments">
+
+                <td class="primary-cell">
+                  #{{ item.consignmentId }}
+                </td>
+
+
+                <td>
+
+                  <span class="commodity-chip">
+                    {{
+                    item.commodity ||
+                    'Not Specified'
+                    }}
+                  </span>
+
+                </td>
+
+
+                <td>
+                  {{
+                  item.quantity
+                  | number:'1.0-2'
+                  }}
+                </td>
+
+
+                <td>
+                  {{
+                  item.consignor?.customerName ||
+                  'Not Available'
+                  }}
+                </td>
+
+
+                <td>
+                  {{
+                  item.consignee?.customerName ||
+                  'Not Available'
+                  }}
+                </td>
+
+
+                <td>
+
+                  <div>
+                    {{
+                    item.fromStation?.stationName ||
+                    'Not Assigned'
+                    }}
+                  </div>
+
+                  <small>
+                    {{
+                    item.fromStation?.stationCode ||
+                    '—'
+                    }}
+                  </small>
+
+                </td>
+
+
+                <td>
+
+                  <div>
+                    {{
+                    item.toStation?.stationName ||
+                    'Not Assigned'
+                    }}
+                  </div>
+
+                  <small>
+                    {{
+                    item.toStation?.stationCode ||
+                    '—'
+                    }}
+                  </small>
+
+                </td>
+
+
+                <td>
+
+                  <ng-container *ngIf="
+                      item.demand;
+                      else noLinkedDemand
+                    ">
+
+                    <div class="demand-id">
+                      #{{ item.demand.demandId }}
+                    </div>
+
+                    <span class="status-badge" [ngClass]="
+                        getStatusClass(
+                          item.demand.status
+                        )
+                      ">
+                      {{
+                      getStatusLabel(
+                      item.demand.status
+                      )
+                      }}
+                    </span>
+
+                  </ng-container>
+
+
+                  <ng-template #noLinkedDemand>
+                    <span class="muted">
+                      Not Linked
+                    </span>
+                  </ng-template>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+
+
+    <!-- =====================================================
+         ALLOCATION / LOADING REPORT SELECTION
+         ===================================================== -->
+
+
+      <!-- =====================================================
+          ALLOCATION REPORT
+          ===================================================== -->
+
+      <ng-container *ngIf="selectedReport === 'ALLOCATIONS'">
+
+        <div class="page-heading report-subheading">
+
+          <div>
+
+            <h2>Wagon Allocation Report</h2>
+
+            <p class="subtitle">
+              Review wagon-to-consignment allocations,
+              allocation status, and routes.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="loadAllocations()"
+            [disabled]="allocationLoading"
+          >
+
+            <svg lucideRefreshCw></svg>
+
+            {{
+              allocationLoading
+                ? 'Refreshing...'
+                : 'Refresh'
+            }}
+
+          </button>
+
+        </div>
+
+
+        <!-- Allocation Summary Cards -->
+
+        <div class="summary-grid">
+
+          <div class="summary-card total-card">
+
+            <div class="summary-card-top">
+              <span>Total Allocations</span>
+              <svg lucideFileText></svg>
+            </div>
+
+            <strong>
+              {{ allocations.length }}
+            </strong>
+
+            <small>
+              All allocation records
+            </small>
+
+          </div>
+
+
+          <div class="summary-card available-card">
+
+            <div class="summary-card-top">
+              <span>Allocated</span>
+              <svg lucidePackageCheck></svg>
+            </div>
+
+            <strong>
+              {{ allocatedWagonCount }}
+            </strong>
+
+            <small>
+              Allocation status is Allocated
+            </small>
+
+          </div>
+
+
+          <div class="summary-card loaded-card">
+
+            <div class="summary-card-top">
+              <span>Loaded Wagons</span>
+              <svg lucidePackagePlus></svg>
+            </div>
+
+            <strong>
+              {{ loadedAllocationCount }}
+            </strong>
+
+            <small>
+              Wagon status is Loaded
+            </small>
+
+          </div>
+
+
+          <div class="summary-card other-card">
+
+            <div class="summary-card-top">
+              <span>Consignments</span>
+              <svg lucideTrainFront></svg>
+            </div>
+
+            <strong>
+              {{ distinctAllocatedConsignmentCount }}
+            </strong>
+
+            <small>
+              Distinct consignments allocated
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Allocation Records -->
+
+        <section class="report-panel">
+
+          <div class="panel-heading">
+
+            <div>
+
+              <h2>Allocation Records</h2>
+
+              <p>
+                Search allocations and filter by
+                status or commodity.
+              </p>
+
+            </div>
+
+
+            <div class="panel-actions">
+
+              <span class="record-count">
+                {{ filteredAllocations.length }} records
+              </span>
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="exportAllocationsToCsv()"
+                [disabled]="!filteredAllocations.length"
+              >
+
+                <svg lucideDownload></svg>
+
+                Export CSV
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Allocation Filters -->
+
+          <div class="filter-bar allocation-filters">
+
+            <label class="search-field">
+
+              <svg lucideSearch></svg>
+
+              <input
+                type="text"
+                [(ngModel)]="allocationSearchTerm"
+                placeholder="Search allocation, wagon, consignment, commodity..."
+                aria-label="Search allocations"
+              />
+
+            </label>
+
+
+            <select
+              [(ngModel)]="selectedAllocationStatus"
+              aria-label="Filter allocation status"
+            >
+
+              <option value="ALL">
+                All Allocation Statuses
+              </option>
+
+              <option
+                *ngFor="let status of allocationStatuses"
+                [value]="status"
+              >
+                {{ getStatusLabel(status) }}
+              </option>
+
+            </select>
+
+
+            <select
+              [(ngModel)]="selectedAllocationCommodity"
+              aria-label="Filter allocation commodity"
+            >
+
+              <option value="ALL">
+                All Commodities
+              </option>
+
+              <option
+                *ngFor="let commodity of allocationCommodities"
+                [value]="commodity"
+              >
+                {{ commodity }}
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Allocation Loading -->
+
+          <div
+            *ngIf="allocationLoading"
+            class="message-state"
+          >
+            Loading allocation report...
+          </div>
+
+
+          <!-- Allocation Error -->
+
+          <div
+            *ngIf="
+              !allocationLoading &&
+              allocationErrorMessage
+            "
+            class="message-state error"
+          >
+
+            {{ allocationErrorMessage }}
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="loadAllocations()"
+            >
+              Try again
+            </button>
+
+          </div>
+
+
+          <!-- Allocation Empty -->
+
+          <div
+            *ngIf="
+              !allocationLoading &&
+              !allocationErrorMessage &&
+              !filteredAllocations.length
+            "
+            class="message-state"
+          >
+            No allocations match the selected filters.
+          </div>
+
+
+          <!-- Allocation Table -->
+
+          <div
+            *ngIf="
+              !allocationLoading &&
+              !allocationErrorMessage &&
+              filteredAllocations.length
+            "
+            class="table-wrapper"
+          >
+
+            <table class="allocation-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>Allocation</th>
+                  <th>Allocated At</th>
+                  <th>Allocation Status</th>
+                  <th>Wagon</th>
+                  <th>Wagon Status</th>
+                  <th>Consignment</th>
+                  <th>Commodity</th>
+                  <th>Quantity</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                <tr *ngFor="let item of filteredAllocations">
+
+                  <td class="primary-cell">
+                    #{{ item.allocationId }}
+                  </td>
+
+
+                  <td>
+
+                    <ng-container
+                      *ngIf="
+                        item.allocatedAt;
+                        else noAllocationDate
+                      "
+                    >
+
+                      {{
+                        item.allocatedAt
+                          | date:'dd MMM yyyy, HH:mm'
+                      }}
+
+                    </ng-container>
+
+
+                    <ng-template #noAllocationDate>
+
+                      <span class="muted">
+                        Not Available
+                      </span>
+
+                    </ng-template>
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(
+                          item.allocationStatus
+                        )
+                      "
+                    >
+
+                      {{
+                        getStatusLabel(
+                          item.allocationStatus
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    <div class="primary-cell">
+
+                      {{
+                        item.wagon?.wagonNumber ||
+                        'Not Available'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        item.wagon?.wagonType ||
+                        'Type not available'
+                      }}
+
+                      <ng-container
+                        *ngIf="
+                          item.wagon?.capacity != null
+                        "
+                      >
+
+                        ·
+
+                        {{
+                          item.wagon.capacity
+                            | number
+                        }}
+
+                        tonnes
+
+                      </ng-container>
+
+                    </small>
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(
+                          item.wagon?.status
+                        )
+                      "
+                    >
+
+                      {{
+                        getStatusLabel(
+                          item.wagon?.status
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <td class="primary-cell">
+
+                    #{{ item.consignment?.consignmentId ?? '—' }}
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="commodity-chip">
+
+                      {{
+                        item.consignment?.commodity ||
+                        'Not Specified'
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    {{
+                      item.consignment?.quantity
+                        | number:'1.0-2'
+                    }}
+
+                  </td>
+
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        item.consignment?.fromStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        item.consignment?.fromStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        item.consignment?.toStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        item.consignment?.toStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      </ng-container>
+
+
+
+      <!-- =====================================================
+          WAGON LOADING REPORT
+          ===================================================== -->
+
+
+        <ng-container *ngIf="selectedReport === 'LOADINGS'">
+
+          <div class="page-heading report-subheading">
+
+            <div>
+
+              <h2>Wagon Loading Report</h2>
+
+              <p class="subtitle">
+                Review wagon loading activity, loaded quantities,
+                loading status, and routes.
+              </p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="action-button"
+              (click)="loadLoadings()"
+              [disabled]="loadingLoading"
+            >
+
+              <svg lucideRefreshCw></svg>
+
+              {{
+                loadingLoading
+                  ? 'Refreshing...'
+                  : 'Refresh'
+              }}
+
+            </button>
+
+          </div>
+
+
+          <!-- Loading Summary Cards -->
+
+          <div class="summary-grid">
+
+            <!-- Total Loadings -->
+
+            <div class="summary-card total-card">
+
+              <div class="summary-card-top">
+
+                <span>Total Loadings</span>
+
+                <svg lucideFileText></svg>
+
+              </div>
+
+              <strong>
+                {{ loadings.length }}
+              </strong>
+
+              <small>
+                All loading records
+              </small>
+
+            </div>
+
+
+            <!-- Loaded Quantity -->
+
+            <div class="summary-card available-card">
+
+              <div class="summary-card-top">
+
+                <span>Loaded Quantity</span>
+
+                <svg lucidePackageCheck></svg>
+
+              </div>
+
+              <strong class="quantity">
+
+                {{
+                  totalLoadedQuantity
+                    | number:'1.0-2'
+                }}
+
+              </strong>
+
+              <small>
+                Combined loaded quantity
+              </small>
+
+            </div>
+
+
+            <!-- Loaded Wagons -->
+
+            <div class="summary-card loaded-card">
+
+              <div class="summary-card-top">
+
+                <span>Loaded Wagons</span>
+
+                <svg lucidePackagePlus></svg>
+
+              </div>
+
+              <strong>
+                {{ loadedWagonCountFromLoading }}
+              </strong>
+
+              <small>
+                Distinct wagons with loaded status
+              </small>
+
+            </div>
+
+
+            <!-- Consignments -->
+
+            <div class="summary-card other-card">
+
+              <div class="summary-card-top">
+
+                <span>Consignments</span>
+
+                <svg lucideTrainFront></svg>
+
+              </div>
+
+              <strong>
+                {{ distinctLoadingConsignmentCount }}
+              </strong>
+
+              <small>
+                Distinct consignments loaded
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- Loading Records -->
+
+          <section class="report-panel">
+
+            <div class="panel-heading">
+
+              <div>
+
+                <h2>Loading Records</h2>
+
+                <p>
+                  Search loading records and filter by
+                  status or commodity.
+                </p>
+
+              </div>
+
+
+              <div class="panel-actions">
+
+                <span class="record-count">
+                  {{ filteredLoadings.length }} records
+                </span>
+
+
+                <button
+                  type="button"
+                  class="action-button"
+                  (click)="exportLoadingsToCsv()"
+                  [disabled]="!filteredLoadings.length"
+                >
+
+                  <svg lucideDownload></svg>
+
+                  Export CSV
+
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <!-- Loading Filters -->
+
+            <div class="filter-bar loading-filters">
+
+              <label class="search-field">
+
+                <svg lucideSearch></svg>
+
+                <input
+                  type="text"
+                  [(ngModel)]="loadingSearchTerm"
+                  placeholder="Search loading, wagon, consignment, commodity..."
+                  aria-label="Search loading records"
+                />
+
+              </label>
+
+
+              <select
+                [(ngModel)]="selectedLoadingStatus"
+                aria-label="Filter loading status"
+              >
+
+                <option value="ALL">
+                  All Loading Statuses
+                </option>
+
+                <option
+                  *ngFor="let status of loadingStatuses"
+                  [value]="status"
+                >
+
+                  {{ getStatusLabel(status) }}
+
+                </option>
+
+              </select>
+
+
+              <select
+                [(ngModel)]="selectedLoadingCommodity"
+                aria-label="Filter loading commodity"
+              >
+
+                <option value="ALL">
+                  All Commodities
+                </option>
+
+                <option
+                  *ngFor="let commodity of loadingCommodities"
+                  [value]="commodity"
+                >
+
+                  {{ commodity }}
+
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- Loading State -->
+
+            <div
+              *ngIf="loadingLoading"
+              class="message-state"
+            >
+              Loading loading report...
+            </div>
+
+
+            <!-- Loading Error -->
+
+            <div
+              *ngIf="
+                !loadingLoading &&
+                loadingErrorMessage
+              "
+              class="message-state error"
+            >
+
+              {{ loadingErrorMessage }}
+
+              <button
+                type="button"
+                class="text-button"
+                (click)="loadLoadings()"
+              >
+                Try again
+              </button>
+
+            </div>
+
+
+            <!-- Loading Empty -->
+
+            <div
+              *ngIf="
+                !loadingLoading &&
+                !loadingErrorMessage &&
+                !filteredLoadings.length
+              "
+              class="message-state"
+            >
+              No loading records match the selected filters.
+            </div>
+
+
+            <!-- Loading Table -->
+
+            <div
+              *ngIf="
+                !loadingLoading &&
+                !loadingErrorMessage &&
+                filteredLoadings.length
+              "
+              class="table-wrapper"
+            >
+
+              <table class="loading-table">
+
+                <thead>
+
+                  <tr>
+
+                    <th>Loading</th>
+                    <th>Loading Time</th>
+                    <th>Loading Status</th>
+                    <th>Wagon</th>
+                    <th>Wagon Status</th>
+                    <th>Consignment</th>
+                    <th>Commodity</th>
+                    <th>Loaded Quantity</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                  <tr *ngFor="let item of filteredLoadings">
+
+                    <!-- Loading ID -->
+
+                    <td class="primary-cell">
+
+                      #{{ item.loadingId }}
+
+                    </td>
+
+
+                    <!-- Loading Time -->
+
+                    <td>
+
+                      <ng-container
+                        *ngIf="
+                          item.loadingTime;
+                          else noLoadingDate
+                        "
+                      >
+
+                        {{
+                          item.loadingTime
+                            | date:'dd MMM yyyy, HH:mm'
+                        }}
+
+                      </ng-container>
+
+
+                      <ng-template #noLoadingDate>
+
+                        <span class="muted">
+                          Not Available
+                        </span>
+
+                      </ng-template>
+
+                    </td>
+
+
+                    <!-- Loading Status -->
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [ngClass]="
+                          getStatusClass(
+                            item.loadingStatus
+                          )
+                        "
+                      >
+
+                        {{
+                          getStatusLabel(
+                            item.loadingStatus
+                          )
+                        }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- Wagon -->
+
+                    <td>
+
+                      <div class="primary-cell">
+
+                        {{
+                          item.wagon?.wagonNumber ||
+                          'Not Available'
+                        }}
+
+                      </div>
+
+                      <small>
+
+                        {{
+                          item.wagon?.wagonType ||
+                          'Type not available'
+                        }}
+
+                        <ng-container
+                          *ngIf="
+                            item.wagon?.capacity != null
+                          "
+                        >
+
+                          ·
+
+                          {{
+                            item.wagon.capacity
+                              | number
+                          }}
+
+                          tonnes
+
+                        </ng-container>
+
+                      </small>
+
+                    </td>
+
+
+                    <!-- Wagon Status -->
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [ngClass]="
+                          getStatusClass(
+                            item.wagon?.status
+                          )
+                        "
+                      >
+
+                        {{
+                          getStatusLabel(
+                            item.wagon?.status
+                          )
+                        }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- Consignment -->
+
+                    <td class="primary-cell">
+
+                      #{{ item.consignment?.consignmentId ?? '—' }}
+
+                    </td>
+
+
+                    <!-- Commodity -->
+
+                    <td>
+
+                      <span class="commodity-chip">
+
+                        {{
+                          item.consignment?.commodity ||
+                          'Not Specified'
+                        }}
+
+                      </span>
+
+                    </td>
+
+
+                    <!-- Loaded Quantity -->
+
+                    <td>
+
+                      <strong class="quantity-cell">
+
+                        {{
+                          item.loadedQuantity
+                            | number:'1.0-2'
+                        }}
+
+                      </strong>
+
+                      <small>
+                        tonnes
+                      </small>
+
+                    </td>
+
+
+                    <!-- Origin -->
+
+                    <td>
+
+                      <div>
+
+                        {{
+                          item.consignment?.fromStation?.stationName ||
+                          'Not Assigned'
+                        }}
+
+                      </div>
+
+                      <small>
+
+                        {{
+                          item.consignment?.fromStation?.stationCode ||
+                          '—'
+                        }}
+
+                      </small>
+
+                    </td>
+
+
+                    <!-- Destination -->
+
+                    <td>
+
+                      <div>
+
+                        {{
+                          item.consignment?.toStation?.stationName ||
+                          'Not Assigned'
+                        }}
+
+                      </div>
+
+                      <small>
+
+                        {{
+                          item.consignment?.toStation?.stationCode ||
+                          '—'
+                        }}
+
+                      </small>
+
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </section>
+
+        </ng-container>
+
+
+
+
+      <!-- =====================================================
+          RAKE FORMATION REPORT
+          ===================================================== -->
+
+      <ng-container *ngIf="selectedReport === 'RAKES'">
+
+        <!-- Rake Heading -->
+
+        <div class="page-heading report-subheading">
+
+          <div>
+
+            <h2>Rake Formation Report</h2>
+
+            <p class="subtitle">
+              Review rake formation, wagon counts, status,
+              consignments, and routes.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="loadRakes()"
+            [disabled]="rakeLoading"
+          >
+
+            <svg lucideRefreshCw></svg>
+
+            {{
+              rakeLoading
+                ? 'Refreshing...'
+                : 'Refresh'
+            }}
+
+          </button>
+
+        </div>
+
+
+        <!-- Rake Summary Cards -->
+
+        <div class="summary-grid">
+
+          <!-- Total Rakes -->
+
+          <div class="summary-card total-card">
+
+            <div class="summary-card-top">
+
+              <span>Total Rakes</span>
+
+              <svg lucideTrainFront></svg>
+
+            </div>
+
+            <strong>
+              {{ rakes.length }}
+            </strong>
+
+            <small>
+              All rake formation records
+            </small>
+
+          </div>
+
+
+          <!-- Formed -->
+
+          <div class="summary-card available-card">
+
+            <div class="summary-card-top">
+
+              <span>Formed</span>
+
+              <svg lucidePackageCheck></svg>
+
+            </div>
+
+            <strong>
+              {{ formedRakeCount }}
+            </strong>
+
+            <small>
+              Rakes currently formed
+            </small>
+
+          </div>
+
+
+          <!-- Dispatched -->
+
+          <div class="summary-card loaded-card">
+
+            <div class="summary-card-top">
+
+              <span>Dispatched</span>
+
+              <svg lucidePackagePlus></svg>
+
+            </div>
+
+            <strong>
+              {{ dispatchedRakeCount }}
+            </strong>
+
+            <small>
+              Rakes dispatched
+            </small>
+
+          </div>
+
+
+          <!-- Arrived -->
+
+          <div class="summary-card other-card">
+
+            <div class="summary-card-top">
+
+              <span>Arrived</span>
+
+              <svg lucideFileText></svg>
+
+            </div>
+
+            <strong>
+              {{ arrivedRakeCount }}
+            </strong>
+
+            <small>
+              Rakes reached destination
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Rake Records -->
+
+        <section class="report-panel">
+
+          <div class="panel-heading">
+
+            <div>
+
+              <h2>Rake Records</h2>
+
+              <p>
+                Search rakes and filter by status or commodity.
+              </p>
+
+            </div>
+
+
+            <div class="panel-actions">
+
+              <span class="record-count">
+                {{ filteredRakes.length }} records
+              </span>
+
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="exportRakesToCsv()"
+                [disabled]="!filteredRakes.length"
+              >
+
+                <svg lucideDownload></svg>
+
+                Export CSV
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Rake Filters -->
+
+          <div class="filter-bar rake-filters">
+
+            <label class="search-field">
+
+              <svg lucideSearch></svg>
+
+              <input
+                type="text"
+                [(ngModel)]="rakeSearchTerm"
+                placeholder="Search rake, consignment, commodity, station..."
+                aria-label="Search rakes"
+              />
+
+            </label>
+
+
+            <!-- Rake Status -->
+
+            <select
+              [(ngModel)]="selectedRakeStatus"
+              aria-label="Filter rake status"
+            >
+
+              <option value="ALL">
+                All Rake Statuses
+              </option>
+
+              <option
+                *ngFor="let status of rakeStatuses"
+                [value]="status"
+              >
+
+                {{ getStatusLabel(status) }}
+
+              </option>
+
+            </select>
+
+
+            <!-- Commodity -->
+
+            <select
+              [(ngModel)]="selectedRakeCommodity"
+              aria-label="Filter rake commodity"
+            >
+
+              <option value="ALL">
+                All Commodities
+              </option>
+
+              <option
+                *ngFor="let commodity of rakeCommodities"
+                [value]="commodity"
+              >
+
+                {{ commodity }}
+
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Rake Loading -->
+
+          <div
+            *ngIf="rakeLoading"
+            class="message-state"
+          >
+            Loading rake formation report...
+          </div>
+
+
+          <!-- Rake Error -->
+
+          <div
+            *ngIf="
+              !rakeLoading &&
+              rakeErrorMessage
+            "
+            class="message-state error"
+          >
+
+            {{ rakeErrorMessage }}
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="loadRakes()"
+            >
+              Try again
+            </button>
+
+          </div>
+
+
+          <!-- Rake Empty -->
+
+          <div
+            *ngIf="
+              !rakeLoading &&
+              !rakeErrorMessage &&
+              !filteredRakes.length
+            "
+            class="message-state"
+          >
+
+            No rake records match the selected filters.
+
+          </div>
+
+
+          <!-- Rake Table -->
+
+          <div
+            *ngIf="
+              !rakeLoading &&
+              !rakeErrorMessage &&
+              filteredRakes.length
+            "
+            class="table-wrapper"
+          >
+
+            <table class="rake-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>Rake</th>
+                  <th>Formation Time</th>
+                  <th>Status</th>
+                  <th>Wagons</th>
+                  <th>Consignment</th>
+                  <th>Commodity</th>
+                  <th>Quantity</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th>Dispatch Time</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                <tr *ngFor="let rake of filteredRakes">
+
+                  <!-- Rake -->
+
+                  <td class="primary-cell">
+
+                    <div>
+                      #{{ rake.rakeId }}
+                    </div>
+
+                    <small>
+                      {{ rake.rakeNumber }}
+                    </small>
+
+                  </td>
+
+
+                  <!-- Formation Time -->
+
+                  <td>
+
+                    <ng-container
+                      *ngIf="
+                        rake.formationTime;
+                        else noFormationDate
+                      "
+                    >
+
+                      {{
+                        rake.formationTime
+                          | date:'dd MMM yyyy, HH:mm'
+                      }}
+
+                    </ng-container>
+
+
+                    <ng-template #noFormationDate>
+
+                      <span class="muted">
+                        Not Available
+                      </span>
+
+                    </ng-template>
+
+                  </td>
+
+
+                  <!-- Status -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(rake.status)
+                      "
+                    >
+
+                      {{
+                        getStatusLabel(rake.status)
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- Wagon Count -->
+
+                  <td>
+
+                    <strong>
+                      {{ rake.wagonCount }}
+                    </strong>
+
+                    <small>
+                      wagons
+                    </small>
+
+                  </td>
+
+
+                  <!-- Consignment -->
+
+                  <td class="primary-cell">
+
+                    #{{ rake.consignment?.consignmentId ?? '—' }}
+
+                  </td>
+
+
+                  <!-- Commodity -->
+
+                  <td>
+
+                    <span class="commodity-chip">
+
+                      {{
+                        rake.consignment?.commodity ||
+                        'Not Specified'
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- Quantity -->
+
+                  <td>
+
+                    <strong>
+
+                      {{
+                        rake.consignment?.quantity
+                          | number:'1.0-2'
+                      }}
+
+                    </strong>
+
+                  </td>
+
+
+                  <!-- Origin -->
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        rake.fromStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        rake.fromStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- Destination -->
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        rake.toStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        rake.toStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- Dispatch Time -->
+
+                  <td>
+
+                    <ng-container
+                      *ngIf="
+                        rake.dispatchTime;
+                        else noDispatchDate
+                      "
+                    >
+
+                      {{
+                        rake.dispatchTime
+                          | date:'dd MMM yyyy, HH:mm'
+                      }}
+
+                    </ng-container>
+
+
+                    <ng-template #noDispatchDate>
+
+                      <span class="muted">
+                        Not Dispatched
+                      </span>
+
+                    </ng-template>
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      </ng-container>
+
+      <!-- =====================================================
+          MOVEMENT HISTORY REPORT
+          ===================================================== -->
+
+      <ng-container *ngIf="selectedReport === 'MOVEMENTS'">
+
+        <div class="page-heading report-subheading">
+
+          <div>
+
+            <h2>Wagon Movement History Report</h2>
+
+            <p class="subtitle">
+              Review wagon movement history, origin and destination
+              stations, and movement timestamps.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="loadMovements()"
+            [disabled]="movementLoading"
+          >
+
+            <svg lucideRefreshCw></svg>
+
+            {{
+              movementLoading
+                ? 'Refreshing...'
+                : 'Refresh'
+            }}
+
+          </button>
+
+        </div>
+
+
+        <!-- Movement Summary Cards -->
+
+        <div class="summary-grid">
+
+          <!-- Total Movements -->
+
+          <div class="summary-card total-card">
+
+            <div class="summary-card-top">
+
+              <span>Total Movements</span>
+
+              <svg lucideArrowLeftRight></svg>
+
+            </div>
+
+            <strong>
+              {{ movements.length }}
+            </strong>
+
+            <small>
+              All wagon movement records
+            </small>
+
+          </div>
+
+
+          <!-- Today's Movements -->
+
+          <div class="summary-card available-card">
+
+            <div class="summary-card-top">
+
+              <span>Today's Movements</span>
+
+              <svg lucideClock3></svg>
+
+            </div>
+
+            <strong>
+              {{ todayMovementCount }}
+            </strong>
+
+            <small>
+              Movements recorded today
+            </small>
+
+          </div>
+
+
+          <!-- Origin Stations -->
+
+          <div class="summary-card loaded-card">
+
+            <div class="summary-card-top">
+
+              <span>Origin Stations</span>
+
+              <svg lucideMapPin></svg>
+
+            </div>
+
+            <strong>
+              {{ movementOriginStationCount }}
+            </strong>
+
+            <small>
+              Distinct origin stations
+            </small>
+
+          </div>
+
+
+          <!-- Destination Stations -->
+
+          <div class="summary-card other-card">
+
+            <div class="summary-card-top">
+
+              <span>Destination Stations</span>
+
+              <svg lucideMapPinCheck></svg>
+
+            </div>
+
+            <strong>
+              {{ movementDestinationStationCount }}
+            </strong>
+
+            <small>
+              Distinct destination stations
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Movement Records -->
+
+        <section class="report-panel">
+
+          <div class="panel-heading">
+
+            <div>
+
+              <h2>Movement Records</h2>
+
+              <p>
+                Search movements and filter by origin or destination station.
+              </p>
+
+            </div>
+
+
+            <div class="panel-actions">
+
+              <span class="record-count">
+                {{ filteredMovements.length }} records
+              </span>
+
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="exportMovementsToCsv()"
+                [disabled]="!filteredMovements.length"
+              >
+
+                <svg lucideDownload></svg>
+
+                Export CSV
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Movement Filters -->
+
+          <div class="filter-bar movement-filters">
+
+            <label class="search-field">
+
+              <svg lucideSearch></svg>
+
+              <input
+                type="text"
+                [(ngModel)]="movementSearchTerm"
+                placeholder="Search movement, wagon, station..."
+                aria-label="Search movement records"
+              />
+
+            </label>
+
+
+            <!-- Origin Station -->
+
+            <select
+              [(ngModel)]="selectedMovementOrigin"
+              aria-label="Filter movement origin"
+            >
+
+              <option value="ALL">
+                All Origins
+              </option>
+
+              <option
+                *ngFor="let station of movementOrigins"
+                [value]="station"
+              >
+
+                {{ station }}
+
+              </option>
+
+            </select>
+
+
+            <!-- Destination Station -->
+
+            <select
+              [(ngModel)]="selectedMovementDestination"
+              aria-label="Filter movement destination"
+            >
+
+              <option value="ALL">
+                All Destinations
+              </option>
+
+              <option
+                *ngFor="let station of movementDestinations"
+                [value]="station"
+              >
+
+                {{ station }}
+
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Movement Loading -->
+
+          <div
+            *ngIf="movementLoading"
+            class="message-state"
+          >
+            Loading movement history report...
+          </div>
+
+
+          <!-- Movement Error -->
+
+          <div
+            *ngIf="
+              !movementLoading &&
+              movementErrorMessage
+            "
+            class="message-state error"
+          >
+
+            {{ movementErrorMessage }}
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="loadMovements()"
+            >
+              Try again
+            </button>
+
+          </div>
+
+
+          <!-- Movement Empty -->
+
+          <div
+            *ngIf="
+              !movementLoading &&
+              !movementErrorMessage &&
+              !filteredMovements.length
+            "
+            class="message-state"
+          >
+
+            No movement records match the selected filters.
+
+          </div>
+
+
+          <!-- Movement Table -->
+
+          <div
+            *ngIf="
+              !movementLoading &&
+              !movementErrorMessage &&
+              filteredMovements.length
+            "
+            class="table-wrapper"
+          >
+
+            <table class="movement-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>Movement</th>
+                  <th>Wagon</th>
+                  <th>From Station</th>
+                  <th>To Station</th>
+                  <th>Movement Time</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                <tr *ngFor="let movement of filteredMovements">
+
+                  <!-- Movement ID -->
+
+                  <td class="primary-cell">
+
+                    #{{ movement.movementId }}
+
+                  </td>
+
+
+                  <!-- Wagon -->
+
+                  <td>
+
+                    <div class="primary-cell">
+
+                      {{
+                        movement.wagon?.wagonNumber ||
+                        'Not Available'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        movement.wagon?.wagonType ||
+                        'Type not available'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- From Station -->
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        movement.fromStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        movement.fromStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- To Station -->
+
+                  <td>
+
+                    <div>
+
+                      {{
+                        movement.toStation?.stationName ||
+                        'Not Assigned'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        movement.toStation?.stationCode ||
+                        '—'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- Movement Time -->
+
+                  <td>
+
+                    <ng-container
+                      *ngIf="
+                        movement.movementTime;
+                        else noMovementDate
+                      "
+                    >
+
+                      {{
+                        movement.movementTime
+                          | date:'dd MMM yyyy, HH:mm'
+                      }}
+
+                    </ng-container>
+
+
+                    <ng-template #noMovementDate>
+
+                      <span class="muted">
+                        Not Available
+                      </span>
+
+                    </ng-template>
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      </ng-container>
+
+
+      <!-- =====================================================
+           UNLOADING REPORT
+           ===================================================== -->
+
+      <ng-container *ngIf="selectedReport === 'UNLOADINGS'">
+
+        <div class="page-heading report-subheading">
+
+          <div>
+
+            <h2>Wagon Unloading Report</h2>
+
+            <p class="subtitle">
+              Review unloading records, quantities, wagons,
+              consignments, and unloading timestamps.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="loadUnloadings()"
+            [disabled]="unloadingLoading"
+          >
+
+            <svg lucideRefreshCw></svg>
+
+            {{
+              unloadingLoading
+                ? 'Refreshing...'
+                : 'Refresh'
+            }}
+
+          </button>
+
+        </div>
+
+
+        <!-- Unloading Summary Cards -->
+
+        <div class="summary-grid">
+
+          <!-- Total Unloadings -->
+
+          <div class="summary-card total-card">
+
+            <div class="summary-card-top">
+
+              <span>Total Unloadings</span>
+
+              <svg lucidePackageCheck></svg>
+
+            </div>
+
+            <strong>
+              {{ unloadings.length }}
+            </strong>
+
+            <small>
+              All unloading records
+            </small>
+
+          </div>
+
+
+          <!-- Total Unloaded Quantity -->
+
+          <div class="summary-card available-card">
+
+            <div class="summary-card-top">
+
+              <span>Unloaded Quantity</span>
+
+              <svg lucidePackagePlus></svg>
+
+            </div>
+
+            <strong class="quantity">
+
+              {{
+                totalUnloadedQuantity
+                  | number:'1.0-2'
+              }}
+
+            </strong>
+
+            <small>
+              Combined unloaded quantity
+            </small>
+
+          </div>
+
+
+          <!-- Unloaded Wagons -->
+
+          <div class="summary-card loaded-card">
+
+            <div class="summary-card-top">
+
+              <span>Unloaded Wagons</span>
+
+              <svg lucideTrainFront></svg>
+
+            </div>
+
+            <strong>
+              {{ unloadedWagonCount }}
+            </strong>
+
+            <small>
+              Distinct wagons unloaded
+            </small>
+
+          </div>
+
+
+          <!-- Consignments -->
+
+          <div class="summary-card other-card">
+
+            <div class="summary-card-top">
+
+              <span>Consignments</span>
+
+              <svg lucideFileText></svg>
+
+            </div>
+
+            <strong>
+              {{ distinctUnloadingConsignmentCount }}
+            </strong>
+
+            <small>
+              Distinct consignments unloaded
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- Unloading Records -->
+
+        <section class="report-panel">
+
+          <div class="panel-heading">
+
+            <div>
+
+              <h2>Unloading Records</h2>
+
+              <p>
+                Search unloading records and filter by status or commodity.
+              </p>
+
+            </div>
+
+
+            <div class="panel-actions">
+
+              <span class="record-count">
+                {{ filteredUnloadings.length }} records
+              </span>
+
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="exportUnloadingsToCsv()"
+                [disabled]="!filteredUnloadings.length"
+              >
+
+                <svg lucideDownload></svg>
+
+                Export CSV
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Unloading Filters -->
+
+          <div class="filter-bar unloading-filters">
+
+            <label class="search-field">
+
+              <svg lucideSearch></svg>
+
+              <input
+                type="text"
+                [(ngModel)]="unloadingSearchTerm"
+                placeholder="Search unloading, wagon, consignment, commodity..."
+                aria-label="Search unloading records"
+              />
+
+            </label>
+
+
+            <!-- Status -->
+
+            <select
+              [(ngModel)]="selectedUnloadingStatus"
+              aria-label="Filter unloading status"
+            >
+
+              <option value="ALL">
+                All Statuses
+              </option>
+
+              <option
+                *ngFor="let status of unloadingStatuses"
+                [value]="status"
+              >
+
+                {{ getStatusLabel(status) }}
+
+              </option>
+
+            </select>
+
+
+            <!-- Commodity -->
+
+            <select
+              [(ngModel)]="selectedUnloadingCommodity"
+              aria-label="Filter unloading commodity"
+            >
+
+              <option value="ALL">
+                All Commodities
+              </option>
+
+              <option
+                *ngFor="let commodity of unloadingCommodities"
+                [value]="commodity"
+              >
+
+                {{ commodity }}
+
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Unloading Loading -->
+
+          <div
+            *ngIf="unloadingLoading"
+            class="message-state"
+          >
+            Loading unloading report...
+          </div>
+
+
+          <!-- Unloading Error -->
+
+          <div
+            *ngIf="
+              !unloadingLoading &&
+              unloadingErrorMessage
+            "
+            class="message-state error"
+          >
+
+            {{ unloadingErrorMessage }}
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="loadUnloadings()"
+            >
+              Try again
+            </button>
+
+          </div>
+
+
+          <!-- Unloading Empty -->
+
+          <div
+            *ngIf="
+              !unloadingLoading &&
+              !unloadingErrorMessage &&
+              !filteredUnloadings.length
+            "
+            class="message-state"
+          >
+
+            No unloading records match the selected filters.
+
+          </div>
+
+
+          <!-- Unloading Table -->
+
+          <div
+            *ngIf="
+              !unloadingLoading &&
+              !unloadingErrorMessage &&
+              filteredUnloadings.length
+            "
+            class="table-wrapper"
+          >
+
+            <table class="unloading-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>Unloading</th>
+                  <th>Unloading Time</th>
+                  <th>Status</th>
+                  <th>Wagon</th>
+                  <th>Consignment</th>
+                  <th>Commodity</th>
+                  <th>Unloaded Quantity</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                <tr *ngFor="let item of filteredUnloadings">
+
+                  <!-- Unloading ID -->
+
+                  <td class="primary-cell">
+
+                    #{{ item.unloadingId }}
+
+                  </td>
+
+
+                  <!-- Unloading Time -->
+
+                  <td>
+
+                    <ng-container
+                      *ngIf="
+                        item.unloadingTime;
+                        else noUnloadingDate
+                      "
+                    >
+
+                      {{
+                        item.unloadingTime
+                          | date:'dd MMM yyyy, HH:mm'
+                      }}
+
+                    </ng-container>
+
+
+                    <ng-template #noUnloadingDate>
+
+                      <span class="muted">
+                        Not Available
+                      </span>
+
+                    </ng-template>
+
+                  </td>
+
+
+                  <!-- Status -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="getStatusClass(item.unloadingStatus)"
+                    >
+
+                      {{ getStatusLabel(item.unloadingStatus) }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- Wagon -->
+
+                  <td>
+
+                    <div class="primary-cell">
+
+                      {{
+                        item.wagon?.wagonNumber ||
+                        'Not Available'
+                      }}
+
+                    </div>
+
+                    <small>
+
+                      {{
+                        item.wagon?.wagonType ||
+                        'Type not available'
+                      }}
+
+                    </small>
+
+                  </td>
+
+
+                  <!-- Consignment -->
+
+                  <td class="primary-cell">
+
+                    {{
+                      item.consignment?.consignmentId != null
+                        ? '#' + item.consignment.consignmentId
+                        : 'Not Available'
+                    }}
+
+                  </td>
+
+
+                  <!-- Commodity -->
+
+                  <td>
+
+                    <span class="commodity-chip">
+
+                      {{
+                        item.consignment?.commodity ||
+                        'Not Specified'
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- Unloaded Quantity -->
+
+                  <td>
+
+                    {{
+                      item.unloadedQuantity
+                        | number:'1.0-2'
+                    }}
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      </ng-container>
+
+
+
+    <!-- =====================================================
+         DEMAND REPORT
+         ===================================================== -->
+
+    <ng-container *ngIf="selectedReport === 'DEMANDS'">
+
+      <div class="page-heading report-subheading">
+
+        <div>
+
+          <h2>Freight Demand Report</h2>
+
+          <p class="subtitle">
+            Review registered freight demands, customers, quantities,
+            wagon requirements, routes, and demand status.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="action-button"
+          (click)="loadDemands()"
+          [disabled]="demandLoading"
+        >
+
+          <svg lucideRefreshCw></svg>
+
+          {{ demandLoading ? 'Refreshing...' : 'Refresh' }}
+
+        </button>
+
+      </div>
+
+
+      <!-- Demand Summary Cards -->
+
+      <div class="summary-grid">
+
+        <div class="summary-card total-card">
+
+          <div class="summary-card-top">
+            <span>Total Demands</span>
+            <svg lucideFileText></svg>
+          </div>
+
+          <strong>
+            {{ demands.length }}
+          </strong>
+
+          <small>
+            All registered demand records
+          </small>
+
+        </div>
+
+
+        <div class="summary-card available-card">
+
+          <div class="summary-card-top">
+            <span>Registered</span>
+            <svg lucideFileText></svg>
+          </div>
+
+          <strong>
+            {{ registeredDemandCount }}
+          </strong>
+
+          <small>
+            Awaiting approval
+          </small>
+
+        </div>
+
+
+        <div class="summary-card loaded-card">
+
+          <div class="summary-card-top">
+            <span>Approved</span>
+            <svg lucidePackageCheck></svg>
+          </div>
+
+          <strong>
+            {{ approvedDemandCount }}
+          </strong>
+
+          <small>
+            Approved demand records
+          </small>
+
+        </div>
+
+
+        <div class="summary-card other-card">
+
+          <div class="summary-card-top">
+            <span>Required Wagons</span>
+            <svg lucideTrainFront></svg>
+          </div>
+
+          <strong>
+            {{ totalRequiredWagons }}
+          </strong>
+
+          <small>
+            Combined wagon requirement
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- Demand Records -->
+
+      <section class="report-panel">
+
+        <div class="panel-heading">
+
+          <div>
+
+            <h2>Demand Records</h2>
+
+            <p>
+              Search demands and filter by status or route.
+            </p>
+
+          </div>
+
+
+          <div class="panel-actions">
+
+            <span class="record-count">
+              {{ filteredDemands.length }} records
+            </span>
+
+
+            <button
+              type="button"
+              class="action-button"
+              (click)="exportDemandsToCsv()"
+              [disabled]="!filteredDemands.length"
+            >
+
+              <svg lucideDownload></svg>
+
+              Export CSV
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- Demand Filters -->
+
+        <div class="filter-bar demand-filters">
+
+          <label class="search-field">
+
+            <svg lucideSearch></svg>
+
+            <input
+              type="text"
+              [(ngModel)]="demandSearchTerm"
+              placeholder="Search demand, customer, commodity..."
+              aria-label="Search demands"
+            />
+
+          </label>
+
+
+          <select
+            [(ngModel)]="selectedDemandStatus"
+            aria-label="Filter demand status"
+          >
+
+            <option value="ALL">
+              All Statuses
+            </option>
+
+            <option
+              *ngFor="let status of demandStatuses"
+              [value]="status"
+            >
+              {{ getStatusLabel(status) }}
+            </option>
+
+          </select>
+
+
+          <select
+            [(ngModel)]="selectedDemandOrigin"
+            aria-label="Filter demand origin"
+          >
+
+            <option value="ALL">
+              All Origins
+            </option>
+
+            <option
+              *ngFor="let station of demandOrigins"
+              [value]="station"
+            >
+              {{ station }}
+            </option>
+
+          </select>
+
+
+          <select
+            [(ngModel)]="selectedDemandDestination"
+            aria-label="Filter demand destination"
+          >
+
+            <option value="ALL">
+              All Destinations
+            </option>
+
+            <option
+              *ngFor="let station of demandDestinations"
+              [value]="station"
+            >
+              {{ station }}
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Demand Loading -->
+
+        <div
+          *ngIf="demandLoading"
+          class="message-state"
+        >
+          Loading demand report...
+        </div>
+
+
+        <!-- Demand Error -->
+
+        <div
+          *ngIf="!demandLoading && demandErrorMessage"
+          class="message-state error"
+        >
+
+          {{ demandErrorMessage }}
+
+          <button
+            type="button"
+            class="text-button"
+            (click)="loadDemands()"
+          >
+            Try again
+          </button>
+
+        </div>
+
+
+        <!-- Demand Empty -->
+
+        <div
+          *ngIf="
+            !demandLoading &&
+            !demandErrorMessage &&
+            !filteredDemands.length
+          "
+          class="message-state"
+        >
+          No demands match the selected filters.
+        </div>
+
+
+        <!-- Demand Table -->
+
+        <div
+          *ngIf="
+            !demandLoading &&
+            !demandErrorMessage &&
+            filteredDemands.length
+          "
+          class="table-wrapper"
+        >
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Demand</th>
+                <th>Demand Date</th>
+                <th>Customer</th>
+                <th>Commodity</th>
+                <th>Quantity</th>
+                <th>Wagons</th>
+                <th>Route</th>
+                <th>Status</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr *ngFor="let demand of filteredDemands">
+
+                <td class="primary-cell">
+                  #{{ demand.demandId }}
+                </td>
+
+
+                <td>
+                  {{ demand.demandDate | date:'dd MMM yyyy, HH:mm' }}
+                </td>
+
+
+                <td>
+                  {{ demand.customer?.customerName || 'Not Available' }}
+                </td>
+
+
+                <td>
+
+                  <span class="commodity-chip">
+                    {{ demand.commodity || 'Not Specified' }}
+                  </span>
+
+                </td>
+
+
+                <td>
+                  {{ demand.quantity | number:'1.0-2' }}
+                </td>
+
+
+                <td>
+                  {{ demand.requiredWagons }}
+                </td>
+
+
+                <td>
+
+                  <div>
+                    {{ demand.fromStation?.stationName || 'Not Assigned' }}
+                  </div>
+
+                  <small>
+                    {{ demand.fromStation?.stationCode || '—' }}
+                    →
+                    {{ demand.toStation?.stationCode || '—' }}
+                  </small>
+
+                  <div>
+                    {{ demand.toStation?.stationName || 'Not Assigned' }}
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [ngClass]="getStatusClass(demand.status)"
+                  >
+                    {{ getStatusLabel(demand.status) }}
+                  </span>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+
+
+
+
+    <!-- =====================================================
+         COMBINED MIS / OPERATIONS SUMMARY
+         ===================================================== -->
+
+    <ng-container *ngIf="selectedReport === 'MIS_SUMMARY'">
+
+      <div class="page-heading report-subheading mis-heading">
+
+        <div>
+
+          <p class="eyebrow">Management Information System</p>
+
+          <h2>Operations Summary</h2>
+
+          <p class="subtitle">
+            Consolidated view of fleet, freight workflow, loading,
+            rake operations, movement activity, and unloading performance.
+          </p>
+
+        </div>
+
+
+        <div class="mis-heading-actions">
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="refreshMisSummary()"
+            [disabled]="misSummaryLoading"
+          >
+
+            <svg lucideRefreshCw></svg>
+
+            {{ misSummaryLoading ? 'Refreshing...' : 'Refresh All' }}
+
+          </button>
+
+
+          <button
+            type="button"
+            class="action-button"
+            (click)="exportMisSummaryToCsv()"
+          >
+
+            <svg lucideDownload></svg>
+
+            Export Summary
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- DATA SOURCE WARNING -->
+
+      <div
+        *ngIf="misDataErrorCount > 0"
+        class="mis-warning"
+      >
+
+        <strong>Some operational data could not be loaded.</strong>
+
+        <span>
+          {{ misDataErrorCount }} report source{{ misDataErrorCount === 1 ? '' : 's' }}
+          require{{ misDataErrorCount === 1 ? 's' : '' }} attention.
+        </span>
+
+      </div>
+
+
+      <!-- EXECUTIVE KPI CARDS -->
+
+      <div class="mis-kpi-grid">
+
+        <article class="mis-kpi-card fleet-kpi">
+
+          <div class="mis-kpi-top">
+            <span>FLEET</span>
+            <svg lucideTrainFront></svg>
+          </div>
+
+          <strong>{{ wagons.length }}</strong>
+
+          <p>Total wagons in the operational fleet</p>
+
+          <div class="mis-kpi-detail">
+            <span>{{ availableCount }} available</span>
+            <span>{{ loadedCount }} loaded</span>
+          </div>
+
+        </article>
+
+
+        <article class="mis-kpi-card freight-kpi">
+
+          <div class="mis-kpi-top">
+            <span>FREIGHT DEMANDS</span>
+            <svg lucideFileText></svg>
+          </div>
+
+          <strong>{{ demands.length }}</strong>
+
+          <p>Total demand records in the workflow</p>
+
+          <div class="mis-kpi-detail">
+            <span>{{ approvedDemandCount }} approved</span>
+            <span>{{ deliveredDemandCount }} delivered</span>
+          </div>
+
+        </article>
+
+
+        <article class="mis-kpi-card rake-kpi">
+
+          <div class="mis-kpi-top">
+            <span>RAKE OPERATIONS</span>
+            <svg lucideTrainFront></svg>
+          </div>
+
+          <strong>{{ rakes.length }}</strong>
+
+          <p>Total rake records across formation and movement</p>
+
+          <div class="mis-kpi-detail">
+            <span>{{ formedRakeCount }} formed</span>
+            <span>{{ dispatchedRakeCount }} dispatched</span>
+          </div>
+
+        </article>
+
+
+        <article class="mis-kpi-card movement-kpi">
+
+          <div class="mis-kpi-top">
+            <span>NETWORK MOVEMENT</span>
+            <svg lucideArrowLeftRight></svg>
+          </div>
+
+          <strong>{{ todayMovementSummaryCount }}</strong>
+
+          <p>Movement records recorded today</p>
+
+          <div class="mis-kpi-detail">
+            <span>{{ movements.length }} total</span>
+            <span>{{ movementOriginStationCount }} origins</span>
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- OPERATIONAL OVERVIEW -->
+
+      <div class="mis-overview-grid">
+
+        <!-- FLEET STATUS -->
+
+        <section class="mis-panel">
+
+          <div class="mis-panel-heading">
+
+            <div>
+              <span class="mis-panel-eyebrow">FLEET</span>
+              <h3>Wagon Status</h3>
+            </div>
+
+            <span class="mis-panel-total">
+              {{ wagons.length }} total
+            </span>
+
+          </div>
+
+
+          <div class="mis-status-list">
+
+            <div class="mis-status-row">
+
+              <div class="mis-status-label">
+                <span>Available</span>
+                <strong>{{ availableCount }}</strong>
+              </div>
+
+              <div class="mis-progress-track">
+                <div
+                  class="mis-progress-fill available-fill"
+                  [style.width.%]="getMisPercentage(availableCount, wagons.length)"
+                ></div>
+              </div>
+
+            </div>
+
+
+            <div class="mis-status-row">
+
+              <div class="mis-status-label">
+                <span>Allocated</span>
+                <strong>{{ allocatedWagonStatusCount }}</strong>
+              </div>
+
+              <div class="mis-progress-track">
+                <div
+                  class="mis-progress-fill allocated-fill"
+                  [style.width.%]="getMisPercentage(allocatedWagonStatusCount, wagons.length)"
+                ></div>
+              </div>
+
+            </div>
+
+
+            <div class="mis-status-row">
+
+              <div class="mis-status-label">
+                <span>Loaded</span>
+                <strong>{{ loadedCount }}</strong>
+              </div>
+
+              <div class="mis-progress-track">
+                <div
+                  class="mis-progress-fill loaded-fill"
+                  [style.width.%]="getMisPercentage(loadedCount, wagons.length)"
+                ></div>
+              </div>
+
+            </div>
+
+
+            <div class="mis-status-row">
+
+              <div class="mis-status-label">
+                <span>In Transit</span>
+                <strong>{{ inTransitWagonCount }}</strong>
+              </div>
+
+              <div class="mis-progress-track">
+                <div
+                  class="mis-progress-fill transit-fill"
+                  [style.width.%]="getMisPercentage(inTransitWagonCount, wagons.length)"
+                ></div>
+              </div>
+
+            </div>
+
+
+            <div class="mis-status-row">
+
+              <div class="mis-status-label">
+                <span>Maintenance</span>
+                <strong>{{ maintenanceWagonCount }}</strong>
+              </div>
+
+              <div class="mis-progress-track">
+                <div
+                  class="mis-progress-fill maintenance-fill"
+                  [style.width.%]="getMisPercentage(maintenanceWagonCount, wagons.length)"
+                ></div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- DEMAND WORKFLOW -->
+
+        <section class="mis-panel">
+
+          <div class="mis-panel-heading">
+
+            <div>
+              <span class="mis-panel-eyebrow">FREIGHT FLOW</span>
+              <h3>Demand Workflow</h3>
+            </div>
+
+            <span class="mis-panel-total">
+              {{ demands.length }} total
+            </span>
+
+          </div>
+
+
+          <div class="mis-workflow-list">
+
+            <div
+              class="mis-workflow-row"
+              *ngFor="let stage of misWorkflowStages"
+            >
+
+              <div class="mis-workflow-main">
+
+                <div class="mis-workflow-label">
+                  <strong>{{ stage.label }}</strong>
+                  <span>{{ stage.value }}</span>
+                </div>
+
+                <div class="mis-progress-track">
+                  <div
+                    class="mis-progress-fill workflow-fill"
+                    [style.width.%]="getMisPercentage(stage.value, demands.length)"
+                  ></div>
+                </div>
+
+              </div>
+
+              <small>{{ stage.description }}</small>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+
+      <!-- RAKES + CARGO + MOVEMENT -->
+
+      <div class="mis-metrics-grid">
+
+        <section class="mis-panel">
+
+          <div class="mis-panel-heading">
+
+            <div>
+              <span class="mis-panel-eyebrow">RAKE MOVEMENT</span>
+              <h3>Rake Operations</h3>
+            </div>
+
+            <svg lucideTrainFront class="mis-heading-icon"></svg>
+
+          </div>
+
+          <div class="mis-mini-metric-grid">
+
+            <div class="mis-mini-metric">
+              <span>Formed</span>
+              <strong>{{ formedRakeCount }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Dispatched</span>
+              <strong>{{ dispatchedRakeCount }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Arrived</span>
+              <strong>{{ arrivedRakeCount }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Wagons in Rakes</span>
+              <strong>{{ totalRakeWagonCount }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="mis-panel">
+
+          <div class="mis-panel-heading">
+
+            <div>
+              <span class="mis-panel-eyebrow">CARGO HANDLING</span>
+              <h3>Loading &amp; Unloading</h3>
+            </div>
+
+            <svg lucidePackageCheck class="mis-heading-icon"></svg>
+
+          </div>
+
+          <div class="mis-mini-metric-grid">
+
+            <div class="mis-mini-metric">
+              <span>Consignments</span>
+              <strong>{{ consignments.length }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Demand Quantity</span>
+              <strong>{{ totalDemandQuantity | number:'1.0-2' }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Loaded Quantity</span>
+              <strong>{{ totalLoadedQuantity | number:'1.0-2' }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Unloaded Quantity</span>
+              <strong>{{ totalUnloadedQuantity | number:'1.0-2' }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="mis-panel">
+
+          <div class="mis-panel-heading">
+
+            <div>
+              <span class="mis-panel-eyebrow">NETWORK ACTIVITY</span>
+              <h3>Movement Summary</h3>
+            </div>
+
+            <svg lucideArrowLeftRight class="mis-heading-icon"></svg>
+
+          </div>
+
+          <div class="mis-mini-metric-grid">
+
+            <div class="mis-mini-metric">
+              <span>Total Movements</span>
+              <strong>{{ movements.length }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Today</span>
+              <strong>{{ todayMovementSummaryCount }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Origin Stations</span>
+              <strong>{{ movementOriginStationCount }}</strong>
+            </div>
+
+            <div class="mis-mini-metric">
+              <span>Destination Stations</span>
+              <strong>{{ movementDestinationStationCount }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+
+      <!-- CURRENT RAKE WORKFLOW -->
+
+      <section class="mis-panel mis-rake-panel">
+
+        <div class="mis-panel-heading">
+
+          <div>
+            <span class="mis-panel-eyebrow">RAKE PIPELINE</span>
+            <h3>Current Rake Workflow</h3>
+            <p>Distribution of rake records across the movement lifecycle.</p>
+          </div>
+
+          <span class="mis-panel-total">
+            {{ rakes.length }} rakes
+          </span>
+
+        </div>
+
+
+        <div class="mis-rake-grid">
+
+          <div
+            class="mis-rake-stage"
+            *ngFor="let stage of misRakeStages"
+          >
+
+            <div class="mis-rake-stage-top">
+              <span>{{ stage.label }}</span>
+              <strong>{{ stage.value }}</strong>
+            </div>
+
+            <div class="mis-progress-track">
+              <div
+                class="mis-progress-fill rake-fill"
+                [style.width.%]="getMisPercentage(stage.value, rakes.length)"
+              ></div>
+            </div>
+
+            <small>{{ stage.description }}</small>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RECENT MOVEMENT ACTIVITY -->
+
+      <section class="mis-panel mis-activity-panel">
+
+        <div class="mis-panel-heading">
+
+          <div>
+            <span class="mis-panel-eyebrow">LATEST ACTIVITY</span>
+            <h3>Recent Wagon Movements</h3>
+            <p>Most recent movement records received from the operational system.</p>
+          </div>
+
+          <span class="mis-panel-total">
+            {{ recentMisMovements.length }} shown
+          </span>
+
+        </div>
+
+
+        <div
+          *ngIf="!recentMisMovements.length"
+          class="message-state"
+        >
+          No movement activity is currently available.
+        </div>
+
+
+        <div
+          *ngIf="recentMisMovements.length"
+          class="table-wrapper"
+        >
+
+          <table class="mis-activity-table">
+
+            <thead>
+              <tr>
+                <th>MOVEMENT</th>
+                <th>WAGON</th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>MOVEMENT TIME</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr *ngFor="let movement of recentMisMovements">
+
+                <td class="primary-cell">
+                  #{{ movement.movementId }}
+                </td>
+
+                <td>
+                  {{ movement.wagon?.wagonNumber || 'Not Available' }}
+                </td>
+
+                <td>
+                  <strong>
+                    {{ movement.fromStation?.stationName || 'Not Assigned' }}
+                  </strong>
+                  <small>
+                    {{ movement.fromStation?.stationCode || '—' }}
+                  </small>
+                </td>
+
+                <td>
+                  <strong>
+                    {{ movement.toStation?.stationName || 'Not Assigned' }}
+                  </strong>
+                  <small>
+                    {{ movement.toStation?.stationCode || '—' }}
+                  </small>
+                </td>
+
+                <td>
+                  {{ movement.movementTime | date:'dd MMM yyyy, HH:mm' }}
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+
+  </ng-template>
+</div>

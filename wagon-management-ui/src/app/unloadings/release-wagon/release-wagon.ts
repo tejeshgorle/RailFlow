@@ -150,7 +150,7 @@ export class ReleaseWagon implements OnInit {
 
     const confirmed = confirm(
       `Release wagon ${wagon.wagonNumber}?\n\n` +
-      `Current station: ${wagon.station.stationCode} - ${wagon.station.stationName}\n` +
+      `Current station: ${wagon.station?.stationCode ?? '—'} - ${wagon.station?.stationName ?? 'Not Assigned'}\n` +
       `Current status: EMPTY\n\n` +
       `After release, the wagon will become AVAILABLE.`
     );
@@ -195,7 +195,7 @@ export class ReleaseWagon implements OnInit {
             `Wagon ${releasedWagon.wagonNumber} ` +
             `released successfully. ` +
             `Status is now AVAILABLE at ` +
-            `${releasedWagon.station.stationCode}.`
+            `${releasedWagon.station?.stationCode ?? '—'}`
 
           );
 

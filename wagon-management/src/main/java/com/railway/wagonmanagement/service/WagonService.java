@@ -5,10 +5,8 @@ import com.railway.wagonmanagement.exception.WagonNotFoundException;
 import com.railway.wagonmanagement.model.Wagon;
 import com.railway.wagonmanagement.model.WagonStatus;
 import com.railway.wagonmanagement.repository.WagonRepository;
-
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class WagonService {
@@ -288,4 +286,8 @@ public class WagonService {
 
         wagonRepository.delete(existingWagon);
     }
+
+    public List<Wagon> getWagonsByStatus(WagonStatus status) {
+        return wagonRepository.findByStatus(status);
+        }
 }

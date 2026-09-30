@@ -27,8 +27,14 @@
         (click)="refreshMovements()"
       >
         <span class="refresh-icon">
-          <svg lucideRefreshCw [attr.width]="14" [attr.height]="14" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideRefreshCw
+            [attr.width]="14"
+            [attr.height]="14"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
+
         Refresh
       </button>
 
@@ -40,13 +46,22 @@
   <!-- KPI CARDS -->
   <section class="kpi-grid">
 
+    <div class="kpi-summary-note">
+      KPI figures show all recorded movements, regardless of the selected wagon filter.
+    </div>
+
     <article class="kpi-card">
 
       <div class="kpi-card-top">
         <span class="kpi-label">TOTAL MOVEMENTS</span>
 
         <span class="kpi-icon blue">
-          <svg lucideArrowLeftRight [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideArrowLeftRight
+            [attr.width]="18"
+            [attr.height]="18"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
       </div>
 
@@ -67,7 +82,12 @@
         <span class="kpi-label">TODAY</span>
 
         <span class="kpi-icon green">
-          <svg lucideCircleCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideCircleCheck
+            [attr.width]="18"
+            [attr.height]="18"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
       </div>
 
@@ -88,7 +108,12 @@
         <span class="kpi-label">ORIGIN STATIONS</span>
 
         <span class="kpi-icon gray">
-          <svg lucideMapPin [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideMapPin
+            [attr.width]="18"
+            [attr.height]="18"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
       </div>
 
@@ -109,7 +134,12 @@
         <span class="kpi-label">DESTINATION STATIONS</span>
 
         <span class="kpi-icon amber">
-          <svg lucideMapPinCheck [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideMapPinCheck
+            [attr.width]="18"
+            [attr.height]="18"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
       </div>
 
@@ -130,7 +160,12 @@
         <span class="kpi-label">LATEST ACTIVITY</span>
 
         <span class="kpi-icon green">
-          <svg lucideClock3 [attr.width]="18" [attr.height]="18" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideClock3
+            [attr.width]="18"
+            [attr.height]="18"
+            [attr.stroke-width]="1.8">
+          </svg>
         </span>
       </div>
 
@@ -167,7 +202,6 @@
       <div class="spinner"></div>
 
       <div class="loading-content">
-
         <strong>
           Loading movement history
         </strong>
@@ -175,13 +209,11 @@
         <span>
           Retrieving wagon movement records...
         </span>
-
       </div>
 
     </div>
 
   } @else {
-
 
     <!-- ERROR -->
     @if (errorMessage()) {
@@ -189,11 +221,15 @@
       <div class="error-banner">
 
         <div class="error-icon">
-          <svg lucideCircleAlert [attr.width]="15" [attr.height]="15" [attr.stroke-width]="1.8"></svg>
+          <svg
+            lucideCircleAlert
+            [attr.width]="15"
+            [attr.height]="15"
+            [attr.stroke-width]="1.8">
+          </svg>
         </div>
 
         <div class="error-content">
-
           <strong>
             Movement history unavailable
           </strong>
@@ -201,7 +237,6 @@
           <span>
             {{ errorMessage() }}
           </span>
-
         </div>
 
       </div>
@@ -209,13 +244,12 @@
     }
 
 
-    <!-- REGISTER -->
+    <!-- MOVEMENT REGISTER -->
     <section class="movement-panel">
 
       <div class="panel-header">
 
         <div>
-
           <div class="panel-eyebrow">
             MOVEMENT REGISTER
           </div>
@@ -224,46 +258,86 @@
             Wagon Movement Records
           </h2>
 
+          @if (selectedWagonNumber()) {
+            <div class="movement-filter-row">
+              <span class="filter-description">
+                Filtered by wagon
+              </span>
+
+              <span class="wagon-filter-badge">
+                {{ selectedWagonNumber() }}
+              </span>
+
+              <a
+                routerLink="/movements"
+                class="clear-filter-link">
+                Clear filter
+              </a>
+            </div>
+          }
         </div>
 
         <span class="record-count">
-          {{ movements().length }}
-          {{ movements().length === 1 ? 'record' : 'records' }}
+          {{ filteredMovements().length }}
+          {{ filteredMovements().length === 1 ? 'record' : 'records' }}
         </span>
 
       </div>
 
 
-      <!-- EMPTY -->
-      @if (movements().length === 0) {
+      <!-- EMPTY STATE -->
+      @if (filteredMovements().length === 0) {
 
         <div class="empty-state">
 
           <div class="empty-icon">
-            <svg lucideArrowLeftRight [attr.width]="24" [attr.height]="24" [attr.stroke-width]="1.7"></svg>
+            <svg
+              lucideArrowLeftRight
+              [attr.width]="24"
+              [attr.height]="24"
+              [attr.stroke-width]="1.7">
+            </svg>
           </div>
 
-          <strong>
-            No movement records found
-          </strong>
+          @if (selectedWagonNumber()) {
 
-          <span>
-            Wagon movement history will appear here when
-            operational movements are recorded.
-          </span>
+            <strong>
+              No movements found for {{ selectedWagonNumber() }}
+            </strong>
+
+            <span>
+              No movement records match this wagon number.
+            </span>
+
+            <a
+              routerLink="/movements"
+              class="clear-filter-link">
+              View all movements
+            </a>
+
+          } @else {
+
+            <strong>
+              No movement records found
+            </strong>
+
+            <span>
+              Wagon movement history will appear here when
+              operational movements are recorded.
+            </span>
+
+          }
 
         </div>
 
       } @else {
 
-
-        <!-- TABLE -->
+        <!-- MOVEMENT TABLE -->
         <div class="table-wrapper">
 
           <table>
 
             <thead>
-
               <tr>
                 <th>MOVEMENT</th>
                 <th>WAGON</th>
@@ -272,56 +346,44 @@
                 <th>TO</th>
                 <th>MOVEMENT TIME</th>
               </tr>
-
             </thead>
 
             <tbody>
 
               @for (
-                movement of movements();
+                movement of filteredMovements();
                 track movement.movementId
               ) {
 
                 <tr>
 
                   <td>
-
-                    <a
-                      [routerLink]="['/movement-history']"
-                      class="movement-id"
-                    >
+                    <span class="movement-id">
                       #{{ movement.movementId }}
-                    </a>
-
+                    </span>
                   </td>
 
 
                   <td>
-
                     <a
                       [routerLink]="[
                         '/wagons',
                         movement.wagon.wagonId
                       ]"
-                      class="wagon-link"
-                    >
+                      class="wagon-link">
                       {{ movement.wagon.wagonNumber }}
                     </a>
-
                   </td>
 
 
                   <td>
-
                     <span class="wagon-type">
                       {{ movement.wagon.wagonType }}
                     </span>
-
                   </td>
 
 
                   <td>
-
                     <div class="station-cell">
 
                       <strong class="station-code">
@@ -333,12 +395,10 @@
                       </span>
 
                     </div>
-
                   </td>
 
 
                   <td>
-
                     <div class="station-cell">
 
                       <strong class="station-code">
@@ -350,12 +410,10 @@
                       </span>
 
                     </div>
-
                   </td>
 
 
                   <td>
-
                     <div class="movement-time">
 
                       <strong>
@@ -367,7 +425,6 @@
                       </span>
 
                     </div>
-
                   </td>
 
                 </tr>

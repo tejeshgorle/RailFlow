@@ -684,5 +684,92 @@
       }
     </article>
 
+        <!-- ===================================================
+          RECENT MOVEMENTS
+          =================================================== -->
+
+      <article class="panel recent-panel" id="recent-movements">
+        <div class="panel-header recent-header">
+          <div>
+            <div class="panel-eyebrow">WAGON OPERATIONS</div>
+            <h2>Recent Movements</h2>
+            <p>Latest recorded wagon movements between stations.</p>
+          </div>
+
+          <span class="panel-count">
+            {{ (dashboardData()?.recentMovements ?? []).length }} SHOWN
+          </span>
+        </div>
+
+        @if ((dashboardData()?.recentMovements ?? []).length === 0) {
+          <div class="empty-state">
+            <div class="empty-state-icon" aria-hidden="true">
+              <svg
+                lucideTrainFront
+                [attr.width]="23"
+                [attr.height]="23"
+                [attr.stroke-width]="1.8"
+              ></svg>
+            </div>
+
+            <strong>No recent movements</strong>
+            <span>Wagon movement records will appear here when available.</span>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>WAGON</th>
+                  <th>ROUTE</th>
+                  <th>MOVEMENT TIME</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (
+                  movement of dashboardData()?.recentMovements ?? [];
+                  track movement.movementId
+                ) {
+                  <tr>
+                    <td>
+                      <a
+                        routerLink="/movements"
+                        class="demand-id"
+                        [queryParams]="{ wagonNumber: movement.wagonNumber }"
+                        title="View movement history"
+                      >
+                        {{ movement.wagonNumber }}
+                      </a>
+                    </td>
+
+                    <td>
+                      <div class="route-cell">
+                        <span>{{ movement.fromStation }}</span>
+                        <span class="route-arrow" aria-hidden="true">
+                          <svg
+                            lucideArrowRight
+                            [attr.width]="12"
+                            [attr.height]="12"
+                            [attr.stroke-width]="1.8"
+                          ></svg>
+                        </span>
+                        <span>{{ movement.toStation }}</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="demand-date">
+                        {{ movement.movementTime | date:'dd MMM yyyy, HH:mm' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+
   }
 </div>

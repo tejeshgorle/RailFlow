@@ -2644,3 +2644,11 @@ tbody tr:last-child td { border-bottom: none; }
   height: 12px;
   display: block;
 }
+
+
+.demand-id,
+.demand-id:hover,
+.demand-id:focus,
+.demand-id:active {
+  text-decoration: none !important;
+}
