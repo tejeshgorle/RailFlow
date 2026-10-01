@@ -26,6 +26,7 @@ com\railway\wagonmanagement\config\PasswordConfig.class
 com\railway\wagonmanagement\model\DemandStatus.class
 com\railway\wagonmanagement\controller\LoadingController.class
 com\railway\wagonmanagement\repository\CustomerRepository.class
+com\railway\wagonmanagement\dto\RecentMovementResponse.class
 com\railway\wagonmanagement\exception\InvalidDemandStatusException.class
 com\railway\wagonmanagement\model\ConsignmentRequest.class
 com\railway\wagonmanagement\service\DemandService.class
